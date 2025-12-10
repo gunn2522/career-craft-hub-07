@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
@@ -10,6 +10,7 @@ const navLinks = [
   { name: "Craft", path: "/craft" },
   { name: "Café", path: "/cafe" },
   { name: "Ambassador", path: "/ambassador" },
+  { name: "Blogs", path: "/blogs" },
 ];
 
 export const Header = () => {
@@ -30,7 +31,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -50,11 +51,18 @@ export const Header = () => {
           </nav>
 
           {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-4">
-            <Button variant="ghost" asChild>
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Partner Button - Highlighted but non-intrusive */}
+            <Button variant="outline" size="sm" className="border-primary/50 text-primary hover:bg-primary/10" asChild>
+              <Link to="/partner" className="flex items-center gap-2">
+                <Handshake className="w-4 h-4" />
+                Become a Partner
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
               <Link to="/login">Log In</Link>
             </Button>
-            <Button variant="gradient" asChild>
+            <Button variant="gradient" size="sm" asChild>
               <Link to="/signup">Get Started</Link>
             </Button>
           </div>
@@ -88,6 +96,12 @@ export const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-border/50">
+                <Button variant="outline" className="border-primary/50 text-primary" asChild>
+                  <Link to="/partner" onClick={() => setIsOpen(false)} className="flex items-center gap-2 justify-center">
+                    <Handshake className="w-4 h-4" />
+                    Become a Partner
+                  </Link>
+                </Button>
                 <Button variant="outline" asChild>
                   <Link to="/login" onClick={() => setIsOpen(false)}>Log In</Link>
                 </Button>

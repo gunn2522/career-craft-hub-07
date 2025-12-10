@@ -1,15 +1,17 @@
 import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/home/HeroSection";
-import { MainBlocks } from "@/components/home/MainBlocks";
+import { ThreePillars } from "@/components/home/ThreePillars";
 import { AmbassadorSection } from "@/components/home/AmbassadorSection";
 import { ConsultancySection } from "@/components/home/ConsultancySection";
 import { SignupCTA } from "@/components/home/SignupCTA";
+import { SuccessStories } from "@/components/home/SuccessStories";
 
 const Index = () => {
   return (
     <Layout>
       <HeroSection />
-      <MainBlocks />
+      <ThreePillars />
+      <SuccessStories />
       <AmbassadorSection />
       <ConsultancySection />
       <SignupCTA />
