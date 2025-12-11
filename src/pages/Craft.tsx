@@ -5,10 +5,10 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
   BookOpen, Code, Target, Trophy, Users, ArrowRight, 
-  CheckCircle, Lock, Star, Clock, Zap
+  CheckCircle, Lock, Star, Clock, Zap, ChevronDown
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import heroBg from "@/assets/hero-bg.jpg";
 const roadmaps = [
   { 
     id: 1, 
@@ -62,22 +62,67 @@ const Craft = () => {
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+      {/* Hero with Image */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroBg}
+            alt="Students learning and crafting skills"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
+        </div>
+
+        {/* Floating Elements */}
+        <div className="absolute top-32 right-1/4 w-4 h-4 bg-primary rounded-full animate-float opacity-60" />
+        <div className="absolute top-1/2 left-20 w-3 h-3 bg-primary rounded-full animate-float opacity-40" style={{ animationDelay: "1s" }} />
+        <div className="absolute bottom-32 right-1/3 w-2 h-2 bg-destructive rounded-full animate-float opacity-50" style={{ animationDelay: "2s" }} />
+
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-              Your Learning Journey
-            </span>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Craft Your <span className="gradient-text">Skills</span>
-            </h1>
-            <p className="text-muted-foreground text-lg mb-10">
-              Follow structured roadmaps, access curated resources, and build real-world projects to become internship-ready
-            </p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-left">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
+                <BookOpen className="w-4 h-4" />
+                Your Learning Journey
+              </div>
+
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                Craft Your{" "}
+                <span className="gradient-text">Skills</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                Follow structured roadmaps, access curated resources, and build real-world projects to become internship-ready
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Button variant="hero" size="xl" asChild>
+                  <a href="#roadmaps" className="group">
+                    <Target className="w-5 h-5" />
+                    Explore Roadmaps
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            <div className="hidden lg:block" />
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <button
+          onClick={() => window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" })}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
+          aria-label="Scroll to content"
+        >
+          <span className="text-sm font-medium">Discover More</span>
+          <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary transition-colors">
+            <ChevronDown className="w-5 h-5 animate-bounce" />
+          </div>
+        </button>
       </section>
 
       {/* Stats */}
