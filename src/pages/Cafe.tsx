@@ -102,7 +102,7 @@ const Cafe = () => {
               Events & Community
             </span>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Welcome to the <span className="gradient-text">Café</span>
+              Welcome to the <span className="gradient-text">Cafe</span>
             </h1>
             <p className="text-muted-foreground text-lg mb-10">
               Join events, hackathons, workshops, and connect with peers and industry experts

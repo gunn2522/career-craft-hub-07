@@ -7,7 +7,7 @@ const stories = [
     name: "Priya Sharma",
     role: "Software Engineer at Google",
     image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=face",
-    story: "Career Craft Café helped me discover my passion for coding. The roadmap was perfect, and I landed my dream job!",
+    story: "Career Craft Cafe helped me discover my passion for coding. The roadmap was perfect, and I landed my dream job!",
     package: "₹32 LPA",
     from: "Tier-3 College"
   },
