@@ -61,7 +61,7 @@ const Ambassador = () => {
             alt="Campus Ambassadors networking" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#12122B] via-[#12122B]/85 to-[#12122B]/70" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
