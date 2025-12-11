@@ -20,7 +20,7 @@ const pillars = [
     color: "from-destructive via-destructive to-primary",
   },
   {
-    title: "CAFÉ",
+    title: "CAFE",
     subtitle: "Best resources for it",
     description: "Join events, hackathons, workshops, and network with industry experts and like-minded peers.",
     icon: Coffee,

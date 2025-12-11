@@ -3,15 +3,16 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
-  Trophy, Gift, Users, Award, Briefcase, Star, 
-  Zap, Mic, CheckCircle, ArrowRight, GraduationCap,
+  Trophy, Gift, Users, Award, Briefcase, 
+  Zap, CheckCircle, ArrowRight, ArrowDown,
   DollarSign, Rocket
 } from "lucide-react";
 import { toast } from "sonner";
+import ambassadorHero from "@/assets/ambassador-hero.jpg";
 
 const responsibilities = [
   "Host events and workshops at your campus",
-  "Spread awareness about Career Craft Café",
+  "Spread awareness about Career Craft Cafe",
   "Build and manage campus communities",
   "Mentor juniors and peers",
   "Organize hackathons and craftathons",
@@ -51,36 +52,59 @@ const Ambassador = () => {
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 gradient-primary opacity-95" />
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-64 h-64 border-2 border-secondary rounded-full" />
-          <div className="absolute bottom-20 right-20 w-48 h-48 border-2 border-secondary rounded-full" />
+      {/* Hero with Image */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src={ambassadorHero} 
+            alt="Campus Ambassadors networking" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/70" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-8 rounded-2xl bg-secondary/20 backdrop-blur-sm">
-              <Trophy className="w-10 h-10 text-secondary" />
-            </div>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-6">
-              Become a Campus Ambassador
-            </h1>
-            <p className="text-secondary/80 text-lg mb-10">
-              Lead your campus, earn rewards, and build your career with Career Craft Café's elite ambassador program
-            </p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Content */}
+            <div>
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-highlight/20 backdrop-blur-sm">
+                <Trophy className="w-8 h-8 text-highlight" />
+              </div>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-6 leading-tight">
+                Become a Campus Ambassador
+              </h1>
+              <p className="text-secondary/80 text-lg mb-8 max-w-lg">
+                Lead your campus, earn rewards, and build your career with Career Craft Cafe's elite ambassador program
+              </p>
+              
+              <Button variant="secondary" size="xl" asChild className="group mb-8">
+                <a href="#apply">
+                  <Zap className="w-5 h-5" />
+                  Apply Now
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </a>
+              </Button>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {stats.map((stat, i) => (
-                <div key={i} className="bg-secondary/10 backdrop-blur-sm rounded-xl p-4 border border-secondary/20">
-                  <div className="font-display text-2xl md:text-3xl font-bold text-secondary">{stat.value}</div>
-                  <div className="text-sm text-secondary/70">{stat.label}</div>
-                </div>
-              ))}
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {stats.map((stat, i) => (
+                  <div key={i} className="bg-secondary/10 backdrop-blur-sm rounded-xl p-4 border border-secondary/20">
+                    <div className="font-display text-xl md:text-2xl font-bold text-secondary">{stat.value}</div>
+                    <div className="text-xs text-secondary/70">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Empty space for visual balance - image shows through */}
+            <div className="hidden lg:block" />
           </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <ArrowDown className="w-6 h-6 text-secondary/60" />
         </div>
       </section>
 
@@ -98,8 +122,8 @@ const Ambassador = () => {
               </h2>
               <div className="space-y-4">
                 {responsibilities.map((item, i) => (
-                  <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-card hover:bg-muted/50 transition-colors">
-                    <CheckCircle className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                  <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-card hover:bg-muted/50 transition-colors border border-border/50">
+                    <CheckCircle className="w-6 h-6 text-highlight flex-shrink-0 mt-0.5" />
                     <span className="text-foreground/80">{item}</span>
                   </div>
                 ))}
@@ -131,7 +155,7 @@ const Ambassador = () => {
       </section>
 
       {/* Application Form */}
-      <section className="py-20 bg-card">
+      <section id="apply" className="py-20 bg-card">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">

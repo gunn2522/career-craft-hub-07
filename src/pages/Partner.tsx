@@ -88,7 +88,7 @@ const Partner = () => {
               Partnership Program
             </div>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              Partner with <span className="gradient-text">Career Craft Café</span>
+              Partner with <span className="gradient-text">Career Craft Cafe</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               Join our network of schools, colleges, and companies to shape the future of career development and talent acquisition.

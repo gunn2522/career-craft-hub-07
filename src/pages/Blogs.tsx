@@ -21,7 +21,7 @@ const blogs = [
   },
   {
     id: 2,
-    title: "From College to ₹15 LPA: Priya's Journey with Career Craft Café",
+    title: "From College to ₹15 LPA: Priya's Journey with Career Craft Cafe",
     excerpt: "How a small-town girl transformed her career trajectory using our roadmaps and mentorship programs.",
     category: "Success Stories",
     author: "Career Craft Team",

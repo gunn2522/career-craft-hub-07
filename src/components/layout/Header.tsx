@@ -8,7 +8,7 @@ const navLinks = [
   { name: "Home", path: "/" },
   { name: "Careers", path: "/careers" },
   { name: "Craft", path: "/craft" },
-  { name: "Café", path: "/cafe" },
+  { name: "Cafe", path: "/cafe" },
   { name: "Ambassador", path: "/ambassador" },
   { name: "Blogs", path: "/blogs" },
 ];
@@ -25,8 +25,8 @@ export const Header = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <img 
               src={logo} 
-              alt="Career Craft Café" 
-              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+              alt="Career Craft Cafe" 
+              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105 dark:brightness-0 dark:invert"
             />
           </Link>
 

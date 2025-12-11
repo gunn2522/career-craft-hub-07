@@ -1,131 +1,112 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
-  Trophy, Gift, Users, Award, Briefcase, Star, 
-  Zap, Mic, ArrowRight 
+  Trophy, Gift, Users, Award, Briefcase, 
+  Zap, Mic, ArrowRight, CheckCircle, DollarSign, Rocket
 } from "lucide-react";
 
 const benefits = [
-  { icon: Trophy, text: "Earn money by hosting events" },
-  { icon: Gift, text: "Exclusive goodies & merch" },
-  { icon: Mic, text: "Host Hackathons + Craftathons" },
-  { icon: Users, text: "Build industry connections" },
-  { icon: Star, text: "Become the campus face of CCC" },
-  { icon: Briefcase, text: "PPO for top Ambassadors" },
+  { icon: DollarSign, title: "Earn Money", desc: "Get paid for every event" },
+  { icon: Gift, title: "Exclusive Goodies", desc: "Premium merchandise" },
+  { icon: Mic, title: "Host Events", desc: "Hackathons & Craftathons" },
+  { icon: Users, title: "Build Network", desc: "Industry connections" },
+  { icon: Briefcase, title: "PPO Opportunity", desc: "Top performer offers" },
+  { icon: Rocket, title: "Career Growth", desc: "Fast-track journey" },
 ];
 
-const badges = [
-  { text: "Earn Money", icon: "💰" },
-  { text: "Certificates", icon: "📜" },
-  { text: "PPO Opportunity", icon: "🚀" },
-  { text: "Networking", icon: "🤝" },
+const responsibilities = [
+  "Host events and workshops at your campus",
+  "Spread awareness about Career Craft Cafe",
+  "Build and manage campus communities",
+  "Mentor juniors and peers",
 ];
 
 export const AmbassadorSection = () => {
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 gradient-primary opacity-95" />
-      
-      {/* Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 border-2 border-secondary rounded-full" />
-        <div className="absolute bottom-20 right-20 w-48 h-48 border-2 border-secondary rounded-full" />
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 border-2 border-secondary rounded-full" />
-      </div>
+    <section className="py-24 bg-card">
+      <div className="container mx-auto px-4">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
+            Campus Ambassador Program
+          </span>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+            Become a Campus Ambassador & <span className="gradient-text">Earn with CCC</span>
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Join our elite ambassador program and transform your campus experience. Lead events, build your network, and unlock exclusive career opportunities.
+          </p>
+        </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
+        <div className="grid lg:grid-cols-2 gap-16">
+          {/* Left - What You'll Do (Responsibilities Style) */}
           <div>
-            {/* Animated Badges */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              {badges.map((badge, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 text-secondary font-medium text-sm backdrop-blur-sm animate-pulse-slow"
-                  style={{ animationDelay: `${i * 0.3}s` }}
-                >
-                  <span>{badge.icon}</span>
-                  {badge.text}
-                </span>
-              ))}
-            </div>
-
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-secondary mb-6 leading-tight">
-              Become a Campus Ambassador & Earn with Career Craft Café
-            </h2>
-
-            <p className="text-secondary/80 text-lg mb-8 leading-relaxed">
-              Join our elite ambassador program and transform your campus experience. Lead events, build your network, and unlock exclusive career opportunities.
-            </p>
-
-            {/* Benefits Grid */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-10">
-              {benefits.map((benefit, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-secondary/10 backdrop-blur-sm border border-secondary/20 hover:bg-secondary/20 transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center">
-                    <benefit.icon className="w-5 h-5 text-secondary" />
-                  </div>
-                  <span className="text-secondary font-medium">{benefit.text}</span>
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
+              What You'll Do
+            </span>
+            <h3 className="font-display text-2xl md:text-3xl font-bold mb-8">
+              Your <span className="gradient-text">Responsibilities</span>
+            </h3>
+            <div className="space-y-4">
+              {responsibilities.map((item, i) => (
+                <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-background hover:bg-muted/50 transition-colors border border-border/50">
+                  <CheckCircle className="w-6 h-6 text-highlight flex-shrink-0 mt-0.5" />
+                  <span className="text-foreground/80">{item}</span>
                 </div>
               ))}
             </div>
 
-            {/* CTA */}
-            <Button variant="secondary" size="xl" asChild className="group">
-              <Link to="/ambassador">
-                <Zap className="w-5 h-5" />
-                Join the Ambassador Program
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
-
-          {/* Visual Side */}
-          <div className="relative hidden lg:block">
-            {/* Main Card */}
-            <div className="relative bg-secondary/10 backdrop-blur-xl rounded-3xl p-8 border border-secondary/30">
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-border/50">
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-secondary/20 flex items-center justify-center">
-                  <Award className="w-12 h-12 text-secondary" />
-                </div>
-                <h3 className="font-display text-2xl font-bold text-secondary mb-3">
-                  Campus Leader Program
-                </h3>
-                <p className="text-secondary/70 mb-6">
-                  Be the change agent on your campus
-                </p>
-                
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 pt-6 border-t border-secondary/20">
-                  <div>
-                    <div className="font-display text-3xl font-bold text-secondary">500+</div>
-                    <div className="text-xs text-secondary/60">Ambassadors</div>
-                  </div>
-                  <div>
-                    <div className="font-display text-3xl font-bold text-secondary">100+</div>
-                    <div className="text-xs text-secondary/60">Colleges</div>
-                  </div>
-                  <div>
-                    <div className="font-display text-3xl font-bold text-secondary">₹50K+</div>
-                    <div className="text-xs text-secondary/60">Avg Earnings</div>
-                  </div>
-                </div>
+                <div className="font-display text-2xl md:text-3xl font-bold text-primary">500+</div>
+                <div className="text-xs text-muted-foreground">Ambassadors</div>
+              </div>
+              <div className="text-center">
+                <div className="font-display text-2xl md:text-3xl font-bold text-primary">100+</div>
+                <div className="text-xs text-muted-foreground">Colleges</div>
+              </div>
+              <div className="text-center">
+                <div className="font-display text-2xl md:text-3xl font-bold text-primary">₹50K+</div>
+                <div className="text-xs text-muted-foreground">Avg Earnings</div>
               </div>
             </div>
+          </div>
 
-            {/* Floating Elements */}
-            <div className="absolute -top-6 -right-6 w-20 h-20 rounded-xl bg-secondary/20 backdrop-blur-sm flex items-center justify-center animate-float">
-              <Trophy className="w-10 h-10 text-secondary" />
-            </div>
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl bg-secondary/20 backdrop-blur-sm flex items-center justify-center animate-float" style={{ animationDelay: "1s" }}>
-              <Gift className="w-8 h-8 text-secondary" />
+          {/* Right - What You'll Get (Perks Grid) */}
+          <div>
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
+              What You'll Get
+            </span>
+            <h3 className="font-display text-2xl md:text-3xl font-bold mb-8">
+              Exclusive <span className="gradient-text">Perks</span>
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {benefits.map((benefit, i) => (
+                <div 
+                  key={i} 
+                  className="glass-card rounded-xl p-5 hover:border-primary/50 transition-all group"
+                >
+                  <div className="w-12 h-12 rounded-lg gradient-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <benefit.icon className="w-6 h-6 text-secondary" />
+                  </div>
+                  <h4 className="font-bold mb-1">{benefit.title}</h4>
+                  <p className="text-sm text-muted-foreground">{benefit.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-16">
+          <Button variant="gradient" size="xl" asChild className="group">
+            <Link to="/ambassador">
+              <Zap className="w-5 h-5" />
+              Join the Ambassador Program
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
