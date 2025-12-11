@@ -53,7 +53,7 @@ const Ambassador = () => {
   return (
     <Layout>
       {/* Hero with Image */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
@@ -61,37 +61,49 @@ const Ambassador = () => {
             alt="Campus Ambassadors networking" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#12122B] via-[#12122B]/85 to-[#12122B]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
         </div>
+
+        {/* Floating Elements */}
+        <div className="absolute top-32 right-1/4 w-4 h-4 bg-primary rounded-full animate-float opacity-60" />
+        <div className="absolute top-1/2 left-20 w-3 h-3 bg-primary rounded-full animate-float opacity-40" style={{ animationDelay: "1s" }} />
+        <div className="absolute bottom-32 right-1/3 w-2 h-2 bg-destructive rounded-full animate-float opacity-50" style={{ animationDelay: "2s" }} />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
-            <div>
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-highlight/20 backdrop-blur-sm">
-                <Trophy className="w-8 h-8 text-highlight" />
+            <div className="text-left">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
+                <Trophy className="w-4 h-4" />
+                Campus Ambassador Program
               </div>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-6 leading-tight">
-                Become a Campus Ambassador
+
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                Become a Campus{" "}
+                <span className="gradient-text">Ambassador</span>
               </h1>
-              <p className="text-secondary/80 text-lg mb-8 max-w-lg">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
                 Lead your campus, earn rewards, and build your career with Career Craft Cafe's elite ambassador program
               </p>
               
-              <Button variant="secondary" size="xl" asChild className="group mb-8">
-                <a href="#apply">
-                  <Zap className="w-5 h-5" />
-                  Apply Now
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </a>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Button variant="hero" size="xl" asChild>
+                  <a href="#apply" className="group">
+                    <Zap className="w-5 h-5" />
+                    Apply Now
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </a>
+                </Button>
+              </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
                 {stats.map((stat, i) => (
-                  <div key={i} className="bg-secondary/10 backdrop-blur-sm rounded-xl p-4 border border-secondary/20">
-                    <div className="font-display text-xl md:text-2xl font-bold text-secondary">{stat.value}</div>
-                    <div className="text-xs text-secondary/70">{stat.label}</div>
+                  <div key={i} className="text-left">
+                    <div className="font-display text-2xl sm:text-3xl font-bold gradient-text">{stat.value}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -103,9 +115,16 @@ const Ambassador = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <ArrowDown className="w-6 h-6 text-secondary/60" />
-        </div>
+        <button
+          onClick={() => window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" })}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
+          aria-label="Scroll to content"
+        >
+          <span className="text-sm font-medium">Discover More</span>
+          <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary transition-colors">
+            <ArrowDown className="w-5 h-5 animate-bounce" />
+          </div>
+        </button>
       </section>
 
       {/* Program Details */}

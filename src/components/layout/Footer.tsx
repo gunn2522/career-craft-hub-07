@@ -10,7 +10,7 @@ export const Footer = () => {
           {/* Brand Column */}
           <div className="space-y-6">
             <Link to="/" className="inline-block">
-              <img src={logo} alt="Career Craft Cafe" className="h-14 w-auto brightness-0 invert" />
+              <img src={logo} alt="Career Craft Cafe" className="h-14 w-auto" />
             </Link>
             <p className="text-secondary/80 leading-relaxed">
               Empowering students to craft their careers, build skills, and connect with opportunities that matter.
