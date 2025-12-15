@@ -14,16 +14,553 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ambassador_applications: {
+        Row: {
+          college: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          social_links: Json | null
+          status: string | null
+          updated_at: string
+          user_id: string | null
+          why_ambassador: string | null
+          year_of_study: string | null
+        }
+        Insert: {
+          college: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          social_links?: Json | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+          why_ambassador?: string | null
+          year_of_study?: string | null
+        }
+        Update: {
+          college?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          social_links?: Json | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+          why_ambassador?: string | null
+          year_of_study?: string | null
+        }
+        Relationships: []
+      }
+      blogs: {
+        Row: {
+          author_id: string | null
+          category: string | null
+          content: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          is_published: boolean | null
+          published_at: string | null
+          read_time: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          published_at?: string | null
+          read_time?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          published_at?: string | null
+          read_time?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      careers: {
+        Row: {
+          category: string
+          created_at: string
+          demand: string | null
+          description: string | null
+          growth: string | null
+          id: string
+          salary: string | null
+          skills: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          demand?: string | null
+          description?: string | null
+          growth?: string | null
+          id?: string
+          salary?: string | null
+          skills?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          demand?: string | null
+          description?: string | null
+          growth?: string | null
+          id?: string
+          salary?: string | null
+          skills?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      event_registrations: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          current_attendees: number | null
+          date: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          location: string | null
+          max_attendees: number | null
+          mode: string | null
+          prize_pool: string | null
+          registration_url: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_attendees?: number | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          mode?: string | null
+          prize_pool?: string | null
+          registration_url?: string | null
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_attendees?: number | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          mode?: string | null
+          prize_pool?: string | null
+          registration_url?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      internships: {
+        Row: {
+          apply_url: string | null
+          company: string
+          created_at: string
+          deadline: string | null
+          description: string | null
+          duration: string | null
+          id: string
+          is_active: boolean | null
+          location: string | null
+          requirements: string[] | null
+          stipend: string | null
+          target_audience: Database["public"]["Enums"]["user_type"][] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apply_url?: string | null
+          company: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          duration?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          requirements?: string[] | null
+          stipend?: string | null
+          target_audience?: Database["public"]["Enums"]["user_type"][] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apply_url?: string | null
+          company?: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          duration?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          requirements?: string[] | null
+          stipend?: string | null
+          target_audience?: Database["public"]["Enums"]["user_type"][] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          institution: string | null
+          updated_at: string
+          user_id: string
+          user_type: Database["public"]["Enums"]["user_type"] | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          institution?: string | null
+          updated_at?: string
+          user_id: string
+          user_type?: Database["public"]["Enums"]["user_type"] | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          institution?: string | null
+          updated_at?: string
+          user_id?: string
+          user_type?: Database["public"]["Enums"]["user_type"] | null
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_premium: boolean | null
+          roadmap_id: string | null
+          title: string
+          type: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          roadmap_id?: string | null
+          title: string
+          type: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          roadmap_id?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resources_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmaps: {
+        Row: {
+          career_id: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          difficulty: string | null
+          duration: string | null
+          id: string
+          steps: Json | null
+          target_audience: Database["public"]["Enums"]["user_type"][] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          career_id?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          duration?: string | null
+          id?: string
+          steps?: Json | null
+          target_audience?: Database["public"]["Enums"]["user_type"][] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          career_id?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          duration?: string | null
+          id?: string
+          steps?: Json | null
+          target_audience?: Database["public"]["Enums"]["user_type"][] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmaps_career_id_fkey"
+            columns: ["career_id"]
+            isOneToOne: false
+            referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_careers: {
+        Row: {
+          career_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          career_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          career_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_careers_career_id_fkey"
+            columns: ["career_id"]
+            isOneToOne: false
+            referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_roadmaps: {
+        Row: {
+          created_at: string
+          id: string
+          progress: Json | null
+          roadmap_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          progress?: Json | null
+          roadmap_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          progress?: Json | null
+          roadmap_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_roadmaps_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      success_stories: {
+        Row: {
+          company: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          is_published: boolean | null
+          name: string
+          story: string | null
+          testimonial: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          name: string
+          story?: string | null
+          testimonial?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          name?: string
+          story?: string | null
+          testimonial?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      user_type: "school_student" | "college_student"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +687,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      user_type: ["school_student", "college_student"],
+    },
   },
 } as const
