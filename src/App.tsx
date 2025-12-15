@@ -3,39 +3,60 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Careers from "./pages/Careers";
 import Craft from "./pages/Craft";
 import Cafe from "./pages/Cafe";
 import Ambassador from "./pages/Ambassador";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Auth from "./pages/Auth";
 import Partner from "./pages/Partner";
 import Blogs from "./pages/Blogs";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminCareers from "./pages/admin/AdminCareers";
+import AdminRoadmaps from "./pages/admin/AdminRoadmaps";
+import AdminResources from "./pages/admin/AdminResources";
+import AdminInternships from "./pages/admin/AdminInternships";
+import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminSuccessStories from "./pages/admin/AdminSuccessStories";
+import AdminEvents from "./pages/admin/AdminEvents";
+import AdminApplications from "./pages/admin/AdminApplications";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/careers" element={<Careers />} />
-          <Route path="/craft" element={<Craft />} />
-          <Route path="/cafe" element={<Cafe />} />
-          <Route path="/ambassador" element={<Ambassador />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/partner" element={<Partner />} />
-          <Route path="/blogs" element={<Blogs />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/craft" element={<Craft />} />
+            <Route path="/cafe" element={<Cafe />} />
+            <Route path="/ambassador" element={<Ambassador />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/login" element={<Auth />} />
+            <Route path="/signup" element={<Auth />} />
+            <Route path="/partner" element={<Partner />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/careers" element={<AdminCareers />} />
+            <Route path="/admin/roadmaps" element={<AdminRoadmaps />} />
+            <Route path="/admin/resources" element={<AdminResources />} />
+            <Route path="/admin/internships" element={<AdminInternships />} />
+            <Route path="/admin/blogs" element={<AdminBlogs />} />
+            <Route path="/admin/success-stories" element={<AdminSuccessStories />} />
+            <Route path="/admin/events" element={<AdminEvents />} />
+            <Route path="/admin/applications" element={<AdminApplications />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
