@@ -1,35 +1,86 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Quote, ArrowRight, Star } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const stories = [
-  {
-    name: "Priya Sharma",
-    role: "Software Engineer at Google",
-    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=face",
-    story: "Career Craft Cafe helped me discover my passion for coding. The roadmap was perfect, and I landed my dream job!",
-    package: "₹32 LPA",
-    from: "Tier-3 College"
-  },
-  {
-    name: "Arjun Patel",
-    role: "Product Manager at Microsoft",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-    story: "From confusion to clarity - the career guidance sessions changed my perspective completely. Forever grateful!",
-    package: "₹28 LPA",
-    from: "Non-Tech Background"
-  },
-  {
-    name: "Sneha Reddy",
-    role: "Data Scientist at Amazon",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face",
-    story: "The structured learning path and real projects gave me the confidence to crack interviews at top companies.",
-    package: "₹24 LPA",
-    from: "Commerce Graduate"
-  }
-];
+interface SuccessStory {
+  id: string;
+  name: string;
+  title: string;
+  company: string | null;
+  testimonial: string | null;
+  image_url: string | null;
+}
 
 export const SuccessStories = () => {
+  const [stories, setStories] = useState<SuccessStory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStories();
+  }, []);
+
+  const fetchStories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("success_stories")
+        .select("*")
+        .eq("is_published", true)
+        .eq("is_featured", true)
+        .limit(3);
+
+      if (error) throw error;
+      setStories(data || []);
+    } catch (error) {
+      console.error("Error fetching success stories:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <section className="py-24 relative overflow-hidden bg-card/30">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+            <div className="max-w-2xl">
+              <Skeleton className="h-8 w-40 mb-4" />
+              <Skeleton className="h-12 w-64 mb-4" />
+              <Skeleton className="h-6 w-96" />
+            </div>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="glass-card rounded-2xl p-8">
+                <Skeleton className="w-12 h-12 rounded-xl mb-6" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-3/4 mb-6" />
+                <div className="flex gap-4 mb-6">
+                  <Skeleton className="h-8 w-20" />
+                  <Skeleton className="h-8 w-24" />
+                </div>
+                <div className="flex items-center gap-4 pt-6 border-t border-border/50">
+                  <Skeleton className="w-14 h-14 rounded-full" />
+                  <div>
+                    <Skeleton className="h-5 w-24 mb-1" />
+                    <Skeleton className="h-4 w-32" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (stories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-24 relative overflow-hidden bg-card/30">
       {/* Background Pattern */}
@@ -61,9 +112,9 @@ export const SuccessStories = () => {
 
         {/* Stories Grid */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {stories.map((story, i) => (
+          {stories.map((story) => (
             <div
-              key={i}
+              key={story.id}
               className="group glass-card rounded-2xl p-8 hover:border-primary/50 transition-all duration-300 hover:scale-[1.02]"
             >
               {/* Quote Icon */}
@@ -73,29 +124,31 @@ export const SuccessStories = () => {
 
               {/* Story */}
               <p className="text-foreground/90 mb-6 leading-relaxed">
-                "{story.story}"
+                "{story.testimonial || "An amazing experience that changed my career trajectory!"}"
               </p>
 
               {/* Stats */}
               <div className="flex gap-4 mb-6">
                 <div className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-bold">
-                  {story.package}
+                  {story.title}
                 </div>
-                <div className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-sm">
-                  {story.from}
-                </div>
+                {story.company && (
+                  <div className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-sm">
+                    {story.company}
+                  </div>
+                )}
               </div>
 
               {/* Author */}
               <div className="flex items-center gap-4 pt-6 border-t border-border/50">
                 <img
-                  src={story.image}
+                  src={story.image_url || "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=face"}
                   alt={story.name}
                   className="w-14 h-14 rounded-full object-cover border-2 border-primary/20"
                 />
                 <div>
                   <h4 className="font-semibold">{story.name}</h4>
-                  <p className="text-sm text-muted-foreground">{story.role}</p>
+                  <p className="text-sm text-muted-foreground">{story.title}</p>
                 </div>
                 <div className="ml-auto flex gap-0.5">
                   {[...Array(5)].map((_, j) => (

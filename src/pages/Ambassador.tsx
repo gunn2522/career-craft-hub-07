@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Trophy, Gift, Users, Award, Briefcase, 
   Zap, CheckCircle, ArrowRight, ArrowDown,
   DollarSign, Rocket
 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import ambassadorHero from "@/assets/ambassador-hero.jpg";
 
 const responsibilities = [
@@ -36,18 +39,58 @@ const stats = [
 ];
 
 const Ambassador = () => {
+  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     college: "",
     year: "",
+    whyAmbassador: "",
+    socialLinks: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Application submitted successfully! We'll contact you within 48 hours.");
-    setFormData({ name: "", email: "", phone: "", college: "", year: "" });
+    
+    if (!formData.name || !formData.email || !formData.college) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from("ambassador_applications")
+        .insert({
+          full_name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          college: formData.college,
+          year_of_study: formData.year || null,
+          why_ambassador: formData.whyAmbassador || null,
+          social_links: formData.socialLinks ? { links: formData.socialLinks } : null,
+          user_id: user?.id || null,
+        });
+
+      if (error) {
+        if (error.code === '23505') {
+          toast.error("You have already submitted an application with this email.");
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success("Application submitted successfully! We'll contact you within 48 hours.");
+        setFormData({ name: "", email: "", phone: "", college: "", year: "", whyAmbassador: "", socialLinks: "" });
+      }
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      toast.error("Failed to submit application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -192,7 +235,7 @@ const Ambassador = () => {
             <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Full Name</label>
+                  <label className="block text-sm font-medium mb-2">Full Name *</label>
                   <Input
                     required
                     value={formData.name}
@@ -202,7 +245,7 @@ const Ambassador = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <label className="block text-sm font-medium mb-2">Email *</label>
                   <Input
                     required
                     type="email"
@@ -218,7 +261,6 @@ const Ambassador = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2">Phone Number</label>
                   <Input
-                    required
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     placeholder="+91 98765 43210"
@@ -228,7 +270,6 @@ const Ambassador = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2">Current Year</label>
                   <Input
-                    required
                     value={formData.year}
                     onChange={(e) => setFormData({...formData, year: e.target.value})}
                     placeholder="2nd Year"
@@ -238,7 +279,7 @@ const Ambassador = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">College/University</label>
+                <label className="block text-sm font-medium mb-2">College/University *</label>
                 <Input
                   required
                   value={formData.college}
@@ -248,10 +289,42 @@ const Ambassador = () => {
                 />
               </div>
 
-              <Button type="submit" variant="gradient" size="lg" className="w-full">
-                <Zap className="w-5 h-5" />
-                Submit Application
-                <ArrowRight className="w-5 h-5" />
+              <div>
+                <label className="block text-sm font-medium mb-2">Why do you want to be an Ambassador?</label>
+                <Textarea
+                  value={formData.whyAmbassador}
+                  onChange={(e) => setFormData({...formData, whyAmbassador: e.target.value})}
+                  placeholder="Tell us about your motivation..."
+                  className="min-h-[100px]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Social Media Links (LinkedIn, Instagram, etc.)</label>
+                <Input
+                  value={formData.socialLinks}
+                  onChange={(e) => setFormData({...formData, socialLinks: e.target.value})}
+                  placeholder="https://linkedin.com/in/yourprofile"
+                  className="h-12"
+                />
+              </div>
+
+              <Button 
+                type="submit" 
+                variant="gradient" 
+                size="lg" 
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  "Submitting..."
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    Submit Application
+                    <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
               </Button>
             </form>
           </div>

@@ -1,94 +1,73 @@
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
-import { Calendar, Clock, ArrowRight, Search, Tag } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const categories = ["All", "Career Tips", "Success Stories", "Industry Insights", "Student Life", "Events"];
 
-const blogs = [
-  {
-    id: 1,
-    title: "10 High-Demand Careers in 2025 You Should Consider",
-    excerpt: "Discover the most promising career paths that offer growth, stability, and fulfillment in the evolving job market.",
-    category: "Career Tips",
-    author: "Rahul Sharma",
-    date: "Dec 5, 2024",
-    readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "From College to ₹15 LPA: Priya's Journey with Career Craft Cafe",
-    excerpt: "How a small-town girl transformed her career trajectory using our roadmaps and mentorship programs.",
-    category: "Success Stories",
-    author: "Career Craft Team",
-    date: "Dec 3, 2024",
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=500&fit=crop",
-    featured: true
-  },
-  {
-    id: 3,
-    title: "How to Build a Portfolio That Gets You Hired",
-    excerpt: "A step-by-step guide to creating an impressive portfolio that showcases your skills to recruiters.",
-    category: "Career Tips",
-    author: "Amit Patel",
-    date: "Dec 1, 2024",
-    readTime: "6 min read",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
-    featured: false
-  },
-  {
-    id: 4,
-    title: "The Rise of AI in Campus Placements: What Students Need to Know",
-    excerpt: "Understanding how AI is reshaping recruitment and how you can prepare for AI-driven interviews.",
-    category: "Industry Insights",
-    author: "Dr. Neha Gupta",
-    date: "Nov 28, 2024",
-    readTime: "7 min read",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=500&fit=crop",
-    featured: false
-  },
-  {
-    id: 5,
-    title: "Campus Ambassador Spotlight: Leading Change at IIT Delhi",
-    excerpt: "Meet Arjun, our campus ambassador who organized 5 hackathons and helped 200+ students get internships.",
-    category: "Success Stories",
-    author: "Career Craft Team",
-    date: "Nov 25, 2024",
-    readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&h=500&fit=crop",
-    featured: false
-  },
-  {
-    id: 6,
-    title: "Hackathon 101: Tips to Win Your First Competition",
-    excerpt: "Everything you need to know about participating in hackathons and making the most of the experience.",
-    category: "Events",
-    author: "Vikram Singh",
-    date: "Nov 22, 2024",
-    readTime: "6 min read",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=500&fit=crop",
-    featured: false
-  }
-];
+interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string | null;
+  category: string | null;
+  image_url: string | null;
+  read_time: string | null;
+  is_featured: boolean | null;
+  published_at: string | null;
+  created_at: string;
+}
 
 const Blogs = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("*")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false });
+
+      if (error) throw error;
+      setBlogs(data || []);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredBlogs = blogs.filter(blog => {
     const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+                          (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     const matchesCategory = activeCategory === "All" || blog.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const featuredBlogs = filteredBlogs.filter(b => b.featured);
-  const regularBlogs = filteredBlogs.filter(b => !b.featured);
+  const featuredBlogs = filteredBlogs.filter(b => b.is_featured);
+  const regularBlogs = filteredBlogs.filter(b => !b.is_featured);
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleDateString('en-IN', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
 
   return (
     <Layout>
@@ -141,8 +120,42 @@ const Blogs = () => {
         </div>
       </section>
 
+      {/* Loading State */}
+      {isLoading && (
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-8 mb-16">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="glass-card rounded-2xl overflow-hidden">
+                  <Skeleton className="aspect-video w-full" />
+                  <div className="p-6">
+                    <Skeleton className="h-6 w-24 mb-3" />
+                    <Skeleton className="h-8 w-full mb-2" />
+                    <Skeleton className="h-4 w-full mb-4" />
+                    <Skeleton className="h-4 w-32" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="glass-card rounded-2xl overflow-hidden">
+                  <Skeleton className="aspect-video w-full" />
+                  <div className="p-5">
+                    <Skeleton className="h-4 w-20 mb-2" />
+                    <Skeleton className="h-6 w-full mb-2" />
+                    <Skeleton className="h-4 w-full mb-3" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Blogs */}
-      {featuredBlogs.length > 0 && (
+      {!isLoading && featuredBlogs.length > 0 && (
         <section className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="font-display text-2xl font-bold mb-8">Featured Articles</h2>
@@ -150,12 +163,12 @@ const Blogs = () => {
               {featuredBlogs.map((blog) => (
                 <Link
                   key={blog.id}
-                  to={`/blogs/${blog.id}`}
+                  to={`/blogs/${blog.slug}`}
                   className="group glass-card rounded-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-300"
                 >
                   <div className="aspect-video overflow-hidden">
                     <img
-                      src={blog.image}
+                      src={blog.image_url || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop"}
                       alt={blog.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -163,12 +176,14 @@ const Blogs = () => {
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
                       <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                        {blog.category}
+                        {blog.category || "General"}
                       </span>
-                      <span className="text-muted-foreground text-sm flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {blog.readTime}
-                      </span>
+                      {blog.read_time && (
+                        <span className="text-muted-foreground text-sm flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {blog.read_time}
+                        </span>
+                      )}
                     </div>
                     <h3 className="font-display text-xl font-bold mb-2 group-hover:text-primary transition-colors">
                       {blog.title}
@@ -179,7 +194,7 @@ const Blogs = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {blog.date}
+                        {formatDate(blog.published_at || blog.created_at)}
                       </span>
                       <span className="text-primary font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
                         Read More <ArrowRight className="w-4 h-4" />
@@ -194,57 +209,65 @@ const Blogs = () => {
       )}
 
       {/* All Blogs Grid */}
-      <section className="py-16 bg-card/30">
-        <div className="container mx-auto px-4">
-          <h2 className="font-display text-2xl font-bold mb-8">All Articles</h2>
-          
-          {regularBlogs.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {regularBlogs.map((blog) => (
-                <Link
-                  key={blog.id}
-                  to={`/blogs/${blog.id}`}
-                  className="group glass-card rounded-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-300"
-                >
-                  <div className="aspect-video overflow-hidden">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                        {blog.category}
-                      </span>
-                      <span className="text-muted-foreground text-xs">{blog.readTime}</span>
+      {!isLoading && (
+        <section className="py-16 bg-card/30">
+          <div className="container mx-auto px-4">
+            <h2 className="font-display text-2xl font-bold mb-8">All Articles</h2>
+            
+            {regularBlogs.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {regularBlogs.map((blog) => (
+                  <Link
+                    key={blog.id}
+                    to={`/blogs/${blog.slug}`}
+                    className="group glass-card rounded-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-300"
+                  >
+                    <div className="aspect-video overflow-hidden">
+                      <img
+                        src={blog.image_url || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop"}
+                        alt={blog.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
                     </div>
-                    <h3 className="font-display text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                      {blog.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
-                      {blog.excerpt}
-                    </p>
-                    <span className="text-sm text-muted-foreground">{blog.date}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No articles found matching your search.</p>
-            </div>
-          )}
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                          {blog.category || "General"}
+                        </span>
+                        {blog.read_time && (
+                          <span className="text-muted-foreground text-xs">{blog.read_time}</span>
+                        )}
+                      </div>
+                      <h3 className="font-display text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                        {blog.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
+                        {blog.excerpt}
+                      </p>
+                      <span className="text-sm text-muted-foreground">
+                        {formatDate(blog.published_at || blog.created_at)}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : filteredBlogs.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No articles found matching your search.</p>
+              </div>
+            ) : null}
 
-          {/* Load More */}
-          <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
-              Load More Articles
-            </Button>
+            {/* Load More */}
+            {regularBlogs.length > 0 && (
+              <div className="text-center mt-12">
+                <Button variant="outline" size="lg">
+                  Load More Articles
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </Layout>
   );
 };
