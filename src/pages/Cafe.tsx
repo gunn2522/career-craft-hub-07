@@ -1,96 +1,75 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   Search, Filter, Calendar, MapPin, Users, 
-  Clock, ArrowRight, Globe, Building, Coffee, ChevronDown
+  ArrowRight, Globe, Building, Coffee, ChevronDown
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const filters = ["All", "Online", "Offline", "Hackathon", "Workshop", "Meetup", "Craftathon"];
 
-const events = [
-  { 
-    id: 1, 
-    title: "AI/ML Hackathon 2024", 
-    type: "Hackathon",
-    mode: "Hybrid",
-    date: "Dec 15-17, 2024",
-    location: "IIT Delhi",
-    city: "Delhi",
-    attendees: 500,
-    prizePool: "₹5 Lakhs"
-  },
-  { 
-    id: 2, 
-    title: "Frontend Masters Workshop", 
-    type: "Workshop",
-    mode: "Online",
-    date: "Dec 20, 2024",
-    location: "Virtual",
-    city: "Online",
-    attendees: 200,
-    prizePool: null
-  },
-  { 
-    id: 3, 
-    title: "Startup Networking Meetup", 
-    type: "Meetup",
-    mode: "Offline",
-    date: "Dec 22, 2024",
-    location: "91springboard",
-    city: "Bangalore",
-    attendees: 80,
-    prizePool: null
-  },
-  { 
-    id: 4, 
-    title: "Product Craftathon", 
-    type: "Craftathon",
-    mode: "Online",
-    date: "Jan 5-7, 2025",
-    location: "Virtual",
-    city: "Online",
-    attendees: 300,
-    prizePool: "₹2 Lakhs"
-  },
-  { 
-    id: 5, 
-    title: "Cloud Computing Bootcamp", 
-    type: "Workshop",
-    mode: "Offline",
-    date: "Jan 10, 2025",
-    location: "Microsoft Office",
-    city: "Hyderabad",
-    attendees: 150,
-    prizePool: null
-  },
-  { 
-    id: 6, 
-    title: "Design Thinking Jam", 
-    type: "Workshop",
-    mode: "Online",
-    date: "Jan 15, 2025",
-    location: "Virtual",
-    city: "Online",
-    attendees: 250,
-    prizePool: null
-  },
-];
+interface Event {
+  id: string;
+  title: string;
+  description: string | null;
+  type: string;
+  mode: string | null;
+  date: string | null;
+  location: string | null;
+  max_attendees: number | null;
+  current_attendees: number | null;
+  prize_pool: string | null;
+  registration_url: string | null;
+}
 
 const Cafe = () => {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("is_active", true)
+        .order("date", { ascending: true });
+
+      if (error) throw error;
+      setEvents(data || []);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(search.toLowerCase()) ||
-                         event.city.toLowerCase().includes(search.toLowerCase());
+                         (event.location?.toLowerCase().includes(search.toLowerCase()) ?? false);
     const matchesFilter = activeFilter === "All" || 
                          event.type === activeFilter || 
                          event.mode === activeFilter;
     return matchesSearch && matchesFilter;
   });
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "TBA";
+    return new Date(dateStr).toLocaleDateString('en-IN', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
 
   return (
     <Layout>
@@ -181,69 +160,104 @@ const Cafe = () => {
           </div>
 
           {/* Events Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event) => (
-              <div key={event.id} className="glass-card rounded-2xl overflow-hidden group hover:border-primary/50 transition-all">
-                {/* Event Header */}
-                <div className="p-6 pb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      event.type === "Hackathon" ? "bg-destructive/10 text-destructive" :
-                      event.type === "Workshop" ? "bg-primary/10 text-primary" :
-                      event.type === "Craftathon" ? "bg-purple-500/10 text-purple-400" :
-                      "bg-muted text-muted-foreground"
-                    }`}>
-                      {event.type}
-                    </span>
-                    <span className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${
-                      event.mode === "Online" ? "bg-green-500/10 text-green-400" :
-                      event.mode === "Offline" ? "bg-blue-500/10 text-blue-400" :
-                      "bg-primary/10 text-primary"
-                    }`}>
-                      {event.mode === "Online" ? <Globe className="w-3 h-3" /> : <Building className="w-3 h-3" />}
-                      {event.mode}
-                    </span>
+          {isLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="glass-card rounded-2xl p-6">
+                  <div className="flex justify-between mb-4">
+                    <Skeleton className="h-6 w-20" />
+                    <Skeleton className="h-6 w-16" />
+                  </div>
+                  <Skeleton className="h-8 w-full mb-4" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                  <Skeleton className="h-10 w-full mt-6" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredEvents.map((event) => (
+                <div key={event.id} className="glass-card rounded-2xl overflow-hidden group hover:border-primary/50 transition-all">
+                  {/* Event Header */}
+                  <div className="p-6 pb-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        event.type === "Hackathon" ? "bg-destructive/10 text-destructive" :
+                        event.type === "Workshop" ? "bg-primary/10 text-primary" :
+                        event.type === "Craftathon" ? "bg-purple-500/10 text-purple-400" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {event.type}
+                      </span>
+                      <span className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${
+                        event.mode === "online" ? "bg-green-500/10 text-green-400" :
+                        event.mode === "offline" ? "bg-blue-500/10 text-blue-400" :
+                        "bg-primary/10 text-primary"
+                      }`}>
+                        {event.mode === "online" ? <Globe className="w-3 h-3" /> : <Building className="w-3 h-3" />}
+                        {event.mode || "Hybrid"}
+                      </span>
+                    </div>
+
+                    <h3 className="font-display text-xl font-bold mb-4 group-hover:text-primary transition-colors">
+                      {event.title}
+                    </h3>
+
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <span>{formatDate(event.date)}</span>
+                      </div>
+                      {event.location && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-primary" />
+                          <span>{event.location}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-primary" />
+                        <span>{event.current_attendees || 0} attending</span>
+                      </div>
+                    </div>
+
+                    {event.prize_pool && (
+                      <div className="mt-4 p-3 rounded-xl gradient-primary">
+                        <span className="text-secondary font-bold text-lg">🏆 {event.prize_pool}</span>
+                        <span className="text-secondary/80 text-sm ml-2">Prize Pool</span>
+                      </div>
+                    )}
                   </div>
 
-                  <h3 className="font-display text-xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    {event.title}
-                  </h3>
-
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-primary" />
-                      <span>{event.date}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      <span>{event.location}, {event.city}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-primary" />
-                      <span>{event.attendees} attending</span>
-                    </div>
+                  {/* Event Footer */}
+                  <div className="p-6 pt-4 border-t border-border/50">
+                    <Button 
+                      variant="default" 
+                      className="w-full"
+                      asChild={!!event.registration_url}
+                    >
+                      {event.registration_url ? (
+                        <a href={event.registration_url} target="_blank" rel="noopener noreferrer">
+                          Register Now
+                          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </a>
+                      ) : (
+                        <>
+                          Register Now
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </Button>
                   </div>
-
-                  {event.prizePool && (
-                    <div className="mt-4 p-3 rounded-xl gradient-primary">
-                      <span className="text-secondary font-bold text-lg">🏆 {event.prizePool}</span>
-                      <span className="text-secondary/80 text-sm ml-2">Prize Pool</span>
-                    </div>
-                  )}
                 </div>
+              ))}
+            </div>
+          )}
 
-                {/* Event Footer */}
-                <div className="p-6 pt-4 border-t border-border/50">
-                  <Button variant="default" className="w-full group-hover:variant-gradient">
-                    Register Now
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredEvents.length === 0 && (
+          {!isLoading && filteredEvents.length === 0 && (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No events found matching your criteria</p>
             </div>
