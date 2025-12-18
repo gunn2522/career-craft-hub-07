@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar, Phone, CheckCircle, ArrowRight } from "lucide-react";
+import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
 
 const features = [
   "1-on-1 personalized guidance",
@@ -17,7 +18,10 @@ export const ConsultancySection = () => {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
       
-      <div className="container mx-auto px-4 relative z-10">
+      {/* 3D Floating Elements */}
+      <FloatingShapes3D count={6} />
+      
+      <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="glass-card rounded-3xl p-8 md:p-12 lg:p-16">
             <div className="grid lg:grid-cols-2 gap-12 items-center">

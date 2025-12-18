@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, School, ArrowRight, Sparkles } from "lucide-react";
+import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
 
 export const SignupCTA = () => {
   return (
@@ -10,7 +11,10 @@ export const SignupCTA = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-destructive/10 rounded-full blur-3xl" />
 
-      <div className="container mx-auto px-4 relative z-10">
+      {/* 3D Floating Elements */}
+      <FloatingShapes3D count={8} />
+
+      <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl gradient-primary">
             <Sparkles className="w-8 h-8 text-secondary" />

@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
 import { 
   Trophy, Gift, Users, Award, Briefcase, 
   Zap, CheckCircle, ArrowRight, ArrowDown,
@@ -12,7 +13,6 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import ambassadorHero from "@/assets/ambassador-hero.jpg";
-
 const responsibilities = [
   "Host events and workshops at your campus",
   "Spread awareness about Career Craft Cafe",
@@ -108,12 +108,10 @@ const Ambassador = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
         </div>
 
-        {/* Floating Elements */}
-        <div className="absolute top-32 right-1/4 w-4 h-4 bg-primary rounded-full animate-float opacity-60" />
-        <div className="absolute top-1/2 left-20 w-3 h-3 bg-primary rounded-full animate-float opacity-40" style={{ animationDelay: "1s" }} />
-        <div className="absolute bottom-32 right-1/3 w-2 h-2 bg-destructive rounded-full animate-float opacity-50" style={{ animationDelay: "2s" }} />
+        {/* 3D Floating Elements */}
+        <FloatingShapes3D count={12} />
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
             <div className="text-left">
@@ -171,8 +169,9 @@ const Ambassador = () => {
       </section>
 
       {/* Program Details */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-20 relative">
+        <FloatingShapes3D count={6} />
+        <div className="w-full px-4 md:px-8 lg:px-16">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Responsibilities */}
             <div>
@@ -217,8 +216,9 @@ const Ambassador = () => {
       </section>
 
       {/* Application Form */}
-      <section id="apply" className="py-20 bg-card">
-        <div className="container mx-auto px-4">
+      <section id="apply" className="py-20 bg-card relative">
+        <FloatingShapes3D count={8} />
+        <div className="w-full px-4 md:px-8 lg:px-16">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
