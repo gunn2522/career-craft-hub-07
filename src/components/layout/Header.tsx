@@ -28,7 +28,7 @@ export const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="container mx-auto px-4">
+      <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-3 group">
             <img 
