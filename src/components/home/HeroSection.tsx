@@ -37,7 +37,8 @@ export const HeroSection = () => {
 
             {/* Main Headline */}
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              Craft Your Career.{" "}
+              Craft Your Career.
+              <br />
               <span className="gradient-text">Build Your Future.</span>
             </h1>
 

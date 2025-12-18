@@ -100,9 +100,8 @@ const Cafe = () => {
                 Events & Community
               </div>
 
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-                Welcome to the{" "}
-                <span className="gradient-text">Cafe</span>
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in whitespace-nowrap" style={{ animationDelay: "0.1s" }}>
+                Welcome to the <span className="gradient-text">Cafe</span>
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
                 Join events, hackathons, workshops, and connect with peers and industry experts
