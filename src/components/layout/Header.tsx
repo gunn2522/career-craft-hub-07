@@ -11,6 +11,7 @@ const navLinks = [
   { name: "Careers", path: "/careers" },
   { name: "Craft", path: "/craft" },
   { name: "Cafe", path: "/cafe" },
+  { name: "Success Stories", path: "/success-stories" },
   { name: "Ambassador", path: "/ambassador" },
   { name: "Blogs", path: "/blogs" },
 ];

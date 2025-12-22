@@ -13,6 +13,7 @@ import Ambassador from "./pages/Ambassador";
 import Auth from "./pages/Auth";
 import Partner from "./pages/Partner";
 import Blogs from "./pages/Blogs";
+import SuccessStories from "./pages/SuccessStories";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminCareers from "./pages/admin/AdminCareers";
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/signup" element={<Auth />} />
             <Route path="/partner" element={<Partner />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/careers" element={<AdminCareers />} />
             <Route path="/admin/roadmaps" element={<AdminRoadmaps />} />
