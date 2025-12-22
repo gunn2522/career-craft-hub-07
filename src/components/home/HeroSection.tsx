@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Compass, ChevronDown } from "lucide-react";
 import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
+import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const HeroSection = () => {
@@ -23,7 +24,10 @@ export const HeroSection = () => {
       </div>
 
       {/* 3D Floating Elements */}
-      <FloatingShapes3D count={15} />
+      <FloatingShapes3D count={10} />
+      
+      {/* Torch-themed 3D Elements */}
+      <TorchElements3D count={15} />
 
       <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">

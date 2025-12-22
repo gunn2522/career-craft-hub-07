@@ -34,7 +34,7 @@ export const Header = () => {
             <img 
               src={logo} 
               alt="Career Craft Cafe" 
-              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105 dark:brightness-0 dark:invert"
+              className="h-16 w-auto transition-transform duration-300 group-hover:scale-110"
             />
           </Link>
 
