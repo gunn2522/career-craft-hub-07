@@ -42,7 +42,7 @@ export const Footer = () => {
                 { name: "Explore Careers", path: "/careers" },
                 { name: "Skill Roadmaps", path: "/craft" },
                 { name: "Events & Cafe", path: "/cafe" },
-                { name: "Campus Ambassador", path: "/ambassador" },
+                { name: "C-Cells Program", path: "/ambassador" },
                 { name: "About Us", path: "/about" },
               ].map((link) => (
                 <li key={link.path}>
@@ -86,7 +86,7 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-highlight mt-0.5" />
-                <span className="text-secondary/80">hello@careercraftcafe.com</span>
+                <a href="mailto:careercraftcafe0@gmail.com" className="text-secondary/80 hover:text-secondary transition-colors">careercraftcafe0@gmail.com</a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-highlight mt-0.5" />

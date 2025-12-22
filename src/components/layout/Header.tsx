@@ -12,7 +12,7 @@ const navLinks = [
   { name: "Craft", path: "/craft" },
   { name: "Cafe", path: "/cafe" },
   { name: "Success Stories", path: "/success-stories" },
-  { name: "Ambassador", path: "/ambassador" },
+  { name: "C-Cells", path: "/ambassador" },
   { name: "Blogs", path: "/blogs" },
 ];
 

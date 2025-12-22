@@ -2,23 +2,23 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   Trophy, Gift, Users, Award, Briefcase, 
-  Zap, Mic, ArrowRight, CheckCircle, DollarSign, Rocket
+  Zap, Building2, ArrowRight, CheckCircle, DollarSign, Rocket, Network
 } from "lucide-react";
 
 const benefits = [
-  { icon: DollarSign, title: "Earn Money", desc: "Get paid for every event" },
-  { icon: Gift, title: "Exclusive Goodies", desc: "Premium merchandise" },
-  { icon: Mic, title: "Host Events", desc: "Hackathons & Craftathons" },
+  { icon: DollarSign, title: "Earn Monthly", desc: "Paid leadership position" },
+  { icon: Gift, title: "Full Sponsorship", desc: "Resources & promotion" },
+  { icon: Building2, title: "Industry Connect", desc: "Company partnerships" },
   { icon: Users, title: "Build Network", desc: "Industry connections" },
-  { icon: Briefcase, title: "PPO Opportunity", desc: "Top performer offers" },
-  { icon: Rocket, title: "Career Growth", desc: "Fast-track journey" },
+  { icon: Briefcase, title: "Career Priority", desc: "First access to opportunities" },
+  { icon: Rocket, title: "Leadership Role", desc: "1-year tenure as Crafter" },
 ];
 
 const responsibilities = [
-  "Host events and workshops at your campus",
-  "Spread awareness about Career Craft Cafe",
-  "Build and manage campus communities",
-  "Mentor juniors and peers",
+  "Lead your college's C-Cell chapter",
+  "Share off-campus placement opportunities",
+  "Organize placement prep workshops",
+  "Bridge industry and academia",
 ];
 
 export const AmbassadorSection = () => {
@@ -28,13 +28,14 @@ export const AmbassadorSection = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-            Campus Ambassador Program
+            C-Cells Crafter Program
           </span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-            Become a Campus Ambassador & <span className="gradient-text">Earn with CCC</span>
+            Lead Your College's <span className="gradient-text">C-Cell & Earn</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Join our elite ambassador program and transform your campus experience. Lead events, build your network, and unlock exclusive career opportunities.
+          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+            Become a <span className="text-primary font-semibold">Crafter</span> — lead your college's Counselling & Corporate Cell. 
+            A 1-year paid program to bridge industry-academia gap and prepare students for placements before they even sit in one.
           </p>
         </div>
 
@@ -42,10 +43,10 @@ export const AmbassadorSection = () => {
           {/* Left - What You'll Do (Responsibilities Style) */}
           <div>
             <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-              What You'll Do
+              Crafter Responsibilities
             </span>
             <h3 className="font-display text-2xl md:text-3xl font-bold mb-8">
-              Your <span className="gradient-text">Responsibilities</span>
+              What You'll <span className="gradient-text">Lead</span>
             </h3>
             <div className="space-y-4">
               {responsibilities.map((item, i) => (
@@ -59,16 +60,16 @@ export const AmbassadorSection = () => {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-border/50">
               <div className="text-center">
-                <div className="font-display text-2xl md:text-3xl font-bold text-primary">500+</div>
-                <div className="text-xs text-muted-foreground">Ambassadors</div>
+                <div className="font-display text-2xl md:text-3xl font-bold text-primary">1 Year</div>
+                <div className="text-xs text-muted-foreground">Tenure</div>
               </div>
               <div className="text-center">
                 <div className="font-display text-2xl md:text-3xl font-bold text-primary">100+</div>
                 <div className="text-xs text-muted-foreground">Colleges</div>
               </div>
               <div className="text-center">
-                <div className="font-display text-2xl md:text-3xl font-bold text-primary">₹50K+</div>
-                <div className="text-xs text-muted-foreground">Avg Earnings</div>
+                <div className="font-display text-2xl md:text-3xl font-bold text-primary">₹10K+</div>
+                <div className="text-xs text-muted-foreground">Monthly</div>
               </div>
             </div>
           </div>
@@ -76,10 +77,10 @@ export const AmbassadorSection = () => {
           {/* Right - What You'll Get (Perks Grid) */}
           <div>
             <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-              What You'll Get
+              Crafter Benefits
             </span>
             <h3 className="font-display text-2xl md:text-3xl font-bold mb-8">
-              Exclusive <span className="gradient-text">Perks</span>
+              What You'll <span className="gradient-text">Earn</span>
             </h3>
             <div className="grid sm:grid-cols-2 gap-4">
               {benefits.map((benefit, i) => (
@@ -103,7 +104,7 @@ export const AmbassadorSection = () => {
           <Button variant="gradient" size="xl" asChild className="group">
             <Link to="/ambassador">
               <Zap className="w-5 h-5" />
-              Join the Ambassador Program
+              Become a Crafter
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>

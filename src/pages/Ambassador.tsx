@@ -7,35 +7,60 @@ import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import { 
   Trophy, Gift, Users, Award, Briefcase, 
   Zap, CheckCircle, ArrowRight, ArrowDown,
-  DollarSign, Rocket
+  DollarSign, Rocket, Building2, Network, Calendar,
+  GraduationCap, Handshake, Target
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import ambassadorHero from "@/assets/ambassador-hero.jpg";
+
 const responsibilities = [
-  "Host events and workshops at your campus",
-  "Spread awareness about Career Craft Cafe",
-  "Build and manage campus communities",
-  "Mentor juniors and peers",
-  "Organize hackathons and craftathons",
-  "Represent CCC at college festivals",
+  "Lead and manage your college's C-Cell chapter",
+  "Organize placement preparation workshops and sessions",
+  "Share off-campus placement opportunities with students",
+  "Build connections between industry and academia",
+  "Host networking events and connectivity programs",
+  "Coordinate with Career Craft Cafe for sponsorships and resources",
 ];
 
 const perks = [
-  { icon: DollarSign, title: "Earn Money", desc: "Get paid for every event you organize" },
-  { icon: Gift, title: "Exclusive Goodies", desc: "Premium merchandise and swag" },
-  { icon: Award, title: "Certificates", desc: "Official recognition certificates" },
-  { icon: Briefcase, title: "PPO Opportunity", desc: "Pre-placement offers for top performers" },
-  { icon: Users, title: "Network Building", desc: "Connect with industry leaders" },
-  { icon: Rocket, title: "Career Growth", desc: "Fast-track your professional journey" },
+  { icon: DollarSign, title: "Earn Money", desc: "Get paid monthly for your leadership role" },
+  { icon: Gift, title: "Sponsorship Support", desc: "Full sponsorship for cell activities" },
+  { icon: Award, title: "Crafter Certificate", desc: "Official recognition as C-Cell Crafter" },
+  { icon: Briefcase, title: "Industry Exposure", desc: "Direct connections with hiring companies" },
+  { icon: Users, title: "Resource Access", desc: "Premium placement prep materials" },
+  { icon: Rocket, title: "Career Fast-Track", desc: "Priority access to opportunities" },
 ];
 
 const stats = [
-  { value: "500+", label: "Active Ambassadors" },
-  { value: "150+", label: "Partner Colleges" },
-  { value: "₹50K+", label: "Avg. Annual Earnings" },
-  { value: "200+", label: "Events Hosted" },
+  { value: "1 Year", label: "Tenure Period" },
+  { value: "₹10K+", label: "Monthly Earnings" },
+  { value: "100+", label: "Partner Colleges" },
+  { value: "500+", label: "Opportunities Shared" },
+];
+
+const programHighlights = [
+  {
+    icon: Building2,
+    title: "Industry-Academia Bridge",
+    description: "Create a society that connects students with real industry requirements before placements"
+  },
+  {
+    icon: Network,
+    title: "Off-Campus Opportunities",
+    description: "Get exclusive access to off-campus placement drives and hiring opportunities"
+  },
+  {
+    icon: Calendar,
+    title: "Annual Selection",
+    description: "New Crafters are selected every year through interviews for fresh perspectives"
+  },
+  {
+    icon: Handshake,
+    title: "Full Sponsorship",
+    description: "Career Craft Cafe fully sponsors and promotes all C-Cell activities"
+  },
 ];
 
 const Ambassador = () => {
@@ -82,7 +107,7 @@ const Ambassador = () => {
           throw error;
         }
       } else {
-        toast.success("Application submitted successfully! We'll contact you within 48 hours.");
+        toast.success("Application submitted successfully! We'll contact you for the interview within 48 hours.");
         setFormData({ name: "", email: "", phone: "", college: "", year: "", whyAmbassador: "", socialLinks: "" });
       }
     } catch (error) {
@@ -101,7 +126,7 @@ const Ambassador = () => {
         <div className="absolute inset-0">
           <img 
             src={ambassadorHero} 
-            alt="Campus Ambassadors networking" 
+            alt="C-Cells Crafter Program" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
@@ -118,22 +143,25 @@ const Ambassador = () => {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
                 <Trophy className="w-4 h-4" />
-                Campus Ambassador Program
+                C-Cells Crafter Program
               </div>
 
               <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-                Become a Campus{" "}
-                <span className="gradient-text">Ambassador</span>
+                Become a{" "}
+                <span className="gradient-text">C-Cell Crafter</span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                Lead your campus, earn rewards, and build your career with Career Craft Cafe's elite ambassador program
+              <p className="text-lg sm:text-xl text-muted-foreground mb-6 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                Lead your college's <span className="text-primary font-semibold">Counselling & Corporate Cell</span> — an industry-academia bridge that prepares students for placements before they even sit in one.
+              </p>
+              <p className="text-base text-muted-foreground mb-10 max-w-xl animate-fade-in" style={{ animationDelay: "0.25s" }}>
+                A <span className="text-primary">1-year paid position</span> where you organize, lead, and transform your campus placement culture. New Crafters selected annually through interviews.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
                 <Button variant="hero" size="xl" asChild>
                   <a href="#apply" className="group">
                     <Zap className="w-5 h-5" />
-                    Apply Now
+                    Apply for Interview
                     <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </Button>
@@ -168,6 +196,38 @@ const Ambassador = () => {
         </button>
       </section>
 
+      {/* What is C-Cells Section */}
+      <section className="py-20 relative bg-card/30">
+        <TorchElements3D count={6} />
+        <div className="w-full px-4 md:px-8 lg:px-16">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
+              About C-Cells
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+              What are <span className="gradient-text">C-Cells</span>?
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+              <span className="text-primary font-semibold">Counselling & Corporate Cells</span> are student-led societies that act as an industry-academia bridge. 
+              They create a new culture of preparing students for placements before they even sit in campus drives — 
+              connecting them with off-campus opportunities, networking events, and career resources.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {programHighlights.map((item, i) => (
+              <div key={i} className="glass-card rounded-2xl p-6 hover:border-primary/50 transition-all group text-center">
+                <div className="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <item.icon className="w-7 h-7 text-secondary" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Program Details */}
       <section className="py-20 relative">
         <TorchElements3D count={8} />
@@ -176,10 +236,10 @@ const Ambassador = () => {
             {/* Responsibilities */}
             <div>
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-                What You'll Do
+                Crafter Responsibilities
               </span>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-8">
-                Your <span className="gradient-text">Responsibilities</span>
+                What You'll <span className="gradient-text">Lead</span>
               </h2>
               <div className="space-y-4">
                 {responsibilities.map((item, i) => (
@@ -194,10 +254,10 @@ const Ambassador = () => {
             {/* Perks */}
             <div>
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-                What You'll Get
+                Crafter Benefits
               </span>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-8">
-                Exclusive <span className="gradient-text">Perks</span>
+                What You'll <span className="gradient-text">Earn</span>
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {perks.map((perk, i) => (
@@ -215,6 +275,41 @@ const Ambassador = () => {
         </div>
       </section>
 
+      {/* How It Works */}
+      <section className="py-20 bg-card/30 relative">
+        <TorchElements3D count={6} />
+        <div className="w-full px-4 md:px-8 lg:px-16">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
+              Selection Process
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+              How to Become a <span className="gradient-text">Crafter</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {[
+              { step: "01", title: "Apply", desc: "Fill out the application form below" },
+              { step: "02", title: "Interview", desc: "Selected candidates are invited for an interview" },
+              { step: "03", title: "Onboarding", desc: "Complete training and get resources" },
+              { step: "04", title: "Lead", desc: "Start your 1-year tenure as Crafter" },
+            ].map((item, i) => (
+              <div key={i} className="text-center relative">
+                <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-secondary">
+                  {item.step}
+                </div>
+                <h3 className="font-bold mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                {i < 3 && (
+                  <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-0.5 bg-primary/20" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Application Form */}
       <section id="apply" className="py-20 bg-card relative">
         <TorchElements3D count={10} />
@@ -222,13 +317,13 @@ const Ambassador = () => {
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-                Join the Program
+                Apply for Interview
               </span>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-                Apply Now
+                Become a Crafter
               </h2>
               <p className="text-muted-foreground">
-                Fill out the form below and we'll get back to you within 48 hours
+                Fill out the form below and we'll invite you for an interview within 48 hours
               </p>
             </div>
 
@@ -290,11 +385,11 @@ const Ambassador = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Why do you want to be an Ambassador?</label>
+                <label className="block text-sm font-medium mb-2">Why do you want to lead a C-Cell?</label>
                 <Textarea
                   value={formData.whyAmbassador}
                   onChange={(e) => setFormData({...formData, whyAmbassador: e.target.value})}
-                  placeholder="Tell us about your motivation..."
+                  placeholder="Tell us about your leadership experience and why you want to bridge the industry-academia gap..."
                   className="min-h-[100px]"
                 />
               </div>

@@ -130,7 +130,7 @@ const About = () => {
               {/* Animated Badge */}
               <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass-card mb-6 animate-fade-in border border-primary/20 backdrop-blur-xl">
                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse" />
-                <span className="text-sm font-semibold text-primary tracking-wide">About Career Craft Café</span>
+                <span className="text-sm font-semibold text-primary tracking-wide">About Career Craft Cafe</span>
               </div>
               
               {/* Main Headline */}
@@ -204,7 +204,7 @@ const About = () => {
               </h2>
               
               <p className="text-muted-foreground mb-6 text-lg">
-                At Career Craft Café, we believe that education shouldn't end at textbooks. 
+                At Career Craft Cafe, we believe that education shouldn't end at textbooks. 
                 The real challenge begins when students step out of classrooms and face the competitive world.
               </p>
               
