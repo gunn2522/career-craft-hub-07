@@ -31,7 +31,7 @@ const testimonials: Testimonial[] = [
     name: "Arjun Sharma",
     institution: "IIT Delhi",
     institutionType: "college",
-    testimonial: "Career Craft Café completely transformed my approach to internships. The skills I learned here helped me crack my dream internship at a top tech company. The mentorship was invaluable!",
+    testimonial: "Career Craft Cafe completely transformed my approach to internships. The skills I learned here helped me crack my dream internship at a top tech company. The mentorship was invaluable!",
     image: student1,
     rating: 5,
   },
@@ -49,7 +49,7 @@ const testimonials: Testimonial[] = [
     name: "Rahul Verma",
     institution: "Kendriya Vidyalaya, Dwarka",
     institutionType: "school",
-    testimonial: "The workshops on soft skills and communication were game-changers. I went from being shy to confidently presenting in front of 100+ students. Thank you, Career Craft Café!",
+    testimonial: "The workshops on soft skills and communication were game-changers. I went from being shy to confidently presenting in front of 100+ students. Thank you, Career Craft Cafe!",
     image: student3,
     rating: 5,
   },
@@ -85,7 +85,7 @@ const testimonials: Testimonial[] = [
     name: "Karthik Iyer",
     institution: "VIT Vellore",
     institutionType: "college",
-    testimonial: "From having zero industry knowledge to bagging an internship at a Fortune 500 company - Career Craft Café bridged that gap for me. The industry exposure was phenomenal!",
+    testimonial: "From having zero industry knowledge to bagging an internship at a Fortune 500 company - Career Craft Cafe bridged that gap for me. The industry exposure was phenomenal!",
     image: student7,
     rating: 5,
   },
@@ -133,7 +133,7 @@ const SuccessStories = () => {
             Success <span className="gradient-text">Stories</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Hear from students who transformed their careers and achieved their dreams with Career Craft Café
+            Hear from students who transformed their careers and achieved their dreams with Career Craft Cafe
           </p>
 
           {/* Stats */}
@@ -263,7 +263,7 @@ const SuccessStories = () => {
               Ready to Write Your <span className="gradient-text">Success Story</span>?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join hundreds of students who have transformed their careers with Career Craft Café. Your journey to success starts here.
+              Join hundreds of students who have transformed their careers with Career Craft Cafe. Your journey to success starts here.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" className="gradient-primary text-primary-foreground" asChild>
