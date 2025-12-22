@@ -127,28 +127,24 @@ export const SuccessStories = () => {
                 "{story.testimonial || "An amazing experience that changed my career trajectory!"}"
               </p>
 
-              {/* Stats */}
-              <div className="flex gap-4 mb-6">
-                <div className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-bold">
-                  {story.title}
-                </div>
-                {story.company && (
-                  <div className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-sm">
+              {/* Company Badge */}
+              {story.company && (
+                <div className="mb-6">
+                  <div className="inline-block px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-sm">
                     {story.company}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Author */}
               <div className="flex items-center gap-4 pt-6 border-t border-border/50">
                 <img
-                  src={story.image_url || "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=face"}
+                  src={story.image_url || `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 50) + 1}.jpg`}
                   alt={story.name}
                   className="w-14 h-14 rounded-full object-cover border-2 border-primary/20"
                 />
                 <div>
                   <h4 className="font-semibold">{story.name}</h4>
-                  <p className="text-sm text-muted-foreground">{story.title}</p>
                 </div>
                 <div className="ml-auto flex gap-0.5">
                   {[...Array(5)].map((_, j) => (
