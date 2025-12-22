@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
-import { Calendar, Clock, ArrowRight, Search } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Search, BookOpen, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TorchLoader } from "@/components/ui/TorchLoader";
+import { TorchElements3D } from "@/components/ui/TorchElements3D";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const categories = ["All", "Career Tips", "Success Stories", "Industry Insights", "Student Life", "Events"];
 
@@ -71,32 +73,65 @@ const Blogs = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-background" />
-        <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+      {/* Hero with Image */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroBg}
+            alt="Blog and insights"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
+        </div>
+
+        {/* Torch 3D Elements */}
+        <TorchElements3D count={12} />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
-              Career Insights & <span className="gradient-text">Success Stories</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8">
-              Expert advice, student success stories, and industry insights to fuel your career journey.
-            </p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-left">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
+                <BookOpen className="w-4 h-4" />
+                Insights & Stories
+              </div>
 
-            {/* Search Bar */}
-            <div className="relative max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search articles..."
-                className="pl-12 h-14 text-lg rounded-2xl"
-              />
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                Career Insights & <span className="gradient-text">Success Stories</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                Expert advice, student success stories, and industry insights to fuel your career journey.
+              </p>
+
+              {/* Search Bar */}
+              <div className="relative max-w-xl animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search articles..."
+                  className="pl-12 h-14 text-lg rounded-xl bg-card/80 backdrop-blur-sm border-border/50"
+                />
+              </div>
             </div>
+
+            <div className="hidden lg:block" />
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <button
+          onClick={() => window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" })}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
+          aria-label="Scroll to content"
+        >
+          <span className="text-sm font-medium">Discover More</span>
+          <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary transition-colors">
+            <ChevronDown className="w-5 h-5 animate-bounce" />
+          </div>
+        </button>
       </section>
 
       {/* Categories */}
@@ -124,31 +159,8 @@ const Blogs = () => {
       {isLoading && (
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-8 mb-16">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="glass-card rounded-2xl overflow-hidden">
-                  <Skeleton className="aspect-video w-full" />
-                  <div className="p-6">
-                    <Skeleton className="h-6 w-24 mb-3" />
-                    <Skeleton className="h-8 w-full mb-2" />
-                    <Skeleton className="h-4 w-full mb-4" />
-                    <Skeleton className="h-4 w-32" />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="glass-card rounded-2xl overflow-hidden">
-                  <Skeleton className="aspect-video w-full" />
-                  <div className="p-5">
-                    <Skeleton className="h-4 w-20 mb-2" />
-                    <Skeleton className="h-6 w-full mb-2" />
-                    <Skeleton className="h-4 w-full mb-3" />
-                    <Skeleton className="h-4 w-24" />
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-center py-20">
+              <TorchLoader size="lg" text="Loading articles..." />
             </div>
           </div>
         </section>

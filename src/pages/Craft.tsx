@@ -8,7 +8,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TorchLoader } from "@/components/ui/TorchLoader";
+import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import heroBg from "@/assets/hero-bg.jpg";
 
 interface Roadmap {
@@ -59,10 +60,8 @@ const Craft = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
         </div>
 
-        {/* Floating Elements */}
-        <div className="absolute top-32 right-1/4 w-4 h-4 bg-primary rounded-full animate-float opacity-60" />
-        <div className="absolute top-1/2 left-20 w-3 h-3 bg-primary rounded-full animate-float opacity-40" style={{ animationDelay: "1s" }} />
-        <div className="absolute bottom-32 right-1/3 w-2 h-2 bg-destructive rounded-full animate-float opacity-50" style={{ animationDelay: "2s" }} />
+        {/* Torch 3D Elements */}
+        <TorchElements3D count={12} />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -135,16 +134,8 @@ const Craft = () => {
           <h2 className="font-display text-2xl md:text-3xl font-bold mb-8">Available Roadmaps</h2>
           
           {isLoading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="glass-card rounded-2xl p-6">
-                  <Skeleton className="h-6 w-20 mb-4" />
-                  <Skeleton className="h-8 w-full mb-3" />
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-3/4 mb-6" />
-                  <Skeleton className="h-10 w-full" />
-                </div>
-              ))}
+            <div className="flex items-center justify-center py-20">
+              <TorchLoader size="lg" text="Loading roadmaps..." />
             </div>
           ) : roadmaps.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

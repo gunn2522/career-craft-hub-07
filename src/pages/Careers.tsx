@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Filter, TrendingUp, Clock, DollarSign, ArrowRight, Briefcase } from "lucide-react";
+import { Search, Filter, TrendingUp, Clock, DollarSign, ArrowRight, Briefcase, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TorchLoader } from "@/components/ui/TorchLoader";
+import { TorchElements3D } from "@/components/ui/TorchElements3D";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const categories = [
   "All", "Technology", "Business", "Creative", "Healthcare", "Engineering", "Education", "Finance"
@@ -56,34 +58,66 @@ const Careers = () => {
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
-              {careers.length}+ Career Paths
-            </span>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Explore <span className="gradient-text">Career Paths</span>
-            </h1>
-            <p className="text-muted-foreground text-lg mb-10">
-              Discover your perfect career with detailed insights, salary data, and growth projections
-            </p>
+      {/* Hero with Image */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroBg}
+            alt="Career exploration"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
+        </div>
 
-            {/* Search Bar */}
-            <div className="relative max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search careers..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-12 pr-4 h-14 rounded-xl bg-card border-border/50 text-lg"
-              />
+        {/* Torch 3D Elements */}
+        <TorchElements3D count={12} />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-left">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
+                <Briefcase className="w-4 h-4" />
+                {careers.length}+ Career Paths
+              </div>
+
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                Explore <span className="gradient-text">Career Paths</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                Discover your perfect career with detailed insights, salary data, and growth projections
+              </p>
+
+              {/* Search Bar */}
+              <div className="relative max-w-xl animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search careers..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-12 pr-4 h-14 rounded-xl bg-card/80 backdrop-blur-sm border-border/50 text-lg"
+                />
+              </div>
             </div>
+
+            <div className="hidden lg:block" />
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <button
+          onClick={() => window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" })}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
+          aria-label="Scroll to content"
+        >
+          <span className="text-sm font-medium">Discover More</span>
+          <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary transition-colors">
+            <ChevronDown className="w-5 h-5 animate-bounce" />
+          </div>
+        </button>
       </section>
 
       {/* Categories & Results */}
@@ -109,20 +143,8 @@ const Careers = () => {
 
           {/* Career Grid */}
           {isLoading ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="glass-card rounded-2xl p-6">
-                  <Skeleton className="w-12 h-12 rounded-xl mb-4" />
-                  <Skeleton className="h-4 w-20 mb-2" />
-                  <Skeleton className="h-6 w-full mb-3" />
-                  <Skeleton className="h-4 w-full mb-4" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-4 w-28" />
-                    <Skeleton className="h-4 w-20" />
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-center py-20">
+              <TorchLoader size="lg" text="Loading careers..." />
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
