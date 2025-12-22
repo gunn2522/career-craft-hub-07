@@ -109,66 +109,69 @@ const About = () => {
             alt="Career Craft Cafe team collaborating"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/50" />
-          {/* Animated gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-destructive/10 animate-pulse" style={{ animationDuration: '4s' }} />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/60" />
+          {/* Subtle animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 animate-pulse" style={{ animationDuration: '6s' }} />
         </div>
 
-        <TorchElements3D count={20} />
+        <TorchElements3D count={15} />
         
-        {/* Decorative Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '3s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-r from-primary/40 to-destructive/30 rounded-full blur-[100px] animate-float" />
-        <div className="absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-destructive/20 rounded-full blur-[80px] animate-pulse" style={{ animationDuration: '5s' }} />
+        {/* Reduced and Subtle Gradient Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '5s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-primary/15 rounded-full blur-[120px] animate-float" />
+        <div className="absolute top-1/2 right-1/3 w-[250px] h-[250px] bg-primary/8 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '7s' }} />
         
-        <div className="relative z-10 text-center px-4 max-w-6xl mx-auto pt-20">
-          {/* Animated Badge */}
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card mb-8 animate-fade-in border border-primary/30 backdrop-blur-xl">
-            <span className="w-3 h-3 bg-primary rounded-full animate-pulse shadow-lg shadow-primary/50" />
-            <span className="text-base font-semibold text-primary tracking-wide">About Career Craft Café</span>
-            <span className="w-3 h-3 bg-destructive rounded-full animate-pulse shadow-lg shadow-destructive/50" />
-          </div>
-          
-          {/* Main Headline with dramatic styling */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <span className="block text-foreground drop-shadow-2xl">Bridging the Gap</span>
-            <span className="block mt-2">
-              <span className="gradient-text drop-shadow-lg">Academia</span>
-              <span className="text-primary mx-4">↔</span>
-              <span className="gradient-text drop-shadow-lg">Industry</span>
-            </span>
-          </h1>
-          
-          {/* Subheadline with glass effect */}
-          <div className="glass-card p-6 rounded-2xl max-w-4xl mx-auto mb-10 animate-fade-in border border-primary/20" style={{ animationDelay: "0.2s" }}>
-            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-medium">
-              We empower <span className="text-primary font-bold">school</span> and <span className="text-primary font-bold">college students</span> with the skills, guidance, and opportunities 
-              they need to land their <span className="gradient-text font-bold">dream colleges</span>, <span className="gradient-text font-bold">dream jobs</span>, and achieve <span className="text-destructive font-bold">financial independence</span>.
-            </p>
-          </div>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-6 justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <Button variant="hero" size="xl" asChild className="shadow-2xl shadow-primary/40 hover:shadow-primary/60 transition-shadow">
-              <Link to="/careers">Explore Career Paths</Link>
-            </Button>
-            <Button variant="gradient" size="xl" asChild className="shadow-2xl shadow-destructive/30 hover:shadow-destructive/50 transition-shadow">
-              <Link to="/partner">Partner With Us</Link>
-            </Button>
-          </div>
-
-          {/* Animated Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            {stats.map((stat, index) => (
-              <div 
-                key={index}
-                className="glass-card p-6 rounded-2xl text-center group hover:glow-primary transition-all duration-500 hover:scale-105 border border-primary/20"
-              >
-                <div className="text-4xl md:text-5xl font-bold gradient-text mb-2 drop-shadow-lg">{stat.value}</div>
-                <div className="text-sm md:text-base text-muted-foreground font-medium">{stat.label}</div>
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-20">
+          {/* Hero Content Grid - Left aligned text with stats on right */}
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Content */}
+            <div className="text-left">
+              {/* Animated Badge */}
+              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass-card mb-6 animate-fade-in border border-primary/20 backdrop-blur-xl">
+                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-primary tracking-wide">About Career Craft Café</span>
               </div>
-            ))}
+              
+              {/* Main Headline */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                <span className="block text-foreground">Bridging the Gap</span>
+                <span className="block mt-2">
+                  <span className="gradient-text">Academia</span>
+                  <span className="text-primary mx-2 md:mx-3">↔</span>
+                  <span className="gradient-text">Industry</span>
+                </span>
+              </h1>
+              
+              {/* Subheadline */}
+              <p className="text-lg md:text-xl text-foreground/80 leading-relaxed mb-8 animate-fade-in max-w-xl" style={{ animationDelay: "0.2s" }}>
+                We empower <span className="text-primary font-semibold">school</span> and <span className="text-primary font-semibold">college students</span> with the skills, guidance, and opportunities 
+                they need to land their <span className="gradient-text font-semibold">dream colleges</span>, <span className="gradient-text font-semibold">dream jobs</span>, and achieve financial independence.
+              </p>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Button variant="hero" size="lg" asChild className="shadow-xl shadow-primary/30 hover:shadow-primary/50 transition-shadow">
+                  <Link to="/careers">Explore Career Paths</Link>
+                </Button>
+                <Button variant="gradient" size="lg" asChild>
+                  <Link to="/partner">Partner With Us</Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Right Stats Grid */}
+            <div className="grid grid-cols-2 gap-4 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              {stats.map((stat, index) => (
+                <div 
+                  key={index}
+                  className="glass-card p-5 md:p-6 rounded-2xl text-center group hover:glow-primary transition-all duration-500 hover:scale-105 border border-primary/15"
+                >
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text mb-1">{stat.value}</div>
+                  <div className="text-xs md:text-sm text-muted-foreground font-medium">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -186,8 +189,8 @@ const About = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20 px-4 relative">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 mb-4">
@@ -256,8 +259,8 @@ const About = () => {
       </section>
 
       {/* Services Section */}
-      <section className="py-20 px-4 relative bg-card/30">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative bg-card/30">
+        <div className="max-w-7xl mx-auto w-full">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 mb-4">
               <Zap className="w-4 h-4 text-primary" />
@@ -303,8 +306,8 @@ const About = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 px-4 relative">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-7xl mx-auto w-full">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 mb-4">
               <Heart className="w-4 h-4 text-primary" />
@@ -335,8 +338,8 @@ const About = () => {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 px-4 relative bg-card/30">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative bg-card/30">
+        <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
               <div className="glass-card p-8 rounded-3xl">
@@ -401,11 +404,11 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 relative">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="glass-card p-12 rounded-3xl relative overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-destructive/20 rounded-full blur-3xl" />
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="glass-card p-8 md:p-12 rounded-3xl relative overflow-hidden">
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-primary/10 rounded-full blur-3xl" />
             
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
