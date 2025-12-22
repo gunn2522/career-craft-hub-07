@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
+import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import { 
   Trophy, Gift, Users, Award, Briefcase, 
   Zap, CheckCircle, ArrowRight, ArrowDown,
@@ -108,8 +108,8 @@ const Ambassador = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
         </div>
 
-        {/* 3D Floating Elements */}
-        <FloatingShapes3D count={12} />
+        {/* Torch 3D Elements */}
+        <TorchElements3D count={12} />
 
         <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -170,7 +170,7 @@ const Ambassador = () => {
 
       {/* Program Details */}
       <section className="py-20 relative">
-        <FloatingShapes3D count={6} />
+        <TorchElements3D count={8} />
         <div className="w-full px-4 md:px-8 lg:px-16">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Responsibilities */}
@@ -217,7 +217,7 @@ const Ambassador = () => {
 
       {/* Application Form */}
       <section id="apply" className="py-20 bg-card relative">
-        <FloatingShapes3D count={8} />
+        <TorchElements3D count={10} />
         <div className="w-full px-4 md:px-8 lg:px-16">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">
