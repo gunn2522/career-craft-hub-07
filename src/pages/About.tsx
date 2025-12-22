@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { TorchElements3D } from "@/components/ui/TorchElements3D";
+import { AboutSuccessStories } from "@/components/about/AboutSuccessStories";
 import { 
   Target, 
   Users, 
@@ -403,6 +404,9 @@ const About = () => {
         </div>
       </section>
 
+      {/* Success Stories Section */}
+      <AboutSuccessStories />
+
       {/* CTA Section */}
       <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-7xl mx-auto w-full">
@@ -417,7 +421,7 @@ const About = () => {
               </h2>
               
               <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-                Join thousands of students who have transformed their careers with Career Craft Café. 
+                Join thousands of students who have transformed their careers with Career Craft Cafe. 
                 Your dream job is just a step away.
               </p>
               
@@ -426,7 +430,7 @@ const About = () => {
                   <Link to="/auth">Get Started Today</Link>
                 </Button>
                 <Button variant="outline" size="lg" className="border-primary/50 text-primary hover:bg-primary/10" asChild>
-                  <Link to="/ambassador">Become an Ambassador</Link>
+                  <Link to="/ambassador">Become a Crafter</Link>
                 </Button>
               </div>
               

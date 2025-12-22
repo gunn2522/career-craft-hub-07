@@ -13,7 +13,7 @@ import Ambassador from "./pages/Ambassador";
 import Auth from "./pages/Auth";
 import Partner from "./pages/Partner";
 import Blogs from "./pages/Blogs";
-import SuccessStories from "./pages/SuccessStories";
+import Programs from "./pages/Programs";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminCareers from "./pages/admin/AdminCareers";
@@ -24,6 +24,7 @@ import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminSuccessStories from "./pages/admin/AdminSuccessStories";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminApplications from "./pages/admin/AdminApplications";
+import AdminPrograms from "./pages/admin/AdminPrograms";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +47,7 @@ const App = () => (
             <Route path="/signup" element={<Auth />} />
             <Route path="/partner" element={<Partner />} />
             <Route path="/blogs" element={<Blogs />} />
-            <Route path="/success-stories" element={<SuccessStories />} />
+            <Route path="/programs" element={<Programs />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/careers" element={<AdminCareers />} />
             <Route path="/admin/roadmaps" element={<AdminRoadmaps />} />
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/admin/success-stories" element={<AdminSuccessStories />} />
             <Route path="/admin/events" element={<AdminEvents />} />
             <Route path="/admin/applications" element={<AdminApplications />} />
+            <Route path="/admin/programs" element={<AdminPrograms />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

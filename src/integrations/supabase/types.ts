@@ -324,6 +324,54 @@ export type Database = {
         }
         Relationships: []
       }
+      programs: {
+        Row: {
+          banner_url: string | null
+          created_at: string
+          description: string | null
+          duration: string | null
+          end_date: string | null
+          features: string[] | null
+          id: string
+          is_active: boolean | null
+          is_highlighted: boolean | null
+          name: string
+          outcomes: string[] | null
+          start_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          banner_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          end_date?: string | null
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          is_highlighted?: boolean | null
+          name: string
+          outcomes?: string[] | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          banner_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          end_date?: string | null
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          is_highlighted?: boolean | null
+          name?: string
+          outcomes?: string[] | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       resources: {
         Row: {
           category: string | null
