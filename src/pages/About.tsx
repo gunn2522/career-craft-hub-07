@@ -14,10 +14,12 @@ import {
   Zap,
   Award,
   BookOpen,
-  DollarSign
+  DollarSign,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import aboutHeroBg from "@/assets/about-hero-bg.jpg";
 
 const About = () => {
   const stats = [
@@ -92,58 +94,95 @@ const About = () => {
     }
   ];
 
+  const scrollToContent = () => {
+    window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" });
+  };
+
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-20">
-        <TorchElements3D />
+      {/* Hero Section with Background Image */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img
+            src={aboutHeroBg}
+            alt="Career Craft Cafe team collaborating"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/50" />
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-destructive/10 animate-pulse" style={{ animationDuration: '4s' }} />
+        </div>
+
+        <TorchElements3D count={20} />
         
-        {/* Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-primary/30 to-destructive/20 rounded-full blur-3xl animate-float" />
+        {/* Decorative Gradient Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '3s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-r from-primary/40 to-destructive/30 rounded-full blur-[100px] animate-float" />
+        <div className="absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-destructive/20 rounded-full blur-[80px] animate-pulse" style={{ animationDuration: '5s' }} />
         
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-muted-foreground">About Career Craft Café</span>
+        <div className="relative z-10 text-center px-4 max-w-6xl mx-auto pt-20">
+          {/* Animated Badge */}
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card mb-8 animate-fade-in border border-primary/30 backdrop-blur-xl">
+            <span className="w-3 h-3 bg-primary rounded-full animate-pulse shadow-lg shadow-primary/50" />
+            <span className="text-base font-semibold text-primary tracking-wide">About Career Craft Café</span>
+            <span className="w-3 h-3 bg-destructive rounded-full animate-pulse shadow-lg shadow-destructive/50" />
           </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Bridging the Gap Between{" "}
-            <span className="gradient-text">Academia & Industry</span>
+          {/* Main Headline with dramatic styling */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <span className="block text-foreground drop-shadow-2xl">Bridging the Gap</span>
+            <span className="block mt-2">
+              <span className="gradient-text drop-shadow-lg">Academia</span>
+              <span className="text-primary mx-4">↔</span>
+              <span className="gradient-text drop-shadow-lg">Industry</span>
+            </span>
           </h1>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            We empower school and college students with the skills, guidance, and opportunities 
-            they need to land their dream colleges, dream jobs, and achieve financial independence.
-          </p>
+          {/* Subheadline with glass effect */}
+          <div className="glass-card p-6 rounded-2xl max-w-4xl mx-auto mb-10 animate-fade-in border border-primary/20" style={{ animationDelay: "0.2s" }}>
+            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-medium">
+              We empower <span className="text-primary font-bold">school</span> and <span className="text-primary font-bold">college students</span> with the skills, guidance, and opportunities 
+              they need to land their <span className="gradient-text font-bold">dream colleges</span>, <span className="gradient-text font-bold">dream jobs</span>, and achieve <span className="text-destructive font-bold">financial independence</span>.
+            </p>
+          </div>
           
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="gradient" size="lg" asChild>
-              <Link to="/careers">Explore Careers</Link>
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap gap-6 justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            <Button variant="hero" size="xl" asChild className="shadow-2xl shadow-primary/40 hover:shadow-primary/60 transition-shadow">
+              <Link to="/careers">Explore Career Paths</Link>
             </Button>
-            <Button variant="outline" size="lg" className="border-primary/50 text-primary hover:bg-primary/10" asChild>
+            <Button variant="gradient" size="xl" asChild className="shadow-2xl shadow-destructive/30 hover:shadow-destructive/50 transition-shadow">
               <Link to="/partner">Partner With Us</Link>
             </Button>
           </div>
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-4 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {/* Animated Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             {stats.map((stat, index) => (
               <div 
                 key={index}
-                className="glass-card p-6 rounded-2xl text-center group hover:glow-primary transition-all duration-500"
+                className="glass-card p-6 rounded-2xl text-center group hover:glow-primary transition-all duration-500 hover:scale-105 border border-primary/20"
               >
-                <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-4xl md:text-5xl font-bold gradient-text mb-2 drop-shadow-lg">{stat.value}</div>
+                <div className="text-sm md:text-base text-muted-foreground font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <button
+          onClick={scrollToContent}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group z-20"
+          aria-label="Scroll to content"
+        >
+          <span className="text-sm font-medium">Discover Our Story</span>
+          <div className="w-12 h-12 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary group-hover:bg-primary/10 transition-all">
+            <ChevronDown className="w-6 h-6 animate-bounce" />
+          </div>
+        </button>
       </section>
 
       {/* Mission Section */}
