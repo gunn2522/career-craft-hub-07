@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.send-program-reminder]
 verify_jwt = false
+
+[functions.career-assistant]
+verify_jwt = false
