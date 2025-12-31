@@ -59,6 +59,86 @@ export type Database = {
         }
         Relationships: []
       }
+      assignment_submissions: {
+        Row: {
+          assignment_id: string
+          created_at: string
+          feedback: string | null
+          file_name: string | null
+          id: string
+          status: string | null
+          submission_type: string
+          submission_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assignment_id: string
+          created_at?: string
+          feedback?: string | null
+          file_name?: string | null
+          id?: string
+          status?: string | null
+          submission_type: string
+          submission_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assignment_id?: string
+          created_at?: string
+          feedback?: string | null
+          file_name?: string | null
+          id?: string
+          status?: string | null
+          submission_type?: string
+          submission_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignment_submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "daily_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      badges: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          requirement_type: string | null
+          requirement_value: number | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          requirement_type?: string | null
+          requirement_value?: number | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          requirement_type?: string | null
+          requirement_value?: number | null
+        }
+        Relationships: []
+      }
       blogs: {
         Row: {
           author_id: string | null
@@ -156,6 +236,59 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      daily_assignments: {
+        Row: {
+          created_at: string
+          description: string | null
+          difficulty: string | null
+          estimated_time: string | null
+          id: string
+          instructions: string | null
+          is_active: boolean | null
+          roadmap_id: string
+          skill_focus: string | null
+          step_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          estimated_time?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          roadmap_id: string
+          skill_focus?: string | null
+          step_index?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          estimated_time?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          roadmap_id?: string
+          skill_focus?: string | null
+          step_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_assignments_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       event_registrations: {
         Row: {
@@ -637,6 +770,123 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          shared_on_linkedin: boolean | null
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          shared_on_linkedin?: boolean | null
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          shared_on_linkedin?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_career_profiles: {
+        Row: {
+          aspiration: string | null
+          created_at: string
+          id: string
+          selected_roadmap_id: string | null
+          target_job_role: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aspiration?: string | null
+          created_at?: string
+          id?: string
+          selected_roadmap_id?: string | null
+          target_job_role?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aspiration?: string | null
+          created_at?: string
+          id?: string
+          selected_roadmap_id?: string | null
+          target_job_role?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_career_profiles_selected_roadmap_id_fkey"
+            columns: ["selected_roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roadmap_progress: {
+        Row: {
+          completed_at: string | null
+          completion_percentage: number | null
+          created_at: string
+          id: string
+          roadmap_id: string
+          started_at: string | null
+          status: string | null
+          step_index: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          roadmap_id: string
+          started_at?: string | null
+          status?: string | null
+          step_index: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          roadmap_id?: string
+          started_at?: string | null
+          status?: string | null
+          step_index?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roadmap_progress_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -654,6 +904,36 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number | null
+          id: string
+          last_activity_date: string | null
+          longest_streak: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number | null
+          id?: string
+          last_activity_date?: string | null
+          longest_streak?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number | null
+          id?: string
+          last_activity_date?: string | null
+          longest_streak?: number | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
