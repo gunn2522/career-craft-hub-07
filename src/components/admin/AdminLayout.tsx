@@ -14,7 +14,8 @@ import {
   LogOut,
   Settings,
   Home,
-  Sparkles
+  Sparkles,
+  ClipboardList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
@@ -26,6 +27,7 @@ const sidebarLinks = [
   { name: "Resources", path: "/admin/resources", icon: BookOpen },
   { name: "Internships", path: "/admin/internships", icon: GraduationCap },
   { name: "Programs", path: "/admin/programs", icon: Sparkles },
+  { name: "Registrations", path: "/admin/registrations", icon: ClipboardList },
   { name: "Blogs", path: "/admin/blogs", icon: FileText },
   { name: "Success Stories", path: "/admin/success-stories", icon: Trophy },
   { name: "Events", path: "/admin/events", icon: Calendar },
