@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Upload, X, Clock, CheckCircle2, Sparkles, Image } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, X, Clock, CheckCircle2, Sparkles, Image, IndianRupee } from "lucide-react";
 
 interface Program {
   id: string;
@@ -22,6 +22,9 @@ interface Program {
   outcomes: string[];
   is_active: boolean | null;
   is_highlighted: boolean | null;
+  is_free: boolean | null;
+  price: number | null;
+  currency: string | null;
   start_date: string | null;
   end_date: string | null;
   created_at: string;
@@ -44,6 +47,9 @@ const AdminPrograms = () => {
     outcomes: "",
     is_active: true,
     is_highlighted: false,
+    is_free: true,
+    price: "",
+    currency: "INR",
     start_date: "",
     end_date: "",
   });
@@ -123,6 +129,9 @@ const AdminPrograms = () => {
       outcomes: formData.outcomes ? formData.outcomes.split("\n").filter(o => o.trim()) : [],
       is_active: formData.is_active,
       is_highlighted: formData.is_highlighted,
+      is_free: formData.is_free,
+      price: formData.is_free ? 0 : parseFloat(formData.price) || 0,
+      currency: formData.currency,
       start_date: formData.start_date || null,
       end_date: formData.end_date || null,
     };
@@ -169,6 +178,9 @@ const AdminPrograms = () => {
       outcomes: program.outcomes?.join("\n") || "",
       is_active: program.is_active ?? true,
       is_highlighted: program.is_highlighted ?? false,
+      is_free: program.is_free ?? true,
+      price: program.price?.toString() || "",
+      currency: program.currency || "INR",
       start_date: program.start_date ? program.start_date.split("T")[0] : "",
       end_date: program.end_date ? program.end_date.split("T")[0] : "",
     });
@@ -204,10 +216,19 @@ const AdminPrograms = () => {
       outcomes: "",
       is_active: true,
       is_highlighted: false,
+      is_free: true,
+      price: "",
+      currency: "INR",
       start_date: "",
       end_date: "",
     });
     setEditingProgram(null);
+  };
+
+  const formatPrice = (program: Program) => {
+    if (program.is_free) return "Free";
+    const currency = program.currency === "INR" ? "₹" : "$";
+    return `${currency}${program.price?.toLocaleString() || 0}`;
   };
 
   return (
@@ -305,6 +326,55 @@ const AdminPrograms = () => {
                   onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                   placeholder="e.g., 3 Months, 6 Weeks"
                 />
+              </div>
+
+              {/* Pricing Section */}
+              <div className="space-y-4 p-4 rounded-lg border border-border bg-muted/30">
+                <Label className="text-base font-semibold">Pricing</Label>
+                
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="is_free"
+                      checked={formData.is_free}
+                      onCheckedChange={(checked) => setFormData({ ...formData, is_free: checked })}
+                    />
+                    <Label htmlFor="is_free">This program is free</Label>
+                  </div>
+                </div>
+
+                {!formData.is_free && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="price">Price</Label>
+                      <div className="relative">
+                        <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="price"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={formData.price}
+                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          placeholder="e.g., 2999"
+                          className="pl-9"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="currency">Currency</Label>
+                      <select
+                        id="currency"
+                        value={formData.currency}
+                        onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                        className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      >
+                        <option value="INR">INR (₹)</option>
+                        <option value="USD">USD ($)</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Dates */}
@@ -415,20 +485,38 @@ const AdminPrograms = () => {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                  {program.is_highlighted && (
-                    <span className="absolute top-2 right-2 px-2 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                      Highlighted
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    {program.is_highlighted && (
+                      <span className="px-2 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                        Highlighted
+                      </span>
+                    )}
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      program.is_free 
+                        ? "bg-green-500 text-white" 
+                        : "bg-amber-500 text-white"
+                    }`}>
+                      {formatPrice(program)}
                     </span>
-                  )}
+                  </div>
                 </div>
               ) : (
                 <div className="h-40 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center relative">
                   <Sparkles className="w-12 h-12 text-primary/50" />
-                  {program.is_highlighted && (
-                    <span className="absolute top-2 right-2 px-2 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                      Highlighted
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    {program.is_highlighted && (
+                      <span className="px-2 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                        Highlighted
+                      </span>
+                    )}
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      program.is_free 
+                        ? "bg-green-500 text-white" 
+                        : "bg-amber-500 text-white"
+                    }`}>
+                      {formatPrice(program)}
                     </span>
-                  )}
+                  </div>
                 </div>
               )}
 

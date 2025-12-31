@@ -1,1 +1,7 @@
 project_id = "xbqiwuwemtaywedrjsgy"
+
+[functions.send-program-confirmation]
+verify_jwt = false
+
+[functions.send-program-reminder]
+verify_jwt = false
