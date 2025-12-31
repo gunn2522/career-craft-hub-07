@@ -237,6 +237,125 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_participants: {
+        Row: {
+          id: string
+          is_admin: boolean | null
+          joined_at: string
+          last_read_at: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          is_admin?: boolean | null
+          joined_at?: string
+          last_read_at?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          is_admin?: boolean | null
+          joined_at?: string
+          last_read_at?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_participants_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string | null
+          purpose: string | null
+          room_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string | null
+          purpose?: string | null
+          room_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string | null
+          purpose?: string | null
+          room_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      connection_requests: {
+        Row: {
+          created_at: string
+          from_user_id: string
+          id: string
+          message: string | null
+          purpose: string | null
+          status: string | null
+          to_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          from_user_id: string
+          id?: string
+          message?: string | null
+          purpose?: string | null
+          status?: string | null
+          to_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          from_user_id?: string
+          id?: string
+          message?: string | null
+          purpose?: string | null
+          status?: string | null
+          to_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      connections: {
+        Row: {
+          connected_at: string
+          connected_user_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          connected_at?: string
+          connected_user_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          connected_at?: string
+          connected_user_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_assignments: {
         Row: {
           created_at: string
@@ -421,39 +540,116 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          file_url: string | null
+          id: string
+          is_edited: boolean | null
+          message_type: string | null
+          room_id: string
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          is_edited?: boolean | null
+          message_type?: string | null
+          room_id: string
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          is_edited?: boolean | null
+          message_type?: string | null
+          room_id?: string
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
+          career_goals: string | null
           created_at: string
+          current_company: string | null
           email: string | null
           full_name: string | null
           id: string
           institution: string | null
+          is_mentor: boolean | null
+          is_public: boolean | null
+          is_recruiter: boolean | null
+          job_title: string | null
+          linkedin_url: string | null
+          portfolio_url: string | null
+          skills: string[] | null
           updated_at: string
           user_id: string
           user_type: Database["public"]["Enums"]["user_type"] | null
+          years_experience: number | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
+          career_goals?: string | null
           created_at?: string
+          current_company?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
           institution?: string | null
+          is_mentor?: boolean | null
+          is_public?: boolean | null
+          is_recruiter?: boolean | null
+          job_title?: string | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          skills?: string[] | null
           updated_at?: string
           user_id: string
           user_type?: Database["public"]["Enums"]["user_type"] | null
+          years_experience?: number | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
+          career_goals?: string | null
           created_at?: string
+          current_company?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
           institution?: string | null
+          is_mentor?: boolean | null
+          is_public?: boolean | null
+          is_recruiter?: boolean | null
+          job_title?: string | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          skills?: string[] | null
           updated_at?: string
           user_id?: string
           user_type?: Database["public"]["Enums"]["user_type"] | null
+          years_experience?: number | null
         }
         Relationships: []
       }
@@ -839,6 +1035,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_projects: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          github_url: string | null
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          project_url: string | null
+          skills_used: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          github_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          project_url?: string | null
+          skills_used?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          github_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          project_url?: string | null
+          skills_used?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roadmap_progress: {
         Row: {
