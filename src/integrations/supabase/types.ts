@@ -324,49 +324,114 @@ export type Database = {
         }
         Relationships: []
       }
+      program_registrations: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          last_reminder_sent: string | null
+          payment_amount: number | null
+          payment_reference: string | null
+          payment_status: string | null
+          phone: string | null
+          program_id: string
+          reminder_count: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          last_reminder_sent?: string | null
+          payment_amount?: number | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          phone?: string | null
+          program_id: string
+          reminder_count?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          last_reminder_sent?: string | null
+          payment_amount?: number | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          phone?: string | null
+          program_id?: string
+          reminder_count?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_registrations_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       programs: {
         Row: {
           banner_url: string | null
           created_at: string
+          currency: string | null
           description: string | null
           duration: string | null
           end_date: string | null
           features: string[] | null
           id: string
           is_active: boolean | null
+          is_free: boolean | null
           is_highlighted: boolean | null
           name: string
           outcomes: string[] | null
+          price: number | null
           start_date: string | null
           updated_at: string
         }
         Insert: {
           banner_url?: string | null
           created_at?: string
+          currency?: string | null
           description?: string | null
           duration?: string | null
           end_date?: string | null
           features?: string[] | null
           id?: string
           is_active?: boolean | null
+          is_free?: boolean | null
           is_highlighted?: boolean | null
           name: string
           outcomes?: string[] | null
+          price?: number | null
           start_date?: string | null
           updated_at?: string
         }
         Update: {
           banner_url?: string | null
           created_at?: string
+          currency?: string | null
           description?: string | null
           duration?: string | null
           end_date?: string | null
           features?: string[] | null
           id?: string
           is_active?: boolean | null
+          is_free?: boolean | null
           is_highlighted?: boolean | null
           name?: string
           outcomes?: string[] | null
+          price?: number | null
           start_date?: string | null
           updated_at?: string
         }
