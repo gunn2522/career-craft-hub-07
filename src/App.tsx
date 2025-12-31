@@ -15,6 +15,7 @@ import Auth from "./pages/Auth";
 import Partner from "./pages/Partner";
 import Blogs from "./pages/Blogs";
 import Programs from "./pages/Programs";
+import MyCareerLab from "./pages/MyCareerLab";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminCareers from "./pages/admin/AdminCareers";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/partner" element={<Partner />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/programs" element={<Programs />} />
+            <Route path="/my-career-lab" element={<MyCareerLab />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/careers" element={<AdminCareers />} />
             <Route path="/admin/roadmaps" element={<AdminRoadmaps />} />
