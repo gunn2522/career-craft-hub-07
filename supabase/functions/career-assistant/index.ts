@@ -5,6 +5,80 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Input validation constants
+const MAX_MESSAGE_LENGTH = 10000;
+const MAX_CONVERSATION_HISTORY = 50;
+const MAX_TARGET_ROLE_LENGTH = 200;
+
+// Validation helper
+const validateInput = (data: any): { valid: boolean; error?: string } => {
+  if (!data || typeof data !== 'object') {
+    return { valid: false, error: "Invalid request body" };
+  }
+
+  const { message, targetRole, conversationHistory } = data;
+
+  // Validate message
+  if (!message || typeof message !== 'string') {
+    return { valid: false, error: "Message is required and must be a string" };
+  }
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    return { valid: false, error: `Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters` };
+  }
+  if (message.trim().length === 0) {
+    return { valid: false, error: "Message cannot be empty" };
+  }
+
+  // Validate targetRole if provided
+  if (targetRole !== undefined) {
+    if (typeof targetRole !== 'string') {
+      return { valid: false, error: "Target role must be a string" };
+    }
+    if (targetRole.length > MAX_TARGET_ROLE_LENGTH) {
+      return { valid: false, error: `Target role exceeds maximum length of ${MAX_TARGET_ROLE_LENGTH} characters` };
+    }
+  }
+
+  // Validate conversationHistory if provided
+  if (conversationHistory !== undefined) {
+    if (!Array.isArray(conversationHistory)) {
+      return { valid: false, error: "Conversation history must be an array" };
+    }
+    if (conversationHistory.length > MAX_CONVERSATION_HISTORY) {
+      return { valid: false, error: `Conversation history exceeds maximum of ${MAX_CONVERSATION_HISTORY} messages` };
+    }
+    
+    for (let i = 0; i < conversationHistory.length; i++) {
+      const msg = conversationHistory[i];
+      if (!msg || typeof msg !== 'object') {
+        return { valid: false, error: `Invalid message at position ${i}` };
+      }
+      if (!['user', 'assistant'].includes(msg.role)) {
+        return { valid: false, error: `Invalid role at position ${i}. Must be 'user' or 'assistant'` };
+      }
+      if (typeof msg.content !== 'string') {
+        return { valid: false, error: `Invalid content at position ${i}. Must be a string` };
+      }
+      if (msg.content.length > MAX_MESSAGE_LENGTH) {
+        return { valid: false, error: `Message at position ${i} exceeds maximum length` };
+      }
+    }
+  }
+
+  return { valid: true };
+};
+
+// Sanitize text to remove potential prompt injection patterns
+const sanitizeText = (text: string): string => {
+  // Remove potential system prompt injection attempts
+  return text
+    .replace(/\[SYSTEM\]/gi, '')
+    .replace(/\[INST\]/gi, '')
+    .replace(/<<SYS>>/gi, '')
+    .replace(/<\/SYS>>/gi, '')
+    .trim();
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -12,7 +86,35 @@ serve(async (req) => {
   }
 
   try {
-    const { message, targetRole, conversationHistory } = await req.json();
+    let data;
+    try {
+      data = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON in request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate input
+    const validation = validateInput(data);
+    if (!validation.valid) {
+      console.log("Validation failed:", validation.error);
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const { message, targetRole, conversationHistory } = data;
+
+    // Sanitize inputs
+    const sanitizedMessage = sanitizeText(message);
+    const sanitizedTargetRole = targetRole ? sanitizeText(targetRole) : undefined;
+    const sanitizedHistory = (conversationHistory || []).map((msg: any) => ({
+      role: msg.role,
+      content: sanitizeText(msg.content)
+    }));
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -21,7 +123,7 @@ serve(async (req) => {
 
     const systemPrompt = `You are an expert AI Career Assistant for Career Craft Cafe, a career development platform. Your role is to help users navigate their career journey with practical, actionable advice.
 
-${targetRole ? `The user is working towards becoming a ${targetRole}.` : ""}
+${sanitizedTargetRole ? `The user is working towards becoming a ${sanitizedTargetRole}.` : ""}
 
 Your expertise includes:
 - Career planning and goal setting
@@ -44,8 +146,8 @@ Guidelines:
 
     const messages = [
       { role: "system", content: systemPrompt },
-      ...(conversationHistory || []),
-      { role: "user", content: message }
+      ...sanitizedHistory,
+      { role: "user", content: sanitizedMessage }
     ];
 
     console.log("Calling Lovable AI Gateway for career advice...");
@@ -82,8 +184,8 @@ Guidelines:
       throw new Error(`AI Gateway error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const aiResponse = data.choices?.[0]?.message?.content || "I apologize, but I couldn't generate a response.";
+    const responseData = await response.json();
+    const aiResponse = responseData.choices?.[0]?.message?.content || "I apologize, but I couldn't generate a response.";
 
     console.log("Successfully received AI response");
 
