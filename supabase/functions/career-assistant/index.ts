@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,6 +9,26 @@ const corsHeaders = {
 // Input validation constants
 const MAX_MESSAGE_LENGTH = 10000;
 const MAX_CONVERSATION_HISTORY = 50;
+
+// Authentication helper
+const authenticateUser = async (req: Request): Promise<{ user: any; error?: string }> => {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) {
+    return { user: null, error: "Missing authorization header" };
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user) {
+    return { user: null, error: "Invalid or expired token" };
+  }
+
+  return { user };
+};
 const MAX_TARGET_ROLE_LENGTH = 200;
 
 // Validation helper
@@ -86,6 +107,18 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate user
+    const { user, error: authError } = await authenticateUser(req);
+    if (authError || !user) {
+      console.log("Authentication failed:", authError);
+      return new Response(
+        JSON.stringify({ error: authError || "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("Authenticated user:", user.id);
+
     let data;
     try {
       data = await req.json();
