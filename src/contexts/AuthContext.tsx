@@ -3,12 +3,15 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
 type UserType = "school_student" | "college_student";
+type AppRole = "admin" | "moderator" | "user" | "mentor";
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
   isAdmin: boolean;
+  isMentor: boolean;
+  userRole: AppRole | null;
   signUp: (email: string, password: string, fullName: string, userType: UserType, institution?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -22,6 +25,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMentor, setIsMentor] = useState(false);
+  const [userRole, setUserRole] = useState<AppRole | null>(null);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -30,13 +35,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Check admin status with setTimeout to avoid deadlock
+        // Check user role with setTimeout to avoid deadlock
         if (session?.user) {
           setTimeout(() => {
-            checkAdminStatus(session.user.id);
+            checkUserRole(session.user.id);
           }, 0);
         } else {
           setIsAdmin(false);
+          setIsMentor(false);
+          setUserRole(null);
         }
       }
     );
@@ -47,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        checkAdminStatus(session.user.id);
+        checkUserRole(session.user.id);
       }
       setIsLoading(false);
     });
@@ -55,25 +62,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkAdminStatus = async (userId: string) => {
+  const checkUserRole = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", userId)
-        .eq("role", "admin")
         .maybeSingle();
       
       if (error) {
-        console.error("Error checking admin status:", error);
+        console.error("Error checking user role:", error);
         setIsAdmin(false);
+        setIsMentor(false);
+        setUserRole(null);
         return;
       }
       
-      setIsAdmin(!!data);
+      if (data) {
+        const role = data.role as AppRole;
+        setUserRole(role);
+        setIsAdmin(role === "admin");
+        setIsMentor(role === "mentor");
+      } else {
+        setUserRole(null);
+        setIsAdmin(false);
+        setIsMentor(false);
+      }
     } catch (error) {
-      console.error("Error checking admin status:", error);
+      console.error("Error checking user role:", error);
       setIsAdmin(false);
+      setIsMentor(false);
+      setUserRole(null);
     }
   };
 
@@ -127,6 +146,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setSession(null);
     setIsAdmin(false);
+    setIsMentor(false);
+    setUserRole(null);
   };
 
   return (
@@ -136,6 +157,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         session,
         isLoading,
         isAdmin,
+        isMentor,
+        userRole,
         signUp,
         signIn,
         signInWithGoogle,

@@ -28,6 +28,12 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminApplications from "./pages/admin/AdminApplications";
 import AdminPrograms from "./pages/admin/AdminPrograms";
 import AdminDailyTasks from "./pages/admin/AdminDailyTasks";
+import MentorDashboard from "./pages/mentor/MentorDashboard";
+import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
+import MentorPrograms from "./pages/mentor/MentorPrograms";
+import MentorInternships from "./pages/mentor/MentorInternships";
+import MentorBlogs from "./pages/mentor/MentorBlogs";
+import MentorResources from "./pages/mentor/MentorResources";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +70,12 @@ const App = () => (
             <Route path="/admin/applications" element={<AdminApplications />} />
             <Route path="/admin/programs" element={<AdminPrograms />} />
             <Route path="/admin/registrations" element={<AdminRegistrations />} />
+            <Route path="/mentor" element={<MentorDashboard />} />
+            <Route path="/mentor/daily-tasks" element={<MentorDailyTasks />} />
+            <Route path="/mentor/programs" element={<MentorPrograms />} />
+            <Route path="/mentor/internships" element={<MentorInternships />} />
+            <Route path="/mentor/blogs" element={<MentorBlogs />} />
+            <Route path="/mentor/resources" element={<MentorResources />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
