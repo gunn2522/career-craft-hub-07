@@ -198,14 +198,92 @@ export type Database = {
           },
         ]
       }
+      career_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          domain_id: string
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          domain_id: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          domain_id?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "career_categories_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      career_domains: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       careers: {
         Row: {
           category: string
+          category_id: string | null
           created_at: string
           demand: string | null
           description: string | null
+          display_order: number | null
+          domain_id: string | null
           growth: string | null
           id: string
+          is_active: boolean | null
           salary: string | null
           skills: string[] | null
           title: string
@@ -213,11 +291,15 @@ export type Database = {
         }
         Insert: {
           category: string
+          category_id?: string | null
           created_at?: string
           demand?: string | null
           description?: string | null
+          display_order?: number | null
+          domain_id?: string | null
           growth?: string | null
           id?: string
+          is_active?: boolean | null
           salary?: string | null
           skills?: string[] | null
           title: string
@@ -225,17 +307,36 @@ export type Database = {
         }
         Update: {
           category?: string
+          category_id?: string | null
           created_at?: string
           demand?: string | null
           description?: string | null
+          display_order?: number | null
+          domain_id?: string | null
           growth?: string | null
           id?: string
+          is_active?: boolean | null
           salary?: string | null
           skills?: string[] | null
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "careers_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "careers_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       chat_participants: {
         Row: {
@@ -820,9 +921,11 @@ export type Database = {
         Row: {
           career_id: string | null
           category: string | null
+          category_id: string | null
           created_at: string
           description: string | null
           difficulty: string | null
+          domain_id: string | null
           duration: string | null
           id: string
           steps: Json | null
@@ -833,9 +936,11 @@ export type Database = {
         Insert: {
           career_id?: string | null
           category?: string | null
+          category_id?: string | null
           created_at?: string
           description?: string | null
           difficulty?: string | null
+          domain_id?: string | null
           duration?: string | null
           id?: string
           steps?: Json | null
@@ -846,9 +951,11 @@ export type Database = {
         Update: {
           career_id?: string | null
           category?: string | null
+          category_id?: string | null
           created_at?: string
           description?: string | null
           difficulty?: string | null
+          domain_id?: string | null
           duration?: string | null
           id?: string
           steps?: Json | null
@@ -862,6 +969,20 @@ export type Database = {
             columns: ["career_id"]
             isOneToOne: false
             referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "roadmaps_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "roadmaps_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
             referencedColumns: ["id"]
           },
         ]

@@ -3,7 +3,9 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -20,22 +22,26 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Map } from "lucide-react";
 
 interface Roadmap {
   id: string;
   title: string;
   description: string | null;
   career_id: string | null;
-  category: string | null;
+  domain_id: string | null;
+  category_id: string | null;
   difficulty: string | null;
   duration: string | null;
   steps: any;
+  career_title?: string;
 }
 
 interface Career {
   id: string;
   title: string;
+  domain_id: string | null;
+  category_id: string | null;
 }
 
 const difficulties = ["beginner", "intermediate", "advanced"];
@@ -50,7 +56,6 @@ const AdminRoadmaps = () => {
     title: "",
     description: "",
     career_id: "",
-    category: "",
     difficulty: "beginner",
     duration: "",
     steps: "",
@@ -63,18 +68,22 @@ const AdminRoadmaps = () => {
   const fetchData = async () => {
     try {
       const [roadmapsRes, careersRes] = await Promise.all([
-        supabase.from("roadmaps").select("*").order("created_at", { ascending: false }),
-        supabase.from("careers").select("id, title").order("title"),
+        supabase.from("roadmaps").select("*, careers(title)").order("created_at", { ascending: false }),
+        supabase.from("careers").select("id, title, domain_id, category_id").eq("is_active", true).order("title"),
       ]);
 
       if (roadmapsRes.error) throw roadmapsRes.error;
       if (careersRes.error) throw careersRes.error;
 
-      setRoadmaps(roadmapsRes.data || []);
+      const roadmapsWithCareer = (roadmapsRes.data || []).map((r: any) => ({
+        ...r,
+        career_title: r.careers?.title || null,
+      }));
+
+      setRoadmaps(roadmapsWithCareer);
       setCareers(careersRes.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast.error("Failed to fetch data");
+    } catch (error: any) {
+      toast.error("Failed to fetch data: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +103,6 @@ const AdminRoadmaps = () => {
         try {
           stepsJson = JSON.parse(formData.steps);
         } catch {
-          // Parse as simple list
           stepsJson = formData.steps.split("\n").filter(s => s.trim()).map((step, i) => ({
             order: i + 1,
             title: step.trim(),
@@ -103,11 +111,15 @@ const AdminRoadmaps = () => {
         }
       }
 
+      // Get domain_id and category_id from selected career
+      const selectedCareer = careers.find(c => c.id === formData.career_id);
+
       const roadmapData = {
         title: formData.title,
         description: formData.description || null,
         career_id: formData.career_id || null,
-        category: formData.category || null,
+        domain_id: selectedCareer?.domain_id || null,
+        category_id: selectedCareer?.category_id || null,
         difficulty: formData.difficulty,
         duration: formData.duration || null,
         steps: stepsJson,
@@ -118,12 +130,10 @@ const AdminRoadmaps = () => {
           .from("roadmaps")
           .update(roadmapData)
           .eq("id", editingRoadmap.id);
-
         if (error) throw error;
         toast.success("Roadmap updated successfully");
       } else {
-        const { error } = await supabase.from("roadmaps").insert(roadmapData);
-
+        const { error } = await supabase.from("roadmaps").insert([roadmapData]);
         if (error) throw error;
         toast.success("Roadmap created successfully");
       }
@@ -131,9 +141,8 @@ const AdminRoadmaps = () => {
       setIsDialogOpen(false);
       resetForm();
       fetchData();
-    } catch (error) {
-      console.error("Error saving roadmap:", error);
-      toast.error("Failed to save roadmap");
+    } catch (error: any) {
+      toast.error("Failed to save roadmap: " + error.message);
     }
   };
 
@@ -146,7 +155,6 @@ const AdminRoadmaps = () => {
       title: roadmap.title,
       description: roadmap.description || "",
       career_id: roadmap.career_id || "",
-      category: roadmap.category || "",
       difficulty: roadmap.difficulty || "beginner",
       duration: roadmap.duration || "",
       steps: stepsText,
@@ -156,16 +164,13 @@ const AdminRoadmaps = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this roadmap?")) return;
-
     try {
       const { error } = await supabase.from("roadmaps").delete().eq("id", id);
-
       if (error) throw error;
       toast.success("Roadmap deleted successfully");
       fetchData();
-    } catch (error) {
-      console.error("Error deleting roadmap:", error);
-      toast.error("Failed to delete roadmap");
+    } catch (error: any) {
+      toast.error("Failed to delete roadmap: " + error.message);
     }
   };
 
@@ -175,7 +180,6 @@ const AdminRoadmaps = () => {
       title: "",
       description: "",
       career_id: "",
-      category: "",
       difficulty: "beginner",
       duration: "",
       steps: "",
@@ -184,196 +188,176 @@ const AdminRoadmaps = () => {
 
   return (
     <AdminLayout title="Manage Roadmaps">
-      <div className="flex justify-between items-center mb-6">
-        <p className="text-muted-foreground">
-          Create learning roadmaps for career paths
-        </p>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
-          <DialogTrigger asChild>
-            <Button variant="gradient">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Roadmap
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
-                {editingRoadmap ? "Edit Roadmap" : "Add New Roadmap"}
-              </DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">Title *</label>
-                  <Input
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g., Full-Stack Developer Roadmap"
-                    required
-                  />
-                </div>
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">Description</label>
-                  <Textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe this roadmap..."
-                    rows={2}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Related Career</label>
-                  <Select
-                    value={formData.career_id}
-                    onValueChange={(value) => setFormData({ ...formData, career_id: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select career (optional)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {careers.map((career) => (
-                        <SelectItem key={career.id} value={career.id}>
-                          {career.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Category</label>
-                  <Input
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    placeholder="e.g., Web Development"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Difficulty</label>
-                  <Select
-                    value={formData.difficulty}
-                    onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {difficulties.map((diff) => (
-                        <SelectItem key={diff} value={diff}>
-                          {diff.charAt(0).toUpperCase() + diff.slice(1)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Duration</label>
-                  <Input
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    placeholder="e.g., 6 months"
-                  />
-                </div>
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">
-                    Steps (one per line)
-                  </label>
-                  <Textarea
-                    value={formData.steps}
-                    onChange={(e) => setFormData({ ...formData, steps: e.target.value })}
-                    placeholder="Learn HTML & CSS&#10;Master JavaScript&#10;Learn React&#10;Study Node.js&#10;Build Projects"
-                    rows={6}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end gap-3 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" variant="gradient">
-                  {editingRoadmap ? "Update" : "Create"} Roadmap
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="glass-card animate-pulse">
-              <CardHeader>
-                <div className="h-6 bg-muted rounded w-3/4" />
-              </CardHeader>
-              <CardContent>
-                <div className="h-4 bg-muted rounded w-1/2" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : roadmaps.length === 0 ? (
-        <Card className="glass-card">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground mb-4">No roadmaps created yet</p>
-            <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Create your first roadmap
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {roadmaps.map((roadmap) => (
-            <Card key={roadmap.id} className="glass-card">
-              <CardHeader className="flex flex-row items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg">{roadmap.title}</CardTitle>
-                  <div className="flex gap-2 mt-1">
-                    {roadmap.difficulty && (
-                      <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded">
-                        {roadmap.difficulty}
-                      </span>
-                    )}
-                    {roadmap.duration && (
-                      <span className="text-xs text-muted-foreground">
-                        {roadmap.duration}
-                      </span>
-                    )}
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <p className="text-muted-foreground">
+            Roadmaps are linked to specific Career Roles and inherit their Domain/Category
+          </p>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) resetForm();
+          }}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Roadmap
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingRoadmap ? "Edit Roadmap" : "Add New Roadmap"}
+                </DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <Label>Title *</Label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="e.g., Full-Stack Developer Roadmap"
+                      required
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <Label>Description</Label>
+                    <Textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Describe this roadmap..."
+                      rows={2}
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <Label>Linked Career Role *</Label>
+                    <Select
+                      value={formData.career_id}
+                      onValueChange={(value) => setFormData({ ...formData, career_id: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a career role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {careers.map((career) => (
+                          <SelectItem key={career.id} value={career.id}>
+                            {career.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Domain & Category will be inherited from the selected career
+                    </p>
+                  </div>
+                  <div>
+                    <Label>Difficulty</Label>
+                    <Select
+                      value={formData.difficulty}
+                      onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {difficulties.map((diff) => (
+                          <SelectItem key={diff} value={diff}>
+                            {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Duration</Label>
+                    <Input
+                      value={formData.duration}
+                      onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                      placeholder="e.g., 6 months"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <Label>Steps (one per line)</Label>
+                    <Textarea
+                      value={formData.steps}
+                      onChange={(e) => setFormData({ ...formData, steps: e.target.value })}
+                      placeholder="Learn HTML & CSS&#10;Master JavaScript&#10;Learn React&#10;Study Node.js"
+                      rows={6}
+                    />
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button size="icon" variant="ghost" onClick={() => handleEdit(roadmap)}>
-                    <Pencil className="w-4 h-4" />
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                    Cancel
                   </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => handleDelete(roadmap.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
+                  <Button type="submit">
+                    {editingRoadmap ? "Update" : "Create"} Roadmap
                   </Button>
                 </div>
-              </CardHeader>
-              <CardContent>
-                {roadmap.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                    {roadmap.description}
-                  </p>
-                )}
-                {Array.isArray(roadmap.steps) && roadmap.steps.length > 0 && (
-                  <p className="text-xs text-muted-foreground">
-                    {roadmap.steps.length} steps
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
-      )}
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="animate-pulse">
+                <CardHeader><div className="h-6 bg-muted rounded w-3/4" /></CardHeader>
+                <CardContent><div className="h-4 bg-muted rounded w-1/2" /></CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : roadmaps.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Map className="w-12 h-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground mb-4">No roadmaps created yet</p>
+              <Button onClick={() => setIsDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create your first roadmap
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {roadmaps.map((roadmap) => (
+              <Card key={roadmap.id}>
+                <CardHeader className="flex flex-row items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">{roadmap.title}</CardTitle>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {roadmap.career_title && (
+                        <Badge variant="secondary">{roadmap.career_title}</Badge>
+                      )}
+                      {roadmap.difficulty && (
+                        <Badge variant="outline">{roadmap.difficulty}</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button size="icon" variant="ghost" onClick={() => handleEdit(roadmap)}>
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleDelete(roadmap.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {roadmap.description && (
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{roadmap.description}</p>
+                  )}
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>{roadmap.duration || "No duration"}</span>
+                    <span>{Array.isArray(roadmap.steps) ? `${roadmap.steps.length} steps` : "0 steps"}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </AdminLayout>
   );
 };
