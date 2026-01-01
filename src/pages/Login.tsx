@@ -108,6 +108,19 @@ const Login = () => {
                 Sign up
               </Link>
             </p>
+
+            <div className="text-center mt-4 p-4 rounded-xl border border-primary/20 bg-primary/5">
+              <p className="text-sm text-muted-foreground mb-2">
+                Want to guide and inspire students?
+              </p>
+              <Link 
+                to="/signup?role=mentor" 
+                className="text-primary hover:underline font-semibold inline-flex items-center gap-1"
+              >
+                Sign up as a Mentor
+                <Sparkles className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
