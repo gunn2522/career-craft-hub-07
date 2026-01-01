@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Mail, Lock, User, Building2, Sparkles, GraduationCap, School } from "lucide-react";
+import { ArrowRight, Mail, Lock, User, Building2, Sparkles, GraduationCap, School, Users } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
@@ -11,7 +11,7 @@ import { z } from "zod";
 const emailSchema = z.string().email("Invalid email address");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
 
-type UserType = "school_student" | "college_student";
+type UserType = "school_student" | "college_student" | "mentor";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -132,33 +132,47 @@ const Auth = () => {
                   {/* User Type Selection */}
                   <div>
                     <label className="block text-sm font-medium mb-3">I am a</label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                       <button
                         type="button"
                         onClick={() => setUserType("school_student")}
-                        className={`p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 ${
+                        className={`p-3 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 ${
                           userType === "school_student"
                             ? "border-primary bg-primary/10"
                             : "border-border hover:border-primary/50"
                         }`}
                       >
-                        <School className={`w-6 h-6 ${userType === "school_student" ? "text-primary" : "text-muted-foreground"}`} />
-                        <span className={`text-sm font-medium ${userType === "school_student" ? "text-primary" : ""}`}>
+                        <School className={`w-5 h-5 ${userType === "school_student" ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className={`text-xs font-medium ${userType === "school_student" ? "text-primary" : ""}`}>
                           School Student
                         </span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setUserType("college_student")}
-                        className={`p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 ${
+                        className={`p-3 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 ${
                           userType === "college_student"
                             ? "border-primary bg-primary/10"
                             : "border-border hover:border-primary/50"
                         }`}
                       >
-                        <GraduationCap className={`w-6 h-6 ${userType === "college_student" ? "text-primary" : "text-muted-foreground"}`} />
-                        <span className={`text-sm font-medium ${userType === "college_student" ? "text-primary" : ""}`}>
+                        <GraduationCap className={`w-5 h-5 ${userType === "college_student" ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className={`text-xs font-medium ${userType === "college_student" ? "text-primary" : ""}`}>
                           College Student
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUserType("mentor")}
+                        className={`p-3 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 ${
+                          userType === "mentor"
+                            ? "border-primary bg-primary/10"
+                            : "border-border hover:border-primary/50"
+                        }`}
+                      >
+                        <Users className={`w-5 h-5 ${userType === "mentor" ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className={`text-xs font-medium ${userType === "mentor" ? "text-primary" : ""}`}>
+                          Mentor
                         </span>
                       </button>
                     </div>
@@ -201,7 +215,7 @@ const Auth = () => {
                 /* Institution */
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    {userType === "school_student" ? "School Name" : "College/University"}
+                    {userType === "school_student" ? "School Name" : userType === "mentor" ? "Organization/Company" : "College/University"}
                   </label>
                   <div className="relative">
                     <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -209,7 +223,13 @@ const Auth = () => {
                       type="text"
                       value={institution}
                       onChange={(e) => setInstitution(e.target.value)}
-                      placeholder={userType === "school_student" ? "Your school name" : "Your college/university"}
+                      placeholder={
+                        userType === "school_student" 
+                          ? "Your school name" 
+                          : userType === "mentor" 
+                            ? "Your organization/company" 
+                            : "Your college/university"
+                      }
                       className="h-12 pl-12"
                     />
                   </div>
