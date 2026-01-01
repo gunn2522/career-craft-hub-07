@@ -1,10 +1,10 @@
 project_id = "xbqiwuwemtaywedrjsgy"
 
 [functions.send-program-confirmation]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-program-reminder]
-verify_jwt = false
+verify_jwt = true
 
 [functions.career-assistant]
-verify_jwt = false
+verify_jwt = true
