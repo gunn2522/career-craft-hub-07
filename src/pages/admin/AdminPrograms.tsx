@@ -79,13 +79,40 @@ const AdminPrograms = () => {
     }
   };
 
+  // File validation constants
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Only image files (JPEG, PNG, WebP, GIF) are allowed",
+        variant: "destructive",
+      });
+      e.target.value = ''; // Reset input
+      return;
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "File too large",
+        description: "File size must be less than 5MB",
+        variant: "destructive",
+      });
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     setIsUploading(true);
     try {
-      const fileExt = file.name.split(".").pop();
+      // Use MIME type to determine extension (more secure than filename)
+      const fileExt = file.type.split('/')[1];
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `banners/${fileName}`;
 
