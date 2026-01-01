@@ -3,14 +3,16 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Mail, Lock, User, GraduationCap, School, Sparkles } from "lucide-react";
+import { ArrowRight, Mail, Lock, User, GraduationCap, School, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
 
 const Signup = () => {
   const [searchParams] = useSearchParams();
-  const initialType = searchParams.get("type") || "";
+  const initialType = searchParams.get("type") || searchParams.get("role") || "";
   
-  const [userType, setUserType] = useState<"school" | "college" | "">(initialType as "school" | "college" | "");
+  const [userType, setUserType] = useState<"school" | "college" | "mentor" | "">(
+    initialType === "mentor" ? "mentor" : (initialType as "school" | "college" | "")
+  );
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,29 +43,41 @@ const Signup = () => {
             </div>
 
             {/* User Type Selection */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-3 mb-8">
               <button
                 type="button"
                 onClick={() => setUserType("school")}
-                className={`glass-card rounded-xl p-6 transition-all hover:scale-105 ${
+                className={`glass-card rounded-xl p-4 transition-all hover:scale-105 ${
                   userType === "school" ? "border-primary ring-2 ring-primary/20" : ""
                 }`}
               >
-                <School className={`w-8 h-8 mx-auto mb-3 ${userType === "school" ? "text-primary" : "text-muted-foreground"}`} />
-                <h3 className="font-bold mb-1">School Student</h3>
+                <School className={`w-7 h-7 mx-auto mb-2 ${userType === "school" ? "text-primary" : "text-muted-foreground"}`} />
+                <h3 className="font-bold text-sm mb-1">School Student</h3>
                 <p className="text-xs text-muted-foreground">Grades 8-12</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => setUserType("college")}
-                className={`glass-card rounded-xl p-6 transition-all hover:scale-105 ${
+                className={`glass-card rounded-xl p-4 transition-all hover:scale-105 ${
                   userType === "college" ? "border-primary ring-2 ring-primary/20" : ""
                 }`}
               >
-                <GraduationCap className={`w-8 h-8 mx-auto mb-3 ${userType === "college" ? "text-primary" : "text-muted-foreground"}`} />
-                <h3 className="font-bold mb-1">College Student</h3>
+                <GraduationCap className={`w-7 h-7 mx-auto mb-2 ${userType === "college" ? "text-primary" : "text-muted-foreground"}`} />
+                <h3 className="font-bold text-sm mb-1">College Student</h3>
                 <p className="text-xs text-muted-foreground">Undergrad & above</p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setUserType("mentor")}
+                className={`glass-card rounded-xl p-4 transition-all hover:scale-105 ${
+                  userType === "mentor" ? "border-primary ring-2 ring-primary/20" : ""
+                }`}
+              >
+                <Users className={`w-7 h-7 mx-auto mb-2 ${userType === "mentor" ? "text-primary" : "text-muted-foreground"}`} />
+                <h3 className="font-bold text-sm mb-1">Mentor</h3>
+                <p className="text-xs text-muted-foreground">Guide students</p>
               </button>
             </div>
 
@@ -99,11 +113,13 @@ const Signup = () => {
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  {userType === "school" ? "School Name" : "College/University"}
+                  {userType === "school" ? "School Name" : userType === "mentor" ? "Organization/Company" : "College/University"}
                 </label>
                 <div className="relative">
                   {userType === "school" ? (
                     <School className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  ) : userType === "mentor" ? (
+                    <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   ) : (
                     <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   )}
@@ -111,7 +127,13 @@ const Signup = () => {
                     required
                     value={formData.institution}
                     onChange={(e) => setFormData({...formData, institution: e.target.value})}
-                    placeholder={userType === "school" ? "Your school name" : "Your college name"}
+                    placeholder={
+                      userType === "school" 
+                        ? "Your school name" 
+                        : userType === "mentor" 
+                          ? "Your organization name" 
+                          : "Your college name"
+                    }
                     className="h-12 pl-12"
                   />
                 </div>
