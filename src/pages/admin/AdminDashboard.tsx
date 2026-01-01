@@ -10,7 +10,8 @@ import {
   FileText, 
   Trophy, 
   Calendar, 
-  Users 
+  Users,
+  UserCheck
 } from "lucide-react";
 
 interface DashboardStats {
@@ -22,10 +23,11 @@ interface DashboardStats {
   successStories: number;
   events: number;
   applications: number;
+  registeredUsers: number;
 }
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState<DashboardStats>({
+const [stats, setStats] = useState<DashboardStats>({
     careers: 0,
     roadmaps: 0,
     resources: 0,
@@ -34,6 +36,7 @@ const AdminDashboard = () => {
     successStories: 0,
     events: 0,
     applications: 0,
+    registeredUsers: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,6 +55,7 @@ const AdminDashboard = () => {
         { count: successStories },
         { count: events },
         { count: applications },
+        { count: registeredUsers },
       ] = await Promise.all([
         supabase.from("careers").select("*", { count: "exact", head: true }),
         supabase.from("roadmaps").select("*", { count: "exact", head: true }),
@@ -61,6 +65,7 @@ const AdminDashboard = () => {
         supabase.from("success_stories").select("*", { count: "exact", head: true }),
         supabase.from("events").select("*", { count: "exact", head: true }),
         supabase.from("ambassador_applications").select("*", { count: "exact", head: true }),
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
       ]);
 
       setStats({
@@ -72,6 +77,7 @@ const AdminDashboard = () => {
         successStories: successStories || 0,
         events: events || 0,
         applications: applications || 0,
+        registeredUsers: registeredUsers || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -81,6 +87,7 @@ const AdminDashboard = () => {
   };
 
   const statCards = [
+    { title: "Registered Users", value: stats.registeredUsers, icon: Users, color: "text-emerald-500" },
     { title: "Careers", value: stats.careers, icon: Briefcase, color: "text-blue-500" },
     { title: "Roadmaps", value: stats.roadmaps, icon: Map, color: "text-green-500" },
     { title: "Resources", value: stats.resources, icon: BookOpen, color: "text-purple-500" },
@@ -88,7 +95,7 @@ const AdminDashboard = () => {
     { title: "Blogs", value: stats.blogs, icon: FileText, color: "text-pink-500" },
     { title: "Success Stories", value: stats.successStories, icon: Trophy, color: "text-yellow-500" },
     { title: "Events", value: stats.events, icon: Calendar, color: "text-cyan-500" },
-    { title: "Applications", value: stats.applications, icon: Users, color: "text-red-500" },
+    { title: "Applications", value: stats.applications, icon: UserCheck, color: "text-red-500" },
   ];
 
   return (
