@@ -18,6 +18,8 @@ import Programs from "./pages/Programs";
 import MyCareerLab from "./pages/MyCareerLab";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDomains from "./pages/admin/AdminDomains";
+import AdminCategories from "./pages/admin/AdminCategories";
 import AdminCareers from "./pages/admin/AdminCareers";
 import AdminRoadmaps from "./pages/admin/AdminRoadmaps";
 import AdminResources from "./pages/admin/AdminResources";

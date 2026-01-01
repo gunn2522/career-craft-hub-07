@@ -22,6 +22,8 @@ import logo from "@/assets/logo.png";
 
 const sidebarLinks = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
+  { name: "Domains", path: "/admin/domains", icon: Briefcase },
+  { name: "Categories", path: "/admin/categories", icon: Briefcase },
   { name: "Careers", path: "/admin/careers", icon: Briefcase },
   { name: "Roadmaps", path: "/admin/roadmaps", icon: Map },
   { name: "Daily Tasks", path: "/admin/daily-tasks", icon: ClipboardList },
