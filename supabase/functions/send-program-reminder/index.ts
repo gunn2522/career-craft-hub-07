@@ -9,6 +9,51 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// HTML escape function to prevent XSS/injection
+const escapeHtml = (text: string | null | undefined): string => {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
+// UUID validation regex
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Input validation
+const validateInput = (data: any): { valid: boolean; error?: string } => {
+  if (!data || typeof data !== 'object') {
+    return { valid: false, error: "Invalid request body" };
+  }
+
+  const { registration_id, send_all_pending } = data;
+
+  // At least one must be provided
+  if (!registration_id && send_all_pending !== true) {
+    return { valid: false, error: "Either registration_id or send_all_pending must be provided" };
+  }
+
+  // Validate registration_id if provided
+  if (registration_id !== undefined) {
+    if (typeof registration_id !== 'string') {
+      return { valid: false, error: "registration_id must be a string" };
+    }
+    if (!uuidRegex.test(registration_id)) {
+      return { valid: false, error: "registration_id must be a valid UUID" };
+    }
+  }
+
+  // Validate send_all_pending if provided
+  if (send_all_pending !== undefined && typeof send_all_pending !== 'boolean') {
+    return { valid: false, error: "send_all_pending must be a boolean" };
+  }
+
+  return { valid: true };
+};
+
 interface ReminderRequest {
   registration_id?: string;
   send_all_pending?: boolean;
@@ -26,7 +71,27 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { registration_id, send_all_pending }: ReminderRequest = await req.json();
+    let data;
+    try {
+      data = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON in request body" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Validate input
+    const validation = validateInput(data);
+    if (!validation.valid) {
+      console.log("Validation failed:", validation.error);
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const { registration_id, send_all_pending }: ReminderRequest = data;
     
     let registrations: any[] = [];
 
@@ -34,7 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Get all pending registrations that haven't been reminded in the last 24 hours
       const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       
-      const { data, error } = await supabase
+      const { data: regData, error } = await supabase
         .from("program_registrations")
         .select(`
           *,
@@ -45,9 +110,10 @@ const handler = async (req: Request): Promise<Response> => {
         .lt("reminder_count", 3);
 
       if (error) throw error;
-      registrations = data || [];
+      registrations = regData || [];
     } else if (registration_id) {
-      const { data, error } = await supabase
+      // Using parameterized query - registration_id is already validated as UUID
+      const { data: regData, error } = await supabase
         .from("program_registrations")
         .select(`
           *,
@@ -57,7 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
         .single();
 
       if (error) throw error;
-      if (data) registrations = [data];
+      if (regData) registrations = [regData];
     }
 
     console.log(`Processing ${registrations.length} reminders`);
@@ -66,8 +132,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     for (const reg of registrations) {
       const program = reg.programs;
+      
+      // Escape all user-provided data for HTML
+      const safeName = escapeHtml(reg.full_name);
+      const safeProgramName = escapeHtml(program.name);
+      const safeDuration = escapeHtml(program.duration);
+      
       const currencySymbol = program.currency === "INR" ? "₹" : "$";
-      const priceText = program.is_free ? "Free" : `${currencySymbol}${program.price?.toLocaleString()}`;
+      const priceText = program.is_free ? "Free" : `${currencySymbol}${(program.price || 0).toLocaleString()}`;
 
       const emailHtml = `
         <!DOCTYPE html>
@@ -89,14 +161,14 @@ const handler = async (req: Request): Promise<Response> => {
                 <h1 style="margin: 0;">⏰ Complete Your Registration!</h1>
               </div>
               <div class="content">
-                <p>Hello <strong>${reg.full_name}</strong>,</p>
+                <p>Hello <strong>${safeName}</strong>,</p>
                 <p>We noticed you haven't completed your payment for the program. Don't miss out on this opportunity!</p>
                 
                 <div class="highlight">
                   <h3 style="margin-top: 0; color: #f59e0b;">Program Details</h3>
-                  <p><strong>Program:</strong> ${program.name}</p>
-                  ${program.duration ? `<p><strong>Duration:</strong> ${program.duration}</p>` : ''}
-                  <p><strong>Fee:</strong> ${priceText}</p>
+                  <p><strong>Program:</strong> ${safeProgramName}</p>
+                  ${safeDuration ? `<p><strong>Duration:</strong> ${safeDuration}</p>` : ''}
+                  <p><strong>Fee:</strong> ${escapeHtml(priceText)}</p>
                 </div>
                 
                 <p><strong>Why Complete Your Registration?</strong></p>
@@ -122,7 +194,7 @@ const handler = async (req: Request): Promise<Response> => {
         const emailResponse = await resend.emails.send({
           from: "Career Craft Café <onboarding@resend.dev>",
           to: [reg.email],
-          subject: `⏰ Reminder: Complete Your Registration for ${program.name}`,
+          subject: `⏰ Reminder: Complete Your Registration for ${safeProgramName}`,
           html: emailHtml,
         });
 
