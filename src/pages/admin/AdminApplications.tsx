@@ -10,8 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock, ShieldAlert } from "lucide-react";
 
 interface Application {
   id: string;
@@ -33,23 +34,53 @@ const statusOptions = [
   { value: "rejected", label: "Rejected", color: "text-red-500" },
 ];
 
+// Sanitize display text to prevent XSS
+const sanitizeText = (text: string | null): string => {
+  if (!text) return "";
+  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
 const AdminApplications = () => {
+  const { isAdmin, isLoading: authLoading } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
+    // Double-check admin status at application level before fetching sensitive data
+    if (!authLoading) {
+      if (!isAdmin) {
+        setAccessDenied(true);
+        setIsLoading(false);
+        return;
+      }
+      fetchApplications();
+    }
+  }, [isAdmin, authLoading]);
 
   const fetchApplications = async () => {
+    // Additional security: verify admin status before fetching PII
+    if (!isAdmin) {
+      setAccessDenied(true);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from("ambassador_applications")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        // RLS will block non-admins, handle gracefully
+        if (error.code === "42501" || error.message.includes("permission denied")) {
+          setAccessDenied(true);
+          return;
+        }
+        throw error;
+      }
       setApplications(data || []);
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -116,6 +147,23 @@ const AdminApplications = () => {
       day: "numeric",
     });
   };
+
+  // Show access denied message if not admin
+  if (accessDenied) {
+    return (
+      <AdminLayout title="Ambassador Applications">
+        <Card className="glass-card">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <ShieldAlert className="w-12 h-12 text-destructive mb-4" />
+            <p className="text-lg font-medium text-destructive">Access Denied</p>
+            <p className="text-muted-foreground mt-2">
+              You don't have permission to view this sensitive data.
+            </p>
+          </CardContent>
+        </Card>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout title="Ambassador Applications">

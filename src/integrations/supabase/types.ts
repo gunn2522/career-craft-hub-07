@@ -25,7 +25,7 @@ export type Database = {
           social_links: Json | null
           status: string | null
           updated_at: string
-          user_id: string | null
+          user_id: string
           why_ambassador: string | null
           year_of_study: string | null
         }
@@ -39,7 +39,7 @@ export type Database = {
           social_links?: Json | null
           status?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id: string
           why_ambassador?: string | null
           year_of_study?: string | null
         }
@@ -53,7 +53,7 @@ export type Database = {
           social_links?: Json | null
           status?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id?: string
           why_ambassador?: string | null
           year_of_study?: string | null
         }
