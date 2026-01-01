@@ -27,6 +27,7 @@ import AdminSuccessStories from "./pages/admin/AdminSuccessStories";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminApplications from "./pages/admin/AdminApplications";
 import AdminPrograms from "./pages/admin/AdminPrograms";
+import AdminDailyTasks from "./pages/admin/AdminDailyTasks";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/careers" element={<AdminCareers />} />
             <Route path="/admin/roadmaps" element={<AdminRoadmaps />} />
+            <Route path="/admin/daily-tasks" element={<AdminDailyTasks />} />
             <Route path="/admin/resources" element={<AdminResources />} />
             <Route path="/admin/internships" element={<AdminInternships />} />
             <Route path="/admin/blogs" element={<AdminBlogs />} />
@@ -61,6 +63,7 @@ const App = () => (
             <Route path="/admin/events" element={<AdminEvents />} />
             <Route path="/admin/applications" element={<AdminApplications />} />
             <Route path="/admin/programs" element={<AdminPrograms />} />
+            <Route path="/admin/registrations" element={<AdminRegistrations />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
