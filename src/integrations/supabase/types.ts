@@ -713,6 +713,7 @@ export type Database = {
         Row: {
           banner_url: string | null
           created_at: string
+          created_by: string | null
           currency: string | null
           description: string | null
           duration: string | null
@@ -731,6 +732,7 @@ export type Database = {
         Insert: {
           banner_url?: string | null
           created_at?: string
+          created_by?: string | null
           currency?: string | null
           description?: string | null
           duration?: string | null
@@ -749,6 +751,7 @@ export type Database = {
         Update: {
           banner_url?: string | null
           created_at?: string
+          created_by?: string | null
           currency?: string | null
           description?: string | null
           duration?: string | null

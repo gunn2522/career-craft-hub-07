@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Handshake, LogOut, LayoutDashboard, User } from "lucide-react";
+import { Menu, X, Handshake, LogOut, LayoutDashboard, User, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
@@ -21,7 +21,7 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, isMentor, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -72,6 +72,14 @@ export const Header = () => {
                     <Link to="/admin" className="flex items-center gap-2">
                       <LayoutDashboard className="w-4 h-4" />
                       Admin
+                    </Link>
+                  </Button>
+                )}
+                {isMentor && !isAdmin && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/mentor" className="flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4" />
+                      Mentor
                     </Link>
                   </Button>
                 )}
@@ -128,6 +136,11 @@ export const Header = () => {
                     {isAdmin && (
                       <Button variant="outline" asChild>
                         <Link to="/admin" onClick={() => setIsOpen(false)}>Admin Dashboard</Link>
+                      </Button>
+                    )}
+                    {isMentor && !isAdmin && (
+                      <Button variant="outline" asChild>
+                        <Link to="/mentor" onClick={() => setIsOpen(false)}>Mentor Dashboard</Link>
                       </Button>
                     )}
                     <Button variant="gradient" onClick={handleSignOut}>Sign Out</Button>
