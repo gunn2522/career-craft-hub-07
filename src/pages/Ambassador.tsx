@@ -76,11 +76,44 @@ const Ambassador = () => {
     socialLinks: "",
   });
 
+  // Email validation regex
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  // Phone validation regex (Indian format or international)
+  const phoneRegex = /^\+?[0-9]{10,15}$/;
+
+  const validateForm = (): boolean => {
+    if (!user) {
+      toast.error("Please log in to submit an application");
+      return false;
+    }
+
+    if (!formData.name || formData.name.length > 100) {
+      toast.error("Please enter a valid name (max 100 characters)");
+      return false;
+    }
+
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+
+    if (formData.phone && !phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
+      toast.error("Please enter a valid phone number (10-15 digits)");
+      return false;
+    }
+
+    if (!formData.college || formData.college.length > 200) {
+      toast.error("Please enter a valid college name (max 200 characters)");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.college) {
-      toast.error("Please fill in all required fields");
+    if (!validateForm()) {
       return;
     }
 
@@ -90,19 +123,25 @@ const Ambassador = () => {
       const { error } = await supabase
         .from("ambassador_applications")
         .insert({
-          full_name: formData.name,
-          email: formData.email,
-          phone: formData.phone || null,
-          college: formData.college,
+          full_name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone ? formData.phone.replace(/\s/g, "") : null,
+          college: formData.college.trim(),
           year_of_study: formData.year || null,
-          why_ambassador: formData.whyAmbassador || null,
-          social_links: formData.socialLinks ? { links: formData.socialLinks } : null,
-          user_id: user?.id || null,
+          why_ambassador: formData.whyAmbassador?.trim() || null,
+          social_links: formData.socialLinks ? { links: formData.socialLinks.trim() } : null,
+          user_id: user.id, // Required - enforced by database
         });
 
       if (error) {
         if (error.code === '23505') {
           toast.error("You have already submitted an application with this email.");
+        } else if (error.message.includes("user_id is required")) {
+          toast.error("Please log in to submit an application");
+        } else if (error.message.includes("Invalid email")) {
+          toast.error("Invalid email format");
+        } else if (error.message.includes("Invalid phone")) {
+          toast.error("Invalid phone number format");
         } else {
           throw error;
         }
