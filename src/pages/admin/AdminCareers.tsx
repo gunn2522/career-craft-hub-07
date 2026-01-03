@@ -60,6 +60,7 @@ interface Career {
   skills: string[] | null;
   is_active: boolean;
   display_order: number;
+  experience_level: "entry" | "mid" | "senior" | null;
   domain_name?: string;
   category_name?: string;
   roadmap_count?: number;
@@ -87,6 +88,7 @@ const AdminCareers = () => {
     salary: "",
     demand: "",
     skills: "",
+    experience_level: "entry" as "entry" | "mid" | "senior",
     is_active: true,
     display_order: 0,
   });
@@ -187,6 +189,7 @@ const AdminCareers = () => {
         skills: formData.skills
           ? formData.skills.split(",").map((s) => s.trim()).filter(Boolean)
           : null,
+        experience_level: formData.experience_level,
         is_active: formData.is_active,
         display_order: formData.display_order,
       };
@@ -224,6 +227,7 @@ const AdminCareers = () => {
       salary: career.salary || "",
       demand: career.demand || "",
       skills: career.skills?.join(", ") || "",
+      experience_level: career.experience_level || "entry",
       is_active: career.is_active,
       display_order: career.display_order,
     });
@@ -259,6 +263,7 @@ const AdminCareers = () => {
       salary: "",
       demand: "",
       skills: "",
+      experience_level: "entry",
       is_active: true,
       display_order: careers.length,
     });
@@ -463,6 +468,24 @@ const AdminCareers = () => {
                           <SelectItem value="High">High</SelectItem>
                           <SelectItem value="Medium">Medium</SelectItem>
                           <SelectItem value="Low">Low</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Experience Level *</Label>
+                      <Select
+                        value={formData.experience_level}
+                        onValueChange={(value: "entry" | "mid" | "senior") =>
+                          setFormData({ ...formData, experience_level: value })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="entry">Entry Level</SelectItem>
+                          <SelectItem value="mid">Mid Level</SelectItem>
+                          <SelectItem value="senior">Senior Level</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
