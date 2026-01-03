@@ -18,12 +18,13 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { TorchLoader } from "@/components/ui/TorchLoader";
-import { FutureRolesSection } from "@/components/careers/FutureRolesSection";
+import { CareerGraphSection } from "@/components/careers/CareerGraphSection";
 import { cn } from "@/lib/utils";
 
 interface Career {
   id: string;
   title: string;
+  slug: string | null;
   description: string | null;
   salary: string | null;
   growth: string | null;
@@ -52,27 +53,43 @@ const experienceLabels: Record<string, { label: string; color: string }> = {
 };
 
 const CareerDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [career, setCareer] = useState<Career | null>(null);
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
+    if (slug) {
       fetchCareerDetails();
     }
-  }, [id]);
+  }, [slug]);
 
   const fetchCareerDetails = async () => {
     try {
-      // Fetch career details
-      const { data: careerData, error: careerError } = await supabase
-        .from("careers")
-        .select("*")
-        .eq("id", id)
-        .maybeSingle();
+      // Try to fetch by slug first, then by ID for backwards compatibility
+      let careerData = null;
+      
+      // Check if slug looks like a UUID (backwards compatibility)
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug || "");
+      
+      if (isUUID) {
+        const { data, error } = await supabase
+          .from("careers")
+          .select("*")
+          .eq("id", slug)
+          .maybeSingle();
+        
+        if (!error) careerData = data;
+      } else {
+        const { data, error } = await supabase
+          .from("careers")
+          .select("*")
+          .eq("slug", slug)
+          .maybeSingle();
+        
+        if (!error) careerData = data;
+      }
 
-      if (careerError) throw careerError;
       setCareer(careerData);
 
       // Fetch related roadmaps
@@ -80,7 +97,7 @@ const CareerDetail = () => {
         const { data: roadmapData, error: roadmapError } = await supabase
           .from("roadmaps")
           .select("id, title, description, difficulty, duration")
-          .eq("career_id", id);
+          .eq("career_id", careerData.id);
 
         if (!roadmapError && roadmapData) {
           setRoadmaps(roadmapData);
@@ -243,8 +260,12 @@ const CareerDetail = () => {
                 </Card>
               )}
 
-              {/* Future Roles Section */}
-              <FutureRolesSection careerId={career.id} currentTitle={career.title} />
+              {/* Career Graph Section */}
+              <CareerGraphSection 
+                careerId={career.id} 
+                currentTitle={career.title}
+                currentLevel={career.experience_level}
+              />
             </div>
 
             {/* Right Column - Roadmaps & CTA */}
