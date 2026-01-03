@@ -16,6 +16,7 @@ import Partner from "./pages/Partner";
 import Blogs from "./pages/Blogs";
 import Programs from "./pages/Programs";
 import MyCareerLab from "./pages/MyCareerLab";
+import RoadmapDetail from "./pages/RoadmapDetail";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDomains from "./pages/admin/AdminDomains";
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/craft" element={<Craft />} />
+            <Route path="/craft/:id" element={<RoadmapDetail />} />
             <Route path="/cafe" element={<Cafe />} />
             <Route path="/ambassador" element={<Ambassador />} />
             <Route path="/auth" element={<Auth />} />
