@@ -88,6 +88,7 @@ const AdminCareers = () => {
     salary: "",
     demand: "",
     skills: "",
+    responsibilities: "",
     experience_level: "entry" as "entry" | "mid" | "senior",
     is_active: true,
     display_order: 0,
@@ -189,6 +190,9 @@ const AdminCareers = () => {
         skills: formData.skills
           ? formData.skills.split(",").map((s) => s.trim()).filter(Boolean)
           : null,
+        responsibilities: formData.responsibilities
+          ? formData.responsibilities.split("\n").map((s) => s.trim()).filter(Boolean)
+          : null,
         experience_level: formData.experience_level,
         is_active: formData.is_active,
         display_order: formData.display_order,
@@ -215,7 +219,7 @@ const AdminCareers = () => {
     }
   };
 
-  const handleEdit = (career: Career) => {
+  const handleEdit = (career: Career & { responsibilities?: string[] | null }) => {
     setEditingCareer(career);
     setFormData({
       title: career.title,
@@ -227,6 +231,7 @@ const AdminCareers = () => {
       salary: career.salary || "",
       demand: career.demand || "",
       skills: career.skills?.join(", ") || "",
+      responsibilities: career.responsibilities?.join("\n") || "",
       experience_level: career.experience_level || "entry",
       is_active: career.is_active,
       display_order: career.display_order,
@@ -263,6 +268,7 @@ const AdminCareers = () => {
       salary: "",
       demand: "",
       skills: "",
+      responsibilities: "",
       experience_level: "entry",
       is_active: true,
       display_order: careers.length,
@@ -511,6 +517,17 @@ const AdminCareers = () => {
                           setFormData({ ...formData, skills: e.target.value })
                         }
                         placeholder="e.g., JavaScript, React, Node.js"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <Label>Responsibilities (one per line)</Label>
+                      <Textarea
+                        value={formData.responsibilities}
+                        onChange={(e) =>
+                          setFormData({ ...formData, responsibilities: e.target.value })
+                        }
+                        placeholder="Enter each responsibility on a new line..."
+                        rows={4}
                       />
                     </div>
                     <div className="col-span-2 flex items-center space-x-2">

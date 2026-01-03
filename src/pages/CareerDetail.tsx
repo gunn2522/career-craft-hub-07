@@ -34,6 +34,7 @@ interface Career {
   transition_time: string | null;
   category_id: string | null;
   domain_id: string | null;
+  responsibilities: string[] | null;
 }
 
 interface Roadmap {
@@ -221,34 +222,26 @@ const CareerDetail = () => {
               )}
 
               {/* What You'll Do */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5 text-primary" />
-                    What You'll Do
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span>Design and develop solutions that meet user and business needs</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span>Collaborate with cross-functional teams to deliver quality products</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span>Stay updated with industry trends and best practices</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span>Mentor junior team members and contribute to team growth</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
+              {career.responsibilities && career.responsibilities.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Target className="w-5 h-5 text-primary" />
+                      What You'll Do
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {career.responsibilities.map((item, i) => (
+                        <li key={i} className="flex items-start gap-3">
+                          <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Future Roles Section */}
               <FutureRolesSection careerId={career.id} currentTitle={career.title} />
@@ -266,33 +259,40 @@ const CareerDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {roadmaps.length > 0 ? (
-                    roadmaps.map((roadmap) => (
-                      <Link key={roadmap.id} to={`/craft/${roadmap.id}`}>
-                        <Card className="hover:border-primary/50 transition-all cursor-pointer">
-                          <CardContent className="p-4">
-                            <h4 className="font-semibold mb-1">{roadmap.title}</h4>
-                            {roadmap.description && (
-                              <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                                {roadmap.description}
-                              </p>
-                            )}
-                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                              {roadmap.difficulty && (
-                                <Badge variant="outline" className="text-xs">
-                                  {roadmap.difficulty}
-                                </Badge>
+                    <>
+                      {roadmaps.map((roadmap) => (
+                        <Link key={roadmap.id} to={`/craft/${roadmap.id}`}>
+                          <Card className="hover:border-primary/50 transition-all cursor-pointer">
+                            <CardContent className="p-4">
+                              <h4 className="font-semibold mb-1">{roadmap.title}</h4>
+                              {roadmap.description && (
+                                <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                                  {roadmap.description}
+                                </p>
                               )}
-                              {roadmap.duration && (
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-3 h-3" />
-                                  {roadmap.duration}
-                                </span>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                {roadmap.difficulty && (
+                                  <Badge variant="outline" className="text-xs">
+                                    {roadmap.difficulty}
+                                  </Badge>
+                                )}
+                                {roadmap.duration && (
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {roadmap.duration}
+                                  </span>
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      ))}
+                      <Link to={`/craft/${roadmaps[0].id}`} className="block">
+                        <Button className="w-full">
+                          View Roadmap
+                        </Button>
                       </Link>
-                    ))
+                    </>
                   ) : (
                     <div className="text-center py-6 text-muted-foreground">
                       <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-50" />
@@ -302,7 +302,7 @@ const CareerDetail = () => {
                   )}
 
                   <Link to="/craft" className="block">
-                    <Button className="w-full mt-4">
+                    <Button variant="outline" className="w-full mt-2">
                       Explore All Roadmaps
                     </Button>
                   </Link>

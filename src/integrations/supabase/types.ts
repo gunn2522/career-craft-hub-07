@@ -352,6 +352,7 @@ export type Database = {
           growth: string | null
           id: string
           is_active: boolean | null
+          responsibilities: string[] | null
           salary: string | null
           search_keywords: string[] | null
           skills: string[] | null
@@ -375,6 +376,7 @@ export type Database = {
           growth?: string | null
           id?: string
           is_active?: boolean | null
+          responsibilities?: string[] | null
           salary?: string | null
           search_keywords?: string[] | null
           skills?: string[] | null
@@ -398,6 +400,7 @@ export type Database = {
           growth?: string | null
           id?: string
           is_active?: boolean | null
+          responsibilities?: string[] | null
           salary?: string | null
           search_keywords?: string[] | null
           skills?: string[] | null
