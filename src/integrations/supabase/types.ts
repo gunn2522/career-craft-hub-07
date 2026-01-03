@@ -272,6 +272,70 @@ export type Database = {
         }
         Relationships: []
       }
+      career_progressions: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          from_career_id: string | null
+          id: string
+          progression_type: string
+          recommended_roadmap_id: string | null
+          skill_gap: string[] | null
+          to_career_id: string | null
+          transition_time: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          from_career_id?: string | null
+          id?: string
+          progression_type?: string
+          recommended_roadmap_id?: string | null
+          skill_gap?: string[] | null
+          to_career_id?: string | null
+          transition_time?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          from_career_id?: string | null
+          id?: string
+          progression_type?: string
+          recommended_roadmap_id?: string | null
+          skill_gap?: string[] | null
+          to_career_id?: string | null
+          transition_time?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "career_progressions_from_career_id_fkey"
+            columns: ["from_career_id"]
+            isOneToOne: false
+            referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "career_progressions_recommended_roadmap_id_fkey"
+            columns: ["recommended_roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "career_progressions_to_career_id_fkey"
+            columns: ["to_career_id"]
+            isOneToOne: false
+            referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       careers: {
         Row: {
           category: string
@@ -281,12 +345,19 @@ export type Database = {
           description: string | null
           display_order: number | null
           domain_id: string | null
+          experience_level:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
+          future_roles: Json | null
           growth: string | null
           id: string
           is_active: boolean | null
           salary: string | null
+          search_keywords: string[] | null
           skills: string[] | null
+          skills_required: string[] | null
           title: string
+          transition_time: string | null
           updated_at: string
         }
         Insert: {
@@ -297,12 +368,19 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           domain_id?: string | null
+          experience_level?:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
+          future_roles?: Json | null
           growth?: string | null
           id?: string
           is_active?: boolean | null
           salary?: string | null
+          search_keywords?: string[] | null
           skills?: string[] | null
+          skills_required?: string[] | null
           title: string
+          transition_time?: string | null
           updated_at?: string
         }
         Update: {
@@ -313,12 +391,19 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           domain_id?: string | null
+          experience_level?:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
+          future_roles?: Json | null
           growth?: string | null
           id?: string
           is_active?: boolean | null
           salary?: string | null
+          search_keywords?: string[] | null
           skills?: string[] | null
+          skills_required?: string[] | null
           title?: string
+          transition_time?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -702,6 +787,9 @@ export type Database = {
           job_title: string | null
           linkedin_url: string | null
           portfolio_url: string | null
+          preferred_experience_level:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
           skills: string[] | null
           updated_at: string
           user_id: string
@@ -724,6 +812,9 @@ export type Database = {
           job_title?: string | null
           linkedin_url?: string | null
           portfolio_url?: string | null
+          preferred_experience_level?:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
           skills?: string[] | null
           updated_at?: string
           user_id: string
@@ -746,6 +837,9 @@ export type Database = {
           job_title?: string | null
           linkedin_url?: string | null
           portfolio_url?: string | null
+          preferred_experience_level?:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
           skills?: string[] | null
           updated_at?: string
           user_id?: string
@@ -1318,6 +1412,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "mentor"
+      experience_level: "entry" | "mid" | "senior"
       user_type: "school_student" | "college_student"
     }
     CompositeTypes: {
@@ -1447,6 +1542,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user", "mentor"],
+      experience_level: ["entry", "mid", "senior"],
       user_type: ["school_student", "college_student"],
     },
   },
