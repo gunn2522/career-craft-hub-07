@@ -357,6 +357,7 @@ export type Database = {
           search_keywords: string[] | null
           skills: string[] | null
           skills_required: string[] | null
+          slug: string | null
           title: string
           transition_time: string | null
           updated_at: string
@@ -381,6 +382,7 @@ export type Database = {
           search_keywords?: string[] | null
           skills?: string[] | null
           skills_required?: string[] | null
+          slug?: string | null
           title: string
           transition_time?: string | null
           updated_at?: string
@@ -405,6 +407,7 @@ export type Database = {
           search_keywords?: string[] | null
           skills?: string[] | null
           skills_required?: string[] | null
+          slug?: string | null
           title?: string
           transition_time?: string | null
           updated_at?: string

@@ -32,6 +32,7 @@ interface Category {
 interface Career {
   id: string;
   title: string;
+  slug: string | null;
   category: string;
   domain_id: string | null;
   category_id: string | null;

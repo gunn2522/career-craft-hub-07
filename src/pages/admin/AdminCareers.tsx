@@ -32,9 +32,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Briefcase, TrendingUp, DollarSign, BarChart3 } from "lucide-react";
+import { Plus, Pencil, Trash2, Briefcase, TrendingUp, DollarSign, BarChart3, GitBranch } from "lucide-react";
+import { CareerProgressionManager } from "@/components/admin/CareerProgressionManager";
 
 interface Domain {
   id: string;
@@ -50,6 +52,7 @@ interface Category {
 interface Career {
   id: string;
   title: string;
+  slug: string | null;
   description: string | null;
   category: string;
   domain_id: string | null;
@@ -61,9 +64,11 @@ interface Career {
   is_active: boolean;
   display_order: number;
   experience_level: "entry" | "mid" | "senior" | null;
+  responsibilities?: string[] | null;
   domain_name?: string;
   category_name?: string;
   roadmap_count?: number;
+  progression_count?: number;
 }
 
 const AdminCareers = () => {
@@ -77,13 +82,14 @@ const AdminCareers = () => {
   const [deleteConfirm, setDeleteConfirm] = useState<Career | null>(null);
   const [filterDomain, setFilterDomain] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [progressionCareer, setProgressionCareer] = useState<Career | null>(null);
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     domain_id: "",
     category_id: "",
-    category: "", // Legacy field - will be auto-filled
+    category: "",
     growth: "",
     salary: "",
     demand: "",
@@ -99,7 +105,6 @@ const AdminCareers = () => {
   }, []);
 
   useEffect(() => {
-    // Filter categories based on selected domain in form
     if (formData.domain_id) {
       setFilteredCategories(
         categories.filter((c) => c.domain_id === formData.domain_id)
@@ -112,7 +117,6 @@ const AdminCareers = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      // Fetch domains
       const { data: domainsData } = await supabase
         .from("career_domains")
         .select("id, name")
@@ -120,7 +124,6 @@ const AdminCareers = () => {
         .order("display_order");
       setDomains(domainsData || []);
 
-      // Fetch categories
       const { data: categoriesData } = await supabase
         .from("career_categories")
         .select("id, domain_id, name")
@@ -128,7 +131,6 @@ const AdminCareers = () => {
         .order("display_order");
       setCategories(categoriesData || []);
 
-      // Fetch careers with domain and category info
       const { data: careersData, error } = await supabase
         .from("careers")
         .select("*, career_domains(name), career_categories(name)")
@@ -136,19 +138,25 @@ const AdminCareers = () => {
 
       if (error) throw error;
 
-      // Get roadmap counts
       const careersWithCounts = await Promise.all(
         (careersData || []).map(async (career: any) => {
-          const { count } = await supabase
-            .from("roadmaps")
-            .select("*", { count: "exact", head: true })
-            .eq("career_id", career.id);
+          const [roadmapRes, progressionRes] = await Promise.all([
+            supabase
+              .from("roadmaps")
+              .select("*", { count: "exact", head: true })
+              .eq("career_id", career.id),
+            supabase
+              .from("career_progressions")
+              .select("*", { count: "exact", head: true })
+              .eq("from_career_id", career.id),
+          ]);
 
           return {
             ...career,
             domain_name: career.career_domains?.name || null,
             category_name: career.career_categories?.name || null,
-            roadmap_count: count || 0,
+            roadmap_count: roadmapRes.count || 0,
+            progression_count: progressionRes.count || 0,
           };
         })
       );
@@ -174,7 +182,6 @@ const AdminCareers = () => {
       return;
     }
 
-    // Get category name for legacy field
     const selectedCategory = categories.find((c) => c.id === formData.category_id);
 
     try {
@@ -219,7 +226,7 @@ const AdminCareers = () => {
     }
   };
 
-  const handleEdit = (career: Career & { responsibilities?: string[] | null }) => {
+  const handleEdit = (career: Career) => {
     setEditingCareer(career);
     setFormData({
       title: career.title,
@@ -275,7 +282,6 @@ const AdminCareers = () => {
     });
   };
 
-  // Filter careers based on selection
   let filteredCareers = careers;
   if (filterDomain !== "all") {
     filteredCareers = filteredCareers.filter((c) => c.domain_id === filterDomain);
@@ -284,13 +290,11 @@ const AdminCareers = () => {
     filteredCareers = filteredCareers.filter((c) => c.category_id === filterCategory);
   }
 
-  // Get categories for filter dropdown
   const filterCategoriesOptions =
     filterDomain === "all"
       ? categories
       : categories.filter((c) => c.domain_id === filterDomain);
 
-  // Group by domain -> category for display
   const groupedCareers = filteredCareers.reduce((acc, career) => {
     const domainKey = career.domain_name || "Uncategorized";
     const categoryKey = career.category_name || "Uncategorized";
@@ -608,13 +612,26 @@ const AdminCareers = () => {
                             <div className="flex items-start justify-between">
                               <div>
                                 <CardTitle className="text-lg">{career.title}</CardTitle>
-                                {!career.is_active && (
+                                {career.slug && (
                                   <span className="text-xs text-muted-foreground">
+                                    /{career.slug}
+                                  </span>
+                                )}
+                                {!career.is_active && (
+                                  <span className="text-xs text-muted-foreground block">
                                     Inactive
                                   </span>
                                 )}
                               </div>
                               <div className="flex gap-1">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => setProgressionCareer(career)}
+                                  title="Manage Progressions"
+                                >
+                                  <GitBranch className="w-4 h-4" />
+                                </Button>
                                 <Button
                                   size="icon"
                                   variant="ghost"
@@ -640,6 +657,16 @@ const AdminCareers = () => {
                               </p>
                             )}
                             <div className="flex flex-wrap gap-2 text-xs">
+                              <Badge variant="outline" className={
+                                career.experience_level === "entry" 
+                                  ? "bg-green-500/10 text-green-600 border-green-500/30"
+                                  : career.experience_level === "mid"
+                                  ? "bg-blue-500/10 text-blue-600 border-blue-500/30"
+                                  : "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                              }>
+                                {career.experience_level === "entry" ? "Entry" : 
+                                 career.experience_level === "mid" ? "Mid" : "Senior"}
+                              </Badge>
                               {career.salary && (
                                 <span className="flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded">
                                   <DollarSign className="w-3 h-3" />
@@ -652,30 +679,12 @@ const AdminCareers = () => {
                                   {career.growth}
                                 </span>
                               )}
-                              {career.demand && (
-                                <span className="flex items-center gap-1 px-2 py-1 bg-orange-500/10 text-orange-600 rounded">
-                                  <BarChart3 className="w-3 h-3" />
-                                  {career.demand}
-                                </span>
-                              )}
                             </div>
-                            {career.skills && career.skills.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {career.skills.slice(0, 4).map((skill, i) => (
-                                  <Badge key={i} variant="outline" className="text-xs">
-                                    {skill}
-                                  </Badge>
-                                ))}
-                                {career.skills.length > 4 && (
-                                  <Badge variant="outline" className="text-xs">
-                                    +{career.skills.length - 4}
-                                  </Badge>
-                                )}
-                              </div>
-                            )}
-                            <p className="text-xs text-muted-foreground">
-                              {career.roadmap_count} roadmap(s) linked
-                            </p>
+                            <div className="flex gap-2 text-xs text-muted-foreground">
+                              <span>{career.roadmap_count} roadmap(s)</span>
+                              <span>•</span>
+                              <span>{career.progression_count} progression(s)</span>
+                            </div>
                           </CardContent>
                         </Card>
                       ))}
@@ -687,6 +696,24 @@ const AdminCareers = () => {
           </div>
         )}
       </div>
+
+      {/* Progression Manager Dialog */}
+      <Dialog open={!!progressionCareer} onOpenChange={() => setProgressionCareer(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              Career Progressions: {progressionCareer?.title}
+            </DialogTitle>
+          </DialogHeader>
+          {progressionCareer && (
+            <CareerProgressionManager
+              careerId={progressionCareer.id}
+              careerTitle={progressionCareer.title}
+              careerLevel={progressionCareer.experience_level || "entry"}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
         <AlertDialogContent>

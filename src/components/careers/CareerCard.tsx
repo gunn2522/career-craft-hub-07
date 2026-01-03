@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 interface Career {
   id: string;
   title: string;
+  slug?: string | null;
   description?: string | null;
   salary?: string | null;
   growth?: string | null;
@@ -42,8 +43,11 @@ export const CareerCard = ({ career }: CareerCardProps) => {
   const expInfo = career.experience_level ? experienceLevels[career.experience_level] : experienceLevels.entry;
   const Icon = expInfo?.icon || Briefcase;
 
+  // Use slug for SEO-friendly URL, fallback to ID
+  const careerUrl = `/careers/${career.slug || career.id}`;
+
   return (
-    <Link to={`/careers/${career.id}`} className="group block h-full">
+    <Link to={careerUrl} className="group block h-full">
       <Card className="h-full p-6 transition-all duration-300 hover:scale-[1.02] hover:border-primary/50 hover:shadow-lg cursor-pointer">
         <div className="flex flex-col items-center text-center gap-4">
           {/* Role Icon */}
