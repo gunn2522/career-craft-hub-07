@@ -5,12 +5,14 @@ import { AmbassadorSection } from "@/components/home/AmbassadorSection";
 import { ConsultancySection } from "@/components/home/ConsultancySection";
 import { SignupCTA } from "@/components/home/SignupCTA";
 import { SuccessStories } from "@/components/home/SuccessStories";
+import { PartnersSection } from "@/components/home/PartnersSection";
 
 const Index = () => {
   return (
     <Layout>
       <HeroSection />
       <ThreePillars />
+      <PartnersSection />
       <SuccessStories />
       <AmbassadorSection />
       <ConsultancySection />

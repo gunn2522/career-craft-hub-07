@@ -732,6 +732,51 @@ export type Database = {
         }
         Relationships: []
       }
+      mentor_profiles: {
+        Row: {
+          availability_status: string | null
+          created_at: string
+          expertise: string[] | null
+          hourly_rate: number | null
+          id: string
+          rating: number | null
+          sessions_conducted: number | null
+          specialization: string | null
+          students_mentored: number | null
+          updated_at: string
+          user_id: string
+          years_of_experience: number | null
+        }
+        Insert: {
+          availability_status?: string | null
+          created_at?: string
+          expertise?: string[] | null
+          hourly_rate?: number | null
+          id?: string
+          rating?: number | null
+          sessions_conducted?: number | null
+          specialization?: string | null
+          students_mentored?: number | null
+          updated_at?: string
+          user_id: string
+          years_of_experience?: number | null
+        }
+        Update: {
+          availability_status?: string | null
+          created_at?: string
+          expertise?: string[] | null
+          hourly_rate?: number | null
+          id?: string
+          rating?: number | null
+          sessions_conducted?: number | null
+          specialization?: string | null
+          students_mentored?: number | null
+          updated_at?: string
+          user_id?: string
+          years_of_experience?: number | null
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -776,6 +821,95 @@ export type Database = {
           },
         ]
       }
+      partner_profiles: {
+        Row: {
+          company_description: string | null
+          company_name: string | null
+          company_website: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          jobs_posted: number | null
+          partner_id: string | null
+          students_engaged: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_description?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          jobs_posted?: number | null
+          partner_id?: string | null
+          students_engaged?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_description?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          jobs_posted?: number | null
+          partner_id?: string | null
+          students_engaged?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_profiles_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          logo_url: string | null
+          name: string
+          partner_type: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          logo_url?: string | null
+          name: string
+          partner_type?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          logo_url?: string | null
+          name?: string
+          partner_type?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -783,6 +917,7 @@ export type Database = {
           career_goals: string | null
           created_at: string
           current_company: string | null
+          current_level: string | null
           email: string | null
           full_name: string | null
           id: string
@@ -792,11 +927,15 @@ export type Database = {
           is_recruiter: boolean | null
           job_title: string | null
           linkedin_url: string | null
+          long_term_goals: string | null
           portfolio_url: string | null
           preferred_experience_level:
             | Database["public"]["Enums"]["experience_level"]
             | null
+          profile_completed: boolean | null
+          short_term_goals: string | null
           skills: string[] | null
+          status: string | null
           updated_at: string
           user_id: string
           user_type: Database["public"]["Enums"]["user_type"] | null
@@ -808,6 +947,7 @@ export type Database = {
           career_goals?: string | null
           created_at?: string
           current_company?: string | null
+          current_level?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
@@ -817,11 +957,15 @@ export type Database = {
           is_recruiter?: boolean | null
           job_title?: string | null
           linkedin_url?: string | null
+          long_term_goals?: string | null
           portfolio_url?: string | null
           preferred_experience_level?:
             | Database["public"]["Enums"]["experience_level"]
             | null
+          profile_completed?: boolean | null
+          short_term_goals?: string | null
           skills?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id: string
           user_type?: Database["public"]["Enums"]["user_type"] | null
@@ -833,6 +977,7 @@ export type Database = {
           career_goals?: string | null
           created_at?: string
           current_company?: string | null
+          current_level?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
@@ -842,11 +987,15 @@ export type Database = {
           is_recruiter?: boolean | null
           job_title?: string | null
           linkedin_url?: string | null
+          long_term_goals?: string | null
           portfolio_url?: string | null
           preferred_experience_level?:
             | Database["public"]["Enums"]["experience_level"]
             | null
+          profile_completed?: boolean | null
+          short_term_goals?: string | null
           skills?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id?: string
           user_type?: Database["public"]["Enums"]["user_type"] | null
@@ -1417,7 +1566,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "mentor"
+      app_role: "admin" | "moderator" | "user" | "mentor" | "partner"
       experience_level: "entry" | "mid" | "senior"
       user_type: "school_student" | "college_student"
     }
@@ -1547,7 +1696,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user", "mentor"],
+      app_role: ["admin", "moderator", "user", "mentor", "partner"],
       experience_level: ["entry", "mid", "senior"],
       user_type: ["school_student", "college_student"],
     },
