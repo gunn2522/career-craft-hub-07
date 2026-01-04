@@ -4,48 +4,19 @@ import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCareerLab } from "@/hooks/useCareerLab";
 import { TorchLoader } from "@/components/ui/TorchLoader";
-import { ProfileHeader } from "@/components/career-lab/ProfileHeader";
-import { ProgressBar } from "@/components/career-lab/ProgressBar";
-import { RoadmapSteps } from "@/components/career-lab/RoadmapSteps";
-import { DailyTask } from "@/components/career-lab/DailyTask";
-import { BadgesSection } from "@/components/career-lab/BadgesSection";
-import { ProgressInsights } from "@/components/career-lab/ProgressInsights";
-import { RoadmapSelector } from "@/components/career-lab/RoadmapSelector";
-import { EnhancedProfileEditor } from "@/components/career-lab/EnhancedProfileEditor";
-import { NetworkingPanel } from "@/components/career-lab/NetworkingPanel";
-import { ChatPanel } from "@/components/career-lab/ChatPanel";
-import { ProjectsSection } from "@/components/career-lab/ProjectsSection";
-import { CareerLabNavbar } from "@/components/career-lab/CareerLabNavbar";
-import { AICareerAssistant } from "@/components/career-lab/AICareerAssistant";
-import { 
-  Beaker, 
-  Target,
-  Trophy,
-  ClipboardList,
-} from "lucide-react";
+import { ProfileCompletion } from "@/components/career-lab/ProfileCompletion";
+import { StudentDashboard } from "@/components/career-lab/StudentDashboard";
+import { MentorDashboardView } from "@/components/career-lab/MentorDashboardView";
+import { PartnerDashboardView } from "@/components/career-lab/PartnerDashboardView";
+import { supabase } from "@/integrations/supabase/client";
 
 const MyCareerLab = () => {
   const navigate = useNavigate();
-  const { user, isLoading: authLoading } = useAuth();
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const { user, isLoading: authLoading, userRole } = useAuth();
+  const [profileCompleted, setProfileCompleted] = useState<boolean | null>(null);
+  const [isCheckingProfile, setIsCheckingProfile] = useState(true);
   
-  const {
-    isLoading,
-    profile,
-    careerProfile,
-    streak,
-    selectedRoadmap,
-    availableRoadmaps,
-    dailyAssignments,
-    userBadges,
-    allBadges,
-    roadmapProgress,
-    submissions,
-    selectRoadmap,
-    submitAssignment,
-    calculateOverallProgress,
-    shareOnLinkedIn,
-  } = useCareerLab();
+  const careerLabData = useCareerLab();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -53,7 +24,38 @@ const MyCareerLab = () => {
     }
   }, [user, authLoading, navigate]);
 
-  if (authLoading || isLoading) {
+  // Check if profile is completed
+  useEffect(() => {
+    const checkProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("profile_completed, full_name, career_goals, skills")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        
+        // Check if profile has minimum required fields
+        const isComplete = data?.profile_completed || 
+          (data?.full_name && data?.career_goals && data?.skills && data.skills.length > 0);
+        
+        setProfileCompleted(!!isComplete);
+      } catch (error) {
+        console.error("Error checking profile:", error);
+        setProfileCompleted(false);
+      } finally {
+        setIsCheckingProfile(false);
+      }
+    };
+
+    if (user && !authLoading) {
+      checkProfile();
+    }
+  }, [user, authLoading]);
+
+  // Loading state
+  if (authLoading || isCheckingProfile || careerLabData.isLoading) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center">
@@ -65,143 +67,56 @@ const MyCareerLab = () => {
 
   if (!user) return null;
 
-  const currentAssignment = dailyAssignments[0] || null;
-  const isAssignmentSubmitted = currentAssignment 
-    ? submissions.some(s => s.assignment_id === currentAssignment.id)
-    : false;
-  const completedAssignmentsCount = submissions.filter(s => s.status === "approved").length;
-  const overallProgress = calculateOverallProgress();
-
-  if (!careerProfile?.selected_roadmap_id || !selectedRoadmap) {
+  // Show profile completion if not complete (for students mainly)
+  if (profileCompleted === false && userRole !== "admin") {
     return (
       <Layout>
-        <section className="min-h-screen pt-32 pb-16 px-4">
-          <RoadmapSelector
-            roadmaps={availableRoadmaps}
-            isLoading={isLoading}
-            onSelect={selectRoadmap}
-          />
-        </section>
+        <ProfileCompletion 
+          onComplete={() => {
+            setProfileCompleted(true);
+            careerLabData.refreshData?.();
+          }} 
+        />
       </Layout>
     );
   }
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case "dashboard":
-        return (
-          <div className="space-y-8">
-            <ProgressBar roadmapTitle={selectedRoadmap.title} progress={overallProgress} />
-            <div className="grid lg:grid-cols-2 gap-8">
-              <DailyTask
-                assignment={currentAssignment}
-                isSubmitted={isAssignmentSubmitted}
-                onSubmit={submitAssignment}
-              />
-              <ProgressInsights
-                currentStreak={streak?.current_streak || 0}
-                longestStreak={streak?.longest_streak || 0}
-                completedAssignments={completedAssignmentsCount}
-                overallProgress={overallProgress}
-              />
-            </div>
-          </div>
-        );
-      case "daily-tasks":
-        return (
-          <div className="space-y-8">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <ClipboardList className="w-6 h-6 text-primary" />
-              Daily Tasks & Assignments
-            </h2>
-            <DailyTask
-              assignment={currentAssignment}
-              isSubmitted={isAssignmentSubmitted}
-              onSubmit={submitAssignment}
-            />
-            <ProgressInsights
-              currentStreak={streak?.current_streak || 0}
-              longestStreak={streak?.longest_streak || 0}
-              completedAssignments={completedAssignmentsCount}
-              overallProgress={overallProgress}
-            />
-          </div>
-        );
-      case "roadmap":
-        return (
-          <div className="space-y-8">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <Target className="w-6 h-6 text-primary" />
-              Your Career Roadmap
-            </h2>
-            <ProgressBar roadmapTitle={selectedRoadmap.title} progress={overallProgress} />
-            <RoadmapSteps steps={selectedRoadmap.steps} progressData={roadmapProgress} />
-          </div>
-        );
-      case "network":
-        return <NetworkingPanel />;
-      case "chat":
-        return <ChatPanel />;
-      case "projects":
-        return <ProjectsSection />;
-      case "badges":
-        return (
-          <div className="space-y-8">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <Trophy className="w-6 h-6 text-primary" />
-              Achievements & Badges
-            </h2>
-            <BadgesSection allBadges={allBadges} earnedBadges={userBadges} onShareLinkedIn={shareOnLinkedIn} />
-          </div>
-        );
-      case "profile":
-        return <EnhancedProfileEditor />;
-      case "ai-assistant":
-        return <AICareerAssistant targetRole={careerProfile?.target_job_role} />;
+  // Role-based dashboard rendering
+  const renderDashboard = () => {
+    switch (userRole) {
+      case "mentor":
+        return <MentorDashboardView />;
+      case "partner":
+        return <PartnerDashboardView />;
+      case "admin":
+      case "user":
       default:
-        return null;
+        // Students and admins get the student dashboard
+        return (
+          <StudentDashboard
+            profile={careerLabData.profile}
+            careerProfile={careerLabData.careerProfile}
+            streak={careerLabData.streak}
+            selectedRoadmap={careerLabData.selectedRoadmap}
+            availableRoadmaps={careerLabData.availableRoadmaps}
+            dailyAssignments={careerLabData.dailyAssignments}
+            userBadges={careerLabData.userBadges}
+            allBadges={careerLabData.allBadges}
+            roadmapProgress={careerLabData.roadmapProgress}
+            submissions={careerLabData.submissions}
+            selectRoadmap={careerLabData.selectRoadmap}
+            submitAssignment={careerLabData.submitAssignment}
+            calculateOverallProgress={careerLabData.calculateOverallProgress}
+            shareOnLinkedIn={careerLabData.shareOnLinkedIn}
+            isLoading={careerLabData.isLoading}
+          />
+        );
     }
   };
 
   return (
     <Layout>
-      <div className="min-h-screen pt-24 pb-8">
-        {/* Career Lab Header */}
-        <div className="px-4 md:px-8 lg:px-16 mb-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 rounded-xl bg-primary/10">
-                <Beaker className="w-6 h-6 text-primary" />
-              </div>
-              <h1 className="font-display text-2xl md:text-3xl font-bold">My Career Lab</h1>
-            </div>
-            <ProfileHeader
-              name={profile?.full_name}
-              avatarUrl={profile?.avatar_url}
-              aspiration={careerProfile?.aspiration}
-              targetRole={careerProfile?.target_job_role}
-              currentStreak={streak?.current_streak || 0}
-            />
-          </div>
-        </div>
-
-        {/* Navigation Bar */}
-        <div className="px-4 md:px-8 lg:px-16 mb-8">
-          <div className="max-w-7xl mx-auto">
-            <CareerLabNavbar 
-              activeSection={activeSection} 
-              onSectionChange={setActiveSection} 
-            />
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="px-4 md:px-8 lg:px-16">
-          <div className="max-w-7xl mx-auto">
-            {renderContent()}
-          </div>
-        </div>
-      </div>
+      {renderDashboard()}
     </Layout>
   );
 };
