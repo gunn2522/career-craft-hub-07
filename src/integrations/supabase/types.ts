@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_activity_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: string | null
+          target_id: string | null
+          target_type: string | null
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Relationships: []
+      }
+      admin_permissions: {
+        Row: {
+          admin_tier: Database["public"]["Enums"]["admin_tier"]
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          permissions: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_tier?: Database["public"]["Enums"]["admin_tier"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_tier?: Database["public"]["Enums"]["admin_tier"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ambassador_applications: {
         Row: {
           college: string
@@ -338,6 +404,7 @@ export type Database = {
       }
       careers: {
         Row: {
+          after_12th_description: string | null
           category: string
           category_id: string | null
           created_at: string
@@ -352,6 +419,8 @@ export type Database = {
           growth: string | null
           id: string
           is_active: boolean | null
+          linked_degree_ids: string[] | null
+          required_stream: string | null
           responsibilities: string[] | null
           salary: string | null
           search_keywords: string[] | null
@@ -363,6 +432,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          after_12th_description?: string | null
           category: string
           category_id?: string | null
           created_at?: string
@@ -377,6 +447,8 @@ export type Database = {
           growth?: string | null
           id?: string
           is_active?: boolean | null
+          linked_degree_ids?: string[] | null
+          required_stream?: string | null
           responsibilities?: string[] | null
           salary?: string | null
           search_keywords?: string[] | null
@@ -388,6 +460,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          after_12th_description?: string | null
           category?: string
           category_id?: string | null
           created_at?: string
@@ -402,6 +475,8 @@ export type Database = {
           growth?: string | null
           id?: string
           is_active?: boolean | null
+          linked_degree_ids?: string[] | null
+          required_stream?: string | null
           responsibilities?: string[] | null
           salary?: string | null
           search_keywords?: string[] | null
@@ -595,6 +670,69 @@ export type Database = {
           {
             foreignKeyName: "daily_assignments_roadmap_id_fkey"
             columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      degrees: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          duration: string | null
+          eligibility_rules: Json | null
+          entrance_exams: string[] | null
+          id: string
+          is_active: boolean | null
+          mapped_roadmap_id: string | null
+          name: string
+          required_subjects: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          duration?: string | null
+          eligibility_rules?: Json | null
+          entrance_exams?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          mapped_roadmap_id?: string | null
+          name: string
+          required_subjects?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          duration?: string | null
+          eligibility_rules?: Json | null
+          entrance_exams?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          mapped_roadmap_id?: string | null
+          name?: string
+          required_subjects?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "degrees_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "degrees_mapped_roadmap_id_fkey"
+            columns: ["mapped_roadmap_id"]
             isOneToOne: false
             referencedRelation: "roadmaps"
             referencedColumns: ["id"]
@@ -821,44 +959,65 @@ export type Database = {
       mentor_profiles: {
         Row: {
           availability_status: string | null
+          bio: string | null
           created_at: string
           expertise: string[] | null
           hourly_rate: number | null
           id: string
+          linkedin_url: string | null
+          portfolio_url: string | null
           rating: number | null
+          rejection_reason: string | null
           sessions_conducted: number | null
           specialization: string | null
           students_mentored: number | null
           updated_at: string
           user_id: string
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
           years_of_experience: number | null
         }
         Insert: {
           availability_status?: string | null
+          bio?: string | null
           created_at?: string
           expertise?: string[] | null
           hourly_rate?: number | null
           id?: string
+          linkedin_url?: string | null
+          portfolio_url?: string | null
           rating?: number | null
+          rejection_reason?: string | null
           sessions_conducted?: number | null
           specialization?: string | null
           students_mentored?: number | null
           updated_at?: string
           user_id: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
           years_of_experience?: number | null
         }
         Update: {
           availability_status?: string | null
+          bio?: string | null
           created_at?: string
           expertise?: string[] | null
           hourly_rate?: number | null
           id?: string
+          linkedin_url?: string | null
+          portfolio_url?: string | null
           rating?: number | null
+          rejection_reason?: string | null
           sessions_conducted?: number | null
           specialization?: string | null
           students_mentored?: number | null
           updated_at?: string
           user_id?: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
           years_of_experience?: number | null
         }
         Relationships: []
@@ -1730,6 +1889,7 @@ export type Database = {
       }
     }
     Enums: {
+      admin_tier: "super_admin" | "admin" | "moderator"
       app_role: "admin" | "moderator" | "user" | "mentor" | "partner"
       experience_level: "entry" | "mid" | "senior"
       user_type: "school_student" | "college_student"
@@ -1860,6 +2020,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_tier: ["super_admin", "admin", "moderator"],
       app_role: ["admin", "moderator", "user", "mentor", "partner"],
       experience_level: ["entry", "mid", "senior"],
       user_type: ["school_student", "college_student"],
