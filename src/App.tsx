@@ -34,6 +34,7 @@ import AdminPrograms from "./pages/admin/AdminPrograms";
 import AdminDailyTasks from "./pages/admin/AdminDailyTasks";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminPartners from "./pages/admin/AdminPartners";
+import AdminHomepageContent from "./pages/admin/AdminHomepageContent";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
 import MentorPrograms from "./pages/mentor/MentorPrograms";
@@ -82,6 +83,7 @@ const App = () => (
             <Route path="/admin/registrations" element={<AdminRegistrations />} />
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/partners" element={<AdminPartners />} />
+            <Route path="/admin/homepage-content" element={<AdminHomepageContent />} />
             <Route path="/mentor" element={<MentorDashboard />} />
             <Route path="/mentor/daily-tasks" element={<MentorDailyTasks />} />
             <Route path="/mentor/programs" element={<MentorPrograms />} />

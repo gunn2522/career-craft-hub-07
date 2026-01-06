@@ -681,6 +681,92 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_role_content: {
+        Row: {
+          content: Json | null
+          created_at: string | null
+          cta_link: string | null
+          cta_text: string | null
+          id: string
+          is_visible: boolean | null
+          section_key: string
+          subtitle: string | null
+          title: string | null
+          updated_at: string | null
+          visitor_role_id: string | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          id?: string
+          is_visible?: boolean | null
+          section_key: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+          visitor_role_id?: string | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          id?: string
+          is_visible?: boolean | null
+          section_key?: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+          visitor_role_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homepage_role_content_visitor_role_id_fkey"
+            columns: ["visitor_role_id"]
+            isOneToOne: false
+            referencedRelation: "visitor_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homepage_sections: {
+        Row: {
+          content: Json | null
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          section_key: string
+          subtitle: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          section_key: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          section_key?: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       internships: {
         Row: {
           apply_url: string | null
@@ -1297,6 +1383,48 @@ export type Database = {
           },
         ]
       }
+      site_metrics: {
+        Row: {
+          count_condition: Json | null
+          created_at: string | null
+          custom_value: string | null
+          display_label: string
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          metric_key: string
+          table_name: string | null
+          updated_at: string | null
+          value_type: string | null
+        }
+        Insert: {
+          count_condition?: Json | null
+          created_at?: string | null
+          custom_value?: string | null
+          display_label: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          metric_key: string
+          table_name?: string | null
+          updated_at?: string | null
+          value_type?: string | null
+        }
+        Update: {
+          count_condition?: Json | null
+          created_at?: string | null
+          custom_value?: string | null
+          display_label?: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          metric_key?: string
+          table_name?: string | null
+          updated_at?: string | null
+          value_type?: string | null
+        }
+        Relationships: []
+      }
       success_stories: {
         Row: {
           company: string | null
@@ -1549,6 +1677,42 @@ export type Database = {
           longest_streak?: number | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      visitor_roles: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_name: string
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
