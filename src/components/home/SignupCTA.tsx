@@ -1,9 +1,127 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, School, ArrowRight, Sparkles } from "lucide-react";
+import { GraduationCap, School, ArrowRight, Sparkles, Users, Building2, UserCheck } from "lucide-react";
 import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
+import { useRoleBasedSection } from "@/hooks/useHomepageContent";
+import { useVisitorRole } from "@/hooks/useVisitorRole";
+
+// Get CTA cards based on visitor role
+const getCTACards = (role: string | null) => {
+  switch (role) {
+    case 'school_student':
+      return [
+        {
+          link: "/signup?type=school",
+          icon: School,
+          title: "I'm a School Student",
+          description: "Explore career paths after 12th grade",
+          cta: "Get Started",
+        },
+        {
+          link: "/careers",
+          icon: GraduationCap,
+          title: "Explore Careers",
+          description: "Discover degrees, exams & eligibility",
+          cta: "Browse Careers",
+        },
+      ];
+    case 'mentor':
+      return [
+        {
+          link: "/auth",
+          icon: UserCheck,
+          title: "Become a Mentor",
+          description: "Share your expertise and guide students",
+          cta: "Apply Now",
+        },
+        {
+          link: "/about",
+          icon: Users,
+          title: "Learn More",
+          description: "Discover the benefits of mentoring",
+          cta: "Read More",
+        },
+      ];
+    case 'institution':
+    case 'partner':
+      return [
+        {
+          link: "/partner",
+          icon: Building2,
+          title: "Partner With Us",
+          description: "Access talented students for hiring",
+          cta: "Become a Partner",
+        },
+        {
+          link: "/about",
+          icon: Users,
+          title: "View Programs",
+          description: "Explore engagement opportunities",
+          cta: "Learn More",
+        },
+      ];
+    default:
+      return [
+        {
+          link: "/signup?type=school",
+          icon: School,
+          title: "School Student",
+          description: "Grades 8-12 exploring future career options",
+          cta: "Sign Up",
+        },
+        {
+          link: "/signup?type=college",
+          icon: GraduationCap,
+          title: "College Student",
+          description: "Undergraduates & graduates building careers",
+          cta: "Sign Up",
+        },
+      ];
+  }
+};
 
 export const SignupCTA = () => {
+  const { visitorRole } = useVisitorRole();
+  const sectionContent = useRoleBasedSection('signup_cta');
+  
+  const ctaCards = getCTACards(visitorRole);
+
+  // Dynamic title and subtitle based on role
+  const getTitle = () => {
+    if (sectionContent.title) return sectionContent.title;
+    
+    switch (visitorRole) {
+      case 'school_student':
+        return "Ready to Plan Your **Career After 12th?**";
+      case 'mentor':
+        return "Ready to **Share Your Expertise?**";
+      case 'institution':
+      case 'partner':
+        return "Ready to **Find Top Talent?**";
+      default:
+        return "Ready to **Start Your Journey?**";
+    }
+  };
+
+  const getSubtitle = () => {
+    if (sectionContent.subtitle) return sectionContent.subtitle;
+    
+    switch (visitorRole) {
+      case 'school_student':
+        return "Discover your ideal stream, understand eligibility requirements, and plan your path to college.";
+      case 'mentor':
+        return "Join our community of mentors and help shape the careers of tomorrow's professionals.";
+      case 'institution':
+      case 'partner':
+        return "Connect with motivated students who are ready to contribute to your organization's success.";
+      default:
+        return "Create your personalized profile and unlock a world of career opportunities, resources, and guidance tailored just for you.";
+    }
+  };
+
+  const title = getTitle();
+  const subtitle = getSubtitle();
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background */}
@@ -21,46 +139,37 @@ export const SignupCTA = () => {
           </div>
 
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
-            Ready to <span className="gradient-text">Start Your Journey?</span>
+            <span dangerouslySetInnerHTML={{ 
+              __html: title.replace(
+                /\*\*(.*?)\*\*/g, 
+                '<span class="gradient-text">$1</span>'
+              )
+            }} />
           </h2>
 
           <p className="text-muted-foreground text-lg mb-12 max-w-2xl mx-auto">
-            Create your personalized profile and unlock a world of career opportunities, resources, and guidance tailored just for you.
+            {subtitle}
           </p>
 
-          {/* Signup Cards */}
+          {/* CTA Cards - Dynamic based on role */}
           <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            <Link to="/signup?type=school" className="group">
-              <div className="glass-card rounded-2xl p-8 transition-all duration-300 hover:scale-105 hover:border-primary/50 h-full">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <School className="w-8 h-8 text-primary" />
+            {ctaCards.map((card) => (
+              <Link key={card.link + card.title} to={card.link} className="group">
+                <div className="glass-card rounded-2xl p-8 transition-all duration-300 hover:scale-105 hover:border-primary/50 h-full">
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <card.icon className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold mb-3">{card.title}</h3>
+                  <p className="text-muted-foreground text-sm mb-6">
+                    {card.description}
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-primary font-medium">
+                    <span>{card.cta}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </div>
                 </div>
-                <h3 className="font-display text-xl font-bold mb-3">School Student</h3>
-                <p className="text-muted-foreground text-sm mb-6">
-                  Grades 8-12 exploring future career options
-                </p>
-                <div className="flex items-center justify-center gap-2 text-primary font-medium">
-                  <span>Sign Up</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </div>
-            </Link>
-
-            <Link to="/signup?type=college" className="group">
-              <div className="glass-card rounded-2xl p-8 transition-all duration-300 hover:scale-105 hover:border-primary/50 h-full">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <GraduationCap className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="font-display text-xl font-bold mb-3">College Student</h3>
-                <p className="text-muted-foreground text-sm mb-6">
-                  Undergraduates & graduates building careers
-                </p>
-                <div className="flex items-center justify-center gap-2 text-primary font-medium">
-                  <span>Sign Up</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
 
           <p className="mt-8 text-sm text-muted-foreground">
