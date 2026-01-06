@@ -19,6 +19,7 @@ import Programs from "./pages/Programs";
 import MyCareerLab from "./pages/MyCareerLab";
 import RoadmapDetail from "./pages/RoadmapDetail";
 import NotFound from "./pages/NotFound";
+import SchoolCareers from "./pages/SchoolCareers";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDomains from "./pages/admin/AdminDomains";
 import AdminCategories from "./pages/admin/AdminCategories";
@@ -35,6 +36,8 @@ import AdminDailyTasks from "./pages/admin/AdminDailyTasks";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminHomepageContent from "./pages/admin/AdminHomepageContent";
+import AdminDegrees from "./pages/admin/AdminDegrees";
+import AdminMentorVerification from "./pages/admin/AdminMentorVerification";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
 import MentorPrograms from "./pages/mentor/MentorPrograms";
@@ -56,8 +59,10 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/careers/:slug" element={<CareerDetail />} />
+            <Route path="/school-careers" element={<SchoolCareers />} />
             <Route path="/craft" element={<Craft />} />
             <Route path="/craft/:id" element={<RoadmapDetail />} />
+            <Route path="/roadmap/:id" element={<RoadmapDetail />} />
             <Route path="/cafe" element={<Cafe />} />
             <Route path="/ambassador" element={<Ambassador />} />
             <Route path="/auth" element={<Auth />} />
@@ -71,6 +76,7 @@ const App = () => (
             <Route path="/admin/domains" element={<AdminDomains />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/careers" element={<AdminCareers />} />
+            <Route path="/admin/degrees" element={<AdminDegrees />} />
             <Route path="/admin/roadmaps" element={<AdminRoadmaps />} />
             <Route path="/admin/daily-tasks" element={<AdminDailyTasks />} />
             <Route path="/admin/resources" element={<AdminResources />} />
@@ -84,6 +90,7 @@ const App = () => (
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/partners" element={<AdminPartners />} />
             <Route path="/admin/homepage-content" element={<AdminHomepageContent />} />
+            <Route path="/admin/mentor-verification" element={<AdminMentorVerification />} />
             <Route path="/mentor" element={<MentorDashboard />} />
             <Route path="/mentor/daily-tasks" element={<MentorDailyTasks />} />
             <Route path="/mentor/programs" element={<MentorPrograms />} />
