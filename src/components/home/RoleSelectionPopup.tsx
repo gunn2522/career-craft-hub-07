@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useVisitorRoles } from '@/hooks/useHomepageContent';
 import { useVisitorRole, VisitorRoleType } from '@/hooks/useVisitorRole';
-import { GraduationCap, BookOpen, Users, Building2, Briefcase, Loader2 } from 'lucide-react';
+import { GraduationCap, BookOpen, Users, Building2, Briefcase, Loader2, School, UserCheck } from 'lucide-react';
 
 const iconMap: Record<string, React.ElementType> = {
   GraduationCap,
@@ -12,6 +12,8 @@ const iconMap: Record<string, React.ElementType> = {
   Users,
   Building2,
   Briefcase,
+  School,
+  UserCheck,
 };
 
 export const RoleSelectionPopup = () => {
@@ -19,6 +21,7 @@ export const RoleSelectionPopup = () => {
   const { data: roles, isLoading } = useVisitorRoles();
   const [open, setOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
   useEffect(() => {
     // Show popup on first visit (after a short delay for better UX)
@@ -28,19 +31,22 @@ export const RoleSelectionPopup = () => {
     }
   }, [hasVisited]);
 
-  const handleRoleSelect = (roleName: string) => {
+  const handleRoleSelect = (roleName: string, roleId: string) => {
     setSelectedRole(roleName);
+    setSelectedRoleId(roleId);
   };
 
   const handleContinue = () => {
-    if (selectedRole) {
-      setVisitorRole(selectedRole as VisitorRoleType);
+    if (selectedRole && selectedRoleId) {
+      setVisitorRole(selectedRole as VisitorRoleType, selectedRoleId);
       setOpen(false);
     }
   };
 
   const handleSkip = () => {
-    setVisitorRole('college_student'); // Default role
+    // Find college_student role ID
+    const collegeRole = roles?.find(r => r.name === 'college_student');
+    setVisitorRole('college_student', collegeRole?.id);
     setOpen(false);
   };
 
@@ -50,9 +56,9 @@ export const RoleSelectionPopup = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-lg md:max-w-2xl">
         <DialogHeader className="text-center">
-          <DialogTitle className="text-2xl font-bold">Who are you?</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">Welcome to Career Craft Cafe! ☕</DialogTitle>
           <DialogDescription className="text-base">
-            Help us personalize your experience by telling us about yourself
+            Tell us who you are so we can personalize your experience
           </DialogDescription>
         </DialogHeader>
 
@@ -74,7 +80,7 @@ export const RoleSelectionPopup = () => {
                       ? 'border-primary bg-primary/5 ring-2 ring-primary'
                       : 'hover:border-primary/50'
                   }`}
-                  onClick={() => handleRoleSelect(role.name)}
+                  onClick={() => handleRoleSelect(role.name, role.id)}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`p-2 rounded-lg ${isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>

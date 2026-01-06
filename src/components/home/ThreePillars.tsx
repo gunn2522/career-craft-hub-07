@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
-import { Briefcase, Map, Coffee, ArrowRight } from "lucide-react";
+import { Briefcase, Map, Coffee, ArrowRight, GraduationCap, Users, Building2 } from "lucide-react";
 import { useState } from "react";
 import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
+import { useRoleBasedSection } from "@/hooks/useHomepageContent";
+import { useVisitorRole } from "@/hooks/useVisitorRole";
 
-const pillars = [
+// Default pillars (fallback if no role-specific content)
+const getDefaultPillars = () => [
   {
     title: "CAREER",
     subtitle: "Find the right career for you",
@@ -30,8 +33,102 @@ const pillars = [
   },
 ];
 
+// Role-specific pillar configurations
+const getRolePillars = (role: string | null) => {
+  switch (role) {
+    case 'school_student':
+      return [
+        {
+          title: "EXPLORE",
+          subtitle: "Discover what's after 12th",
+          description: "Explore streams, degrees, and career paths based on your interests and eligibility.",
+          icon: GraduationCap,
+          path: "/careers",
+          color: "from-primary via-primary to-primary/70",
+        },
+        {
+          title: "PLAN",
+          subtitle: "Choose your degree path",
+          description: "Understand entrance exams, eligibility criteria, and the best colleges for your chosen stream.",
+          icon: Map,
+          path: "/craft",
+          color: "from-destructive via-destructive to-primary",
+        },
+        {
+          title: "PREPARE",
+          subtitle: "Get ready for college",
+          description: "Access resources, guidance sessions, and connect with mentors to prepare for your future.",
+          icon: Coffee,
+          path: "/cafe",
+          color: "from-primary/70 via-primary to-destructive/70",
+        },
+      ];
+    case 'mentor':
+      return [
+        {
+          title: "MENTOR",
+          subtitle: "Guide the next generation",
+          description: "Share your expertise and help students navigate their career journeys with confidence.",
+          icon: Users,
+          path: "/auth",
+          color: "from-primary via-primary to-primary/70",
+        },
+        {
+          title: "CREATE",
+          subtitle: "Build your personal brand",
+          description: "Create content, host sessions, and establish yourself as a thought leader in your field.",
+          icon: Map,
+          path: "/craft",
+          color: "from-destructive via-destructive to-primary",
+        },
+        {
+          title: "CONNECT",
+          subtitle: "Expand your network",
+          description: "Connect with other mentors, institutions, and industry partners to grow your impact.",
+          icon: Coffee,
+          path: "/cafe",
+          color: "from-primary/70 via-primary to-destructive/70",
+        },
+      ];
+    case 'institution':
+    case 'partner':
+      return [
+        {
+          title: "PARTNER",
+          subtitle: "Join our ecosystem",
+          description: "Connect with talented students, showcase opportunities, and build your employer brand.",
+          icon: Building2,
+          path: "/partner",
+          color: "from-primary via-primary to-primary/70",
+        },
+        {
+          title: "RECRUIT",
+          subtitle: "Find the right talent",
+          description: "Access a pool of skilled, career-ready candidates who match your requirements.",
+          icon: Users,
+          path: "/careers",
+          color: "from-destructive via-destructive to-primary",
+        },
+        {
+          title: "ENGAGE",
+          subtitle: "Host events & workshops",
+          description: "Conduct hiring drives, webinars, and workshops to connect with future employees.",
+          icon: Coffee,
+          path: "/cafe",
+          color: "from-primary/70 via-primary to-destructive/70",
+        },
+      ];
+    default:
+      return getDefaultPillars();
+  }
+};
+
 export const ThreePillars = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { visitorRole } = useVisitorRole();
+  const sectionContent = useRoleBasedSection('three_pillars');
+
+  const pillars = getRolePillars(visitorRole);
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -45,16 +142,25 @@ export const ThreePillars = () => {
       <FloatingShapes3D count={10} />
 
       <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
-        {/* Section Header */}
+        {/* Section Header - Dynamic from database */}
         <div className="text-center mb-20">
           <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
             Your Journey Starts Here
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Three Pillars to <span className="gradient-text">Success</span>
+            {sectionContent.title ? (
+              <span dangerouslySetInnerHTML={{ 
+                __html: sectionContent.title.replace(
+                  /\*\*(.*?)\*\*/g, 
+                  '<span class="gradient-text">$1</span>'
+                )
+              }} />
+            ) : (
+              <>Three Pillars to <span className="gradient-text">Success</span></>
+            )}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            A complete ecosystem designed to guide you from exploration to expertise
+            {sectionContent.subtitle || 'A complete ecosystem designed to guide you from exploration to expertise'}
           </p>
         </div>
 
