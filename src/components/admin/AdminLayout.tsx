@@ -16,13 +16,15 @@ import {
   Home,
   Sparkles,
   ClipboardList,
-  Building2
+  Building2,
+  LayoutList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
 const sidebarLinks = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
+  { name: "Homepage Content", path: "/admin/homepage-content", icon: LayoutList },
   { name: "Users", path: "/admin/users", icon: Users },
   { name: "Partners", path: "/admin/partners", icon: Building2 },
   { name: "Domains", path: "/admin/domains", icon: Briefcase },

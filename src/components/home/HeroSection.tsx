@@ -3,12 +3,36 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Compass, ChevronDown } from "lucide-react";
 import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
 import { TorchElements3D } from "@/components/ui/TorchElements3D";
+import { LiveStats } from "@/components/home/LiveStats";
+import { useHomepageSection } from "@/hooks/useHomepageContent";
+import { useVisitorRole } from "@/hooks/useVisitorRole";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const HeroSection = () => {
+  const heroSection = useHomepageSection('hero');
+  const { visitorRole } = useVisitorRole();
+
   const scrollToContent = () => {
     window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" });
   };
+
+  // Dynamic CTA based on visitor role
+  const getPrimaryCTA = () => {
+    switch (visitorRole) {
+      case 'school_student':
+        return { text: 'Explore After 12th', link: '/careers' };
+      case 'mentor':
+        return { text: 'Become a Mentor', link: '/auth' };
+      case 'partner':
+        return { text: 'Partner With Us', link: '/partner' };
+      case 'institution':
+        return { text: 'Join as Institution', link: '/partner' };
+      default:
+        return { text: 'Explore Careers', link: '/careers' };
+    }
+  };
+
+  const primaryCTA = getPrimaryCTA();
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -39,24 +63,38 @@ export const HeroSection = () => {
               Your Career Journey Starts Here
             </div>
 
-            {/* Main Headline */}
+            {/* Main Headline - Dynamic from database */}
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              Craft Your Career.
-              <br />
-              <span className="gradient-text">Build Your Future.</span>
+              {heroSection?.title?.split('.').map((part, i) => (
+                <span key={i}>
+                  {i === 0 ? part + '.' : null}
+                  {i === 1 ? (
+                    <>
+                      <br />
+                      <span className="gradient-text">{part.trim()}</span>
+                    </>
+                  ) : null}
+                </span>
+              )) || (
+                <>
+                  Craft Your Career.
+                  <br />
+                  <span className="gradient-text">Build Your Future.</span>
+                </>
+              )}
             </h1>
 
-            {/* Subheadline */}
+            {/* Subheadline - Dynamic from database */}
             <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              Discover your perfect career path, master in-demand skills, and connect with opportunities that transform your potential into success.
+              {heroSection?.subtitle || 'Discover your perfect career path, master in-demand skills, and connect with opportunities that transform your potential into success.'}
             </p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Dynamic based on role */}
             <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
               <Button variant="hero" size="xl" asChild>
-                <Link to="/careers" className="group">
+                <Link to={primaryCTA.link} className="group">
                   <Compass className="w-5 h-5" />
-                  Explore Careers
+                  {primaryCTA.text}
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
@@ -67,19 +105,9 @@ export const HeroSection = () => {
               </Button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              {[
-                { value: "10K+", label: "Students Guided" },
-                { value: "500+", label: "Career Paths" },
-                { value: "200+", label: "Partner Companies" },
-                { value: "95%", label: "Success Rate" },
-              ].map((stat, i) => (
-                <div key={i} className="text-left">
-                  <div className="font-display text-2xl sm:text-3xl font-bold gradient-text">{stat.value}</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</div>
-                </div>
-              ))}
+            {/* Live Stats - Dynamic from database */}
+            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              <LiveStats />
             </div>
           </div>
 
