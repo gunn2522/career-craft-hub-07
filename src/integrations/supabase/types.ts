@@ -47,6 +47,48 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_metrics: {
+        Row: {
+          count_condition: Json | null
+          created_at: string | null
+          custom_value: string | null
+          display_label: string
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          metric_key: string
+          table_name: string | null
+          updated_at: string | null
+          value_type: string | null
+        }
+        Insert: {
+          count_condition?: Json | null
+          created_at?: string | null
+          custom_value?: string | null
+          display_label: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          metric_key: string
+          table_name?: string | null
+          updated_at?: string | null
+          value_type?: string | null
+        }
+        Update: {
+          count_condition?: Json | null
+          created_at?: string | null
+          custom_value?: string | null
+          display_label?: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          metric_key?: string
+          table_name?: string | null
+          updated_at?: string | null
+          value_type?: string | null
+        }
+        Relationships: []
+      }
       admin_permissions: {
         Row: {
           admin_tier: Database["public"]["Enums"]["admin_tier"]
@@ -905,6 +947,217 @@ export type Database = {
         }
         Relationships: []
       }
+      institution_events: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          event_date: string | null
+          id: string
+          institution_id: string
+          is_active: boolean | null
+          location: string | null
+          mode: string | null
+          stream_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          institution_id: string
+          is_active?: boolean | null
+          location?: string | null
+          mode?: string | null
+          stream_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          institution_id?: string
+          is_active?: boolean | null
+          location?: string | null
+          mode?: string | null
+          stream_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_events_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institution_events_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institution_events_stream_id_fkey"
+            columns: ["stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institution_members: {
+        Row: {
+          id: string
+          institution_id: string
+          joined_at: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          institution_id: string
+          joined_at?: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          institution_id?: string
+          joined_at?: string
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_members_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institution_resources: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          institution_id: string
+          is_approved: boolean | null
+          stream_id: string | null
+          title: string
+          type: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          institution_id: string
+          is_approved?: boolean | null
+          stream_id?: string | null
+          title: string
+          type?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          institution_id?: string
+          is_approved?: boolean | null
+          stream_id?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_resources_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institution_resources_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institution_resources_stream_id_fkey"
+            columns: ["stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutions: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          is_verified: boolean | null
+          is_visible: boolean | null
+          location: string | null
+          logo_url: string | null
+          member_count: number | null
+          name: string
+          type: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_verified?: boolean | null
+          is_visible?: boolean | null
+          location?: string | null
+          logo_url?: string | null
+          member_count?: number | null
+          name: string
+          type?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_verified?: boolean | null
+          is_visible?: boolean | null
+          location?: string | null
+          logo_url?: string | null
+          member_count?: number | null
+          name?: string
+          type?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       internships: {
         Row: {
           apply_url: string | null
@@ -951,6 +1204,45 @@ export type Database = {
           requirements?: string[] | null
           stipend?: string | null
           target_audience?: Database["public"]["Enums"]["user_type"][] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mentor_posts: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          is_approved: boolean | null
+          is_published: boolean | null
+          likes_count: number | null
+          mentor_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_approved?: boolean | null
+          is_published?: boolean | null
+          likes_count?: number | null
+          mentor_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_approved?: boolean | null
+          is_published?: boolean | null
+          likes_count?: number | null
+          mentor_id?: string
           title?: string
           updated_at?: string
         }
