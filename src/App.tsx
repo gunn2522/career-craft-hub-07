@@ -38,12 +38,17 @@ import AdminPartners from "./pages/admin/AdminPartners";
 import AdminHomepageContent from "./pages/admin/AdminHomepageContent";
 import AdminDegrees from "./pages/admin/AdminDegrees";
 import AdminMentorVerification from "./pages/admin/AdminMentorVerification";
+import AdminInstitutions from "./pages/admin/AdminInstitutions";
+import AdminMetrics from "./pages/admin/AdminMetrics";
+import AdminAccessControl from "./pages/admin/AdminAccessControl";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
 import MentorPrograms from "./pages/mentor/MentorPrograms";
 import MentorInternships from "./pages/mentor/MentorInternships";
 import MentorBlogs from "./pages/mentor/MentorBlogs";
 import MentorResources from "./pages/mentor/MentorResources";
+import Institutions from "./pages/Institutions";
+import InstitutionProfile from "./pages/InstitutionProfile";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +96,11 @@ const App = () => (
             <Route path="/admin/partners" element={<AdminPartners />} />
             <Route path="/admin/homepage-content" element={<AdminHomepageContent />} />
             <Route path="/admin/mentor-verification" element={<AdminMentorVerification />} />
+            <Route path="/admin/institutions" element={<AdminInstitutions />} />
+            <Route path="/admin/metrics" element={<AdminMetrics />} />
+            <Route path="/admin/access-control" element={<AdminAccessControl />} />
+            <Route path="/institutions" element={<Institutions />} />
+            <Route path="/institutions/:id" element={<InstitutionProfile />} />
             <Route path="/mentor" element={<MentorDashboard />} />
             <Route path="/mentor/daily-tasks" element={<MentorDailyTasks />} />
             <Route path="/mentor/programs" element={<MentorPrograms />} />

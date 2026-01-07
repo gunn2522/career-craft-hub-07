@@ -25,9 +25,12 @@ import logo from "@/assets/logo.png";
 const sidebarLinks = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { name: "Homepage Content", path: "/admin/homepage-content", icon: LayoutList },
+  { name: "Live Metrics", path: "/admin/metrics", icon: Settings },
+  { name: "Access Control", path: "/admin/access-control", icon: Settings },
   { name: "Users", path: "/admin/users", icon: Users },
   { name: "Mentor Verification", path: "/admin/mentor-verification", icon: Users },
   { name: "Partners", path: "/admin/partners", icon: Building2 },
+  { name: "Institutions", path: "/admin/institutions", icon: Building2 },
   { name: "Domains", path: "/admin/domains", icon: Briefcase },
   { name: "Categories", path: "/admin/categories", icon: Briefcase },
   { name: "Careers", path: "/admin/careers", icon: Briefcase },
