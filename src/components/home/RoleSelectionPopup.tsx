@@ -24,10 +24,9 @@ export const RoleSelectionPopup = () => {
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Show popup on first visit (after a short delay for better UX)
+    // Show popup immediately on first visit - MANDATORY role selection
     if (!hasVisited) {
-      const timer = setTimeout(() => setOpen(true), 1000);
-      return () => clearTimeout(timer);
+      setOpen(true);
     }
   }, [hasVisited]);
 
@@ -43,18 +42,37 @@ export const RoleSelectionPopup = () => {
     }
   };
 
-  const handleSkip = () => {
-    // Find college_student role ID
-    const collegeRole = roles?.find(r => r.name === 'college_student');
-    setVisitorRole('college_student', collegeRole?.id);
-    setOpen(false);
-  };
+  // Remove skip option - role selection is MANDATORY
+  // Users must select a role to proceed
 
   if (hasVisited) return null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-lg md:max-w-2xl">
+    <Dialog 
+      open={open} 
+      onOpenChange={(isOpen) => {
+        // Prevent closing without selection - role is MANDATORY
+        if (!isOpen && !hasVisited) {
+          return; // Don't close
+        }
+        setOpen(isOpen);
+      }}
+    >
+      <DialogContent 
+        className="sm:max-w-lg md:max-w-2xl"
+        onInteractOutside={(e) => {
+          // Prevent closing on outside click - role is MANDATORY
+          if (!hasVisited) {
+            e.preventDefault();
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          // Prevent closing on escape - role is MANDATORY
+          if (!hasVisited) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader className="text-center">
           <DialogTitle className="text-2xl font-bold">Welcome to Career Craft Cafe! ☕</DialogTitle>
           <DialogDescription className="text-base">
@@ -101,18 +119,11 @@ export const RoleSelectionPopup = () => {
 
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <Button
-            variant="outline"
-            className="flex-1"
-            onClick={handleSkip}
-          >
-            Skip for now
-          </Button>
-          <Button
-            className="flex-1"
+            className="w-full"
             onClick={handleContinue}
             disabled={!selectedRole}
           >
-            Continue
+            {selectedRole ? 'Continue' : 'Select a role to continue'}
           </Button>
         </div>
       </DialogContent>

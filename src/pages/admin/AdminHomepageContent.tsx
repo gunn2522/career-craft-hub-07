@@ -12,7 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Save, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, GripVertical, Lock, Briefcase, Map, Coffee } from "lucide-react";
+import { useEffect } from "react";
 
 interface VisitorRole {
   id: string;
@@ -45,6 +46,36 @@ interface SiteMetric {
   is_visible: boolean;
 }
 
+interface PillarContent {
+  subtitle: string;
+  description: string;
+  cta_link: string;
+}
+
+interface ThreePillarsContent {
+  career: PillarContent;
+  craft: PillarContent;
+  cafe: PillarContent;
+}
+
+const defaultPillarsContent: ThreePillarsContent = {
+  career: {
+    subtitle: 'Find the right career for you',
+    description: 'Explore 500+ career paths with detailed insights, salary data, and growth opportunities tailored to your interests.',
+    cta_link: '/careers',
+  },
+  craft: {
+    subtitle: 'Best roadmap for you',
+    description: 'Follow step-by-step roadmaps, access curated resources, and build real-world projects to become job-ready.',
+    cta_link: '/craft',
+  },
+  cafe: {
+    subtitle: 'Best resources for it',
+    description: 'Join events, hackathons, workshops, and network with industry experts and like-minded peers.',
+    cta_link: '/cafe',
+  },
+};
+
 const AdminHomepageContent = () => {
   const queryClient = useQueryClient();
   const [editingSection, setEditingSection] = useState<HomepageSection | null>(null);
@@ -52,6 +83,8 @@ const AdminHomepageContent = () => {
   const [editingMetric, setEditingMetric] = useState<SiteMetric | null>(null);
   const [newRole, setNewRole] = useState({ name: '', display_name: '', description: '', icon: 'Users' });
   const [showNewRoleDialog, setShowNewRoleDialog] = useState(false);
+  const [pillarsContent, setPillarsContent] = useState<ThreePillarsContent>(defaultPillarsContent);
+  const [pillarsLoading, setPillarsLoading] = useState(true);
 
   // Fetch all visitor roles (including inactive for admin)
   const { data: roles, isLoading: rolesLoading } = useQuery({
@@ -90,6 +123,66 @@ const AdminHomepageContent = () => {
       if (error) throw error;
       return data as SiteMetric[];
     },
+  });
+
+  // Load pillars content from three_pillars section
+  useEffect(() => {
+    const loadPillarsContent = async () => {
+      const { data, error } = await supabase
+        .from('homepage_sections')
+        .select('content')
+        .eq('section_key', 'three_pillars')
+        .single();
+      
+      if (!error && data?.content) {
+        const content = data.content as unknown as Record<string, PillarContent>;
+        setPillarsContent({
+          career: content.career || defaultPillarsContent.career,
+          craft: content.craft || defaultPillarsContent.craft,
+          cafe: content.cafe || defaultPillarsContent.cafe,
+        });
+      }
+      setPillarsLoading(false);
+    };
+    loadPillarsContent();
+  }, []);
+
+  // Save pillars content mutation
+  const savePillarsContent = useMutation({
+    mutationFn: async () => {
+      // First check if section exists
+      const { data: existing } = await supabase
+        .from('homepage_sections')
+        .select('id')
+        .eq('section_key', 'three_pillars')
+        .single();
+
+      const contentJson = JSON.parse(JSON.stringify(pillarsContent));
+
+      if (existing) {
+        const { error } = await supabase
+          .from('homepage_sections')
+          .update({ content: contentJson })
+          .eq('section_key', 'three_pillars');
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('homepage_sections')
+          .insert([{
+            section_key: 'three_pillars',
+            title: 'Three Pillars to **Success**',
+            subtitle: 'A complete ecosystem designed to guide you from exploration to expertise',
+            content: contentJson,
+            display_order: 2,
+          }]);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['three-pillars-content'] });
+      toast.success('3 Pillars content saved successfully');
+    },
+    onError: () => toast.error('Failed to save pillars content'),
   });
 
   // Update section mutation
@@ -204,6 +297,7 @@ const AdminHomepageContent = () => {
       <Tabs defaultValue="sections" className="space-y-6">
         <TabsList>
           <TabsTrigger value="sections">Page Sections</TabsTrigger>
+          <TabsTrigger value="pillars">3 Pillars to Success</TabsTrigger>
           <TabsTrigger value="roles">Visitor Roles</TabsTrigger>
           <TabsTrigger value="metrics">Live Metrics</TabsTrigger>
         </TabsList>
@@ -508,6 +602,188 @@ const AdminHomepageContent = () => {
                     ))}
                   </TableBody>
                 </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 3 Pillars Tab */}
+        <TabsContent value="pillars">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span>3 Pillars to Success</span>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1">
+                  <Lock className="w-3 h-3" /> Structure Locked
+                </span>
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                The pillar names (Career, Craft, Cafe) and their order are fixed. You can only edit the subtitles, descriptions, and CTA links.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {pillarsLoading ? (
+                <p>Loading...</p>
+              ) : (
+                <>
+                  {/* Career Pillar */}
+                  <div className="border rounded-lg p-4 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Briefcase className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold flex items-center gap-2">
+                          CAREER
+                          <Lock className="w-3 h-3 text-muted-foreground" />
+                        </h3>
+                        <p className="text-xs text-muted-foreground">First Pillar (Position Locked)</p>
+                      </div>
+                    </div>
+                    <div className="grid gap-4">
+                      <div>
+                        <Label>Subtitle</Label>
+                        <Input
+                          value={pillarsContent.career.subtitle}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            career: { ...pillarsContent.career, subtitle: e.target.value }
+                          })}
+                          placeholder="Find the right career for you"
+                        />
+                      </div>
+                      <div>
+                        <Label>Description (shown on hover)</Label>
+                        <Textarea
+                          value={pillarsContent.career.description}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            career: { ...pillarsContent.career, description: e.target.value }
+                          })}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label>CTA Link</Label>
+                        <Input
+                          value={pillarsContent.career.cta_link}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            career: { ...pillarsContent.career, cta_link: e.target.value }
+                          })}
+                          placeholder="/careers"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Craft Pillar */}
+                  <div className="border rounded-lg p-4 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                        <Map className="w-5 h-5 text-destructive" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold flex items-center gap-2">
+                          CRAFT
+                          <Lock className="w-3 h-3 text-muted-foreground" />
+                        </h3>
+                        <p className="text-xs text-muted-foreground">Second Pillar (Position Locked)</p>
+                      </div>
+                    </div>
+                    <div className="grid gap-4">
+                      <div>
+                        <Label>Subtitle</Label>
+                        <Input
+                          value={pillarsContent.craft.subtitle}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            craft: { ...pillarsContent.craft, subtitle: e.target.value }
+                          })}
+                          placeholder="Best roadmap for you"
+                        />
+                      </div>
+                      <div>
+                        <Label>Description (shown on hover)</Label>
+                        <Textarea
+                          value={pillarsContent.craft.description}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            craft: { ...pillarsContent.craft, description: e.target.value }
+                          })}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label>CTA Link</Label>
+                        <Input
+                          value={pillarsContent.craft.cta_link}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            craft: { ...pillarsContent.craft, cta_link: e.target.value }
+                          })}
+                          placeholder="/craft"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Cafe Pillar */}
+                  <div className="border rounded-lg p-4 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Coffee className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold flex items-center gap-2">
+                          CAFE
+                          <Lock className="w-3 h-3 text-muted-foreground" />
+                        </h3>
+                        <p className="text-xs text-muted-foreground">Third Pillar (Position Locked)</p>
+                      </div>
+                    </div>
+                    <div className="grid gap-4">
+                      <div>
+                        <Label>Subtitle</Label>
+                        <Input
+                          value={pillarsContent.cafe.subtitle}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            cafe: { ...pillarsContent.cafe, subtitle: e.target.value }
+                          })}
+                          placeholder="Best resources for it"
+                        />
+                      </div>
+                      <div>
+                        <Label>Description (shown on hover)</Label>
+                        <Textarea
+                          value={pillarsContent.cafe.description}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            cafe: { ...pillarsContent.cafe, description: e.target.value }
+                          })}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label>CTA Link</Label>
+                        <Input
+                          value={pillarsContent.cafe.cta_link}
+                          onChange={(e) => setPillarsContent({
+                            ...pillarsContent,
+                            cafe: { ...pillarsContent.cafe, cta_link: e.target.value }
+                          })}
+                          placeholder="/cafe"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button onClick={() => savePillarsContent.mutate()} className="w-full">
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Pillars Content
+                  </Button>
+                </>
               )}
             </CardContent>
           </Card>
