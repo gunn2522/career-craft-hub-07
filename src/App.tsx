@@ -77,9 +77,24 @@ import InstitutionProfilePage from "./pages/institution/InstitutionProfilePage";
 import InstitutionEvents from "./pages/institution/InstitutionEvents";
 import InstitutionMoU from "./pages/institution/InstitutionMoU";
 import InstitutionPreview from "./pages/institution/InstitutionPreview";
+import InstitutionResources from "./pages/institution/InstitutionResources";
+import InstitutionMembers from "./pages/institution/InstitutionMembers";
+import InstitutionPrograms from "./pages/institution/InstitutionPrograms";
+import InstitutionPlans from "./pages/institution/InstitutionPlans";
+import InstitutionInquiries from "./pages/institution/InstitutionInquiries";
+import InstitutionSettings from "./pages/institution/InstitutionSettings";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerProfilePage from "./pages/partner/PartnerProfilePage";
 import PartnerEvents from "./pages/partner/PartnerEvents";
+import PartnerPreview from "./pages/partner/PartnerPreview";
+import PartnerJobs from "./pages/partner/PartnerJobs";
+import PartnerEngagement from "./pages/partner/PartnerEngagement";
+import PartnerCollaborations from "./pages/partner/PartnerCollaborations";
+import PartnerAnalytics from "./pages/partner/PartnerAnalytics";
+import PartnerMoU from "./pages/partner/PartnerMoU";
+import PartnerPlans from "./pages/partner/PartnerPlans";
+import PartnerInquiries from "./pages/partner/PartnerInquiries";
+import PartnerSettings from "./pages/partner/PartnerSettings";
 import PlansAndPricing from "./pages/PlansAndPricing";
 
 const queryClient = new QueryClient();
@@ -377,6 +392,36 @@ const App = () => (
                 <InstitutionPreview />
               </ProtectedRoute>
             } />
+            <Route path="/institution/resources" element={
+              <ProtectedRoute allowedRoles={["institution"]}>
+                <InstitutionResources />
+              </ProtectedRoute>
+            } />
+            <Route path="/institution/members" element={
+              <ProtectedRoute allowedRoles={["institution"]}>
+                <InstitutionMembers />
+              </ProtectedRoute>
+            } />
+            <Route path="/institution/programs" element={
+              <ProtectedRoute allowedRoles={["institution"]}>
+                <InstitutionPrograms />
+              </ProtectedRoute>
+            } />
+            <Route path="/institution/plans" element={
+              <ProtectedRoute allowedRoles={["institution"]}>
+                <InstitutionPlans />
+              </ProtectedRoute>
+            } />
+            <Route path="/institution/inquiries" element={
+              <ProtectedRoute allowedRoles={["institution"]}>
+                <InstitutionInquiries />
+              </ProtectedRoute>
+            } />
+            <Route path="/institution/settings" element={
+              <ProtectedRoute allowedRoles={["institution"]}>
+                <InstitutionSettings />
+              </ProtectedRoute>
+            } />
 
             {/* Partner Dashboard Routes - Partner Only */}
             <Route path="/partner-dashboard" element={
@@ -389,9 +434,54 @@ const App = () => (
                 <PartnerProfilePage />
               </ProtectedRoute>
             } />
+            <Route path="/partner-dashboard/preview" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerPreview />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/jobs" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerJobs />
+              </ProtectedRoute>
+            } />
             <Route path="/partner-dashboard/events" element={
               <ProtectedRoute allowedRoles={["partner"]}>
                 <PartnerEvents />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/engagement" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerEngagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/collaborations" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerCollaborations />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/analytics" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerAnalytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/mou" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerMoU />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/plans" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerPlans />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/inquiries" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerInquiries />
+              </ProtectedRoute>
+            } />
+            <Route path="/partner-dashboard/settings" element={
+              <ProtectedRoute allowedRoles={["partner"]}>
+                <PartnerSettings />
               </ProtectedRoute>
             } />
 
