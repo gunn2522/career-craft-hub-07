@@ -3336,7 +3336,7 @@ export type Database = {
       app_role: "admin" | "moderator" | "user" | "mentor" | "partner"
       experience_level: "entry" | "mid" | "senior"
       question_type: "mcq" | "likert"
-      user_type: "school_student" | "college_student"
+      user_type: "school_student" | "college_student" | "mentor" | "partner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3468,7 +3468,7 @@ export const Constants = {
       app_role: ["admin", "moderator", "user", "mentor", "partner"],
       experience_level: ["entry", "mid", "senior"],
       question_type: ["mcq", "likert"],
-      user_type: ["school_student", "college_student"],
+      user_type: ["school_student", "college_student", "mentor", "partner"],
     },
   },
 } as const
