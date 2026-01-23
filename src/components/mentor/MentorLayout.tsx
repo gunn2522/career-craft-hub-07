@@ -22,9 +22,10 @@ interface MentorLayoutProps {
 
 const menuItems = [
   { name: "Dashboard", path: "/mentor", icon: LayoutDashboard },
-  { name: "Daily Tasks", path: "/mentor/daily-tasks", icon: ClipboardList },
-  { name: "My Programs", path: "/mentor/programs", icon: BookOpen },
-  { name: "Internships", path: "/mentor/internships", icon: Briefcase },
+  { name: "Daily Guidance", path: "/mentor/guidance", icon: ClipboardList },
+  { name: "My Events", path: "/mentor/events", icon: BookOpen },
+  { name: "My Rooms", path: "/mentor/rooms", icon: Library },
+  { name: "Subscribers", path: "/mentor/subscribers", icon: Briefcase },
   { name: "Blogs", path: "/mentor/blogs", icon: FileText },
   { name: "Resources", path: "/mentor/resources", icon: Library },
 ];
