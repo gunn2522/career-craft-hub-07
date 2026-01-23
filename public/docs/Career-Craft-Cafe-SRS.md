@@ -1,8 +1,8 @@
 # Software Requirements Specification (SRS)
 ## Career Craft Cafe - EdTech Platform
 
-**Document Version:** 1.0  
-**Date:** January 3, 2026  
+**Document Version:** 4.0  
+**Date:** January 23, 2026  
 **Standard:** IEEE 830 / IEEE 29148  
 
 ---
@@ -12,18 +12,21 @@
 1. [Introduction](#1-introduction)
 2. [Product Overview](#2-product-overview)
 3. [User Roles & Permissions](#3-user-roles--permissions)
-4. [Information Architecture](#4-information-architecture)
-5. [Functional Requirements](#5-functional-requirements)
-6. [Careers Module](#6-careers-module)
-7. [Roadmap Module](#7-roadmap-module)
-8. [Progress & Gamification](#8-progress--gamification)
-9. [Search & Recommendation](#9-search--recommendation)
-10. [Admin Panel](#10-admin-panel)
-11. [Data Models & Relationships](#11-data-models--relationships)
-12. [Non-Functional Requirements](#12-non-functional-requirements)
-13. [Edge Cases & Error Handling](#13-edge-cases--error-handling)
-14. [Future Scalability](#14-future-scalability)
-15. [Acceptance Criteria](#15-acceptance-criteria)
+4. [Visitor Role System](#4-visitor-role-system)
+5. [Information Architecture](#5-information-architecture)
+6. [Functional Requirements](#6-functional-requirements)
+7. [School Student Career Flow](#7-school-student-career-flow)
+8. [Careers Module](#8-careers-module)
+9. [Roadmap Module](#9-roadmap-module)
+10. [Progress & Gamification](#10-progress--gamification)
+11. [Admin Panel](#11-admin-panel)
+12. [Live Metrics System](#12-live-metrics-system)
+13. [Three Pillars Section](#13-three-pillars-section)
+14. [Data Models & Relationships](#14-data-models--relationships)
+15. [Non-Functional Requirements](#15-non-functional-requirements)
+16. [Edge Cases & Error Handling](#16-edge-cases--error-handling)
+17. [Future Scalability](#17-future-scalability)
+18. [Acceptance Criteria](#18-acceptance-criteria)
 
 ---
 
@@ -36,12 +39,16 @@ This Software Requirements Specification (SRS) defines the complete functional a
 ### 1.2 Scope
 
 Career Craft Cafe provides:
+- **Mandatory role-based personalization** at first visit
 - Career exploration with interactive career graphs
+- **School-to-College career bridge** (After 12th guidance)
 - Personalized learning roadmaps
 - Progress tracking with gamification
 - Mentor connections and networking
+- Institution and Partner management
 - Resource library (Cafe)
-- Admin management system
+- **Fully admin-driven CMS** with zero hardcoding
+- **Live auto-updating metrics**
 
 ### 1.3 Definitions & Acronyms
 
@@ -52,6 +59,9 @@ Career Craft Cafe provides:
 | Career Graph | Visual representation of career progression paths |
 | Roadmap | Step-by-step learning path for a specific career |
 | Cafe | Resource library section of the platform |
+| Visitor Role | Pre-login role selection that personalizes the experience |
+| Three Pillars | Fixed homepage structure: Career, Craft, Cafe |
+| Stream | Academic domain after 12th (Science, Commerce, Arts) |
 
 ### 1.4 References
 
@@ -166,9 +176,75 @@ $$ LANGUAGE sql SECURITY DEFINER;
 
 ---
 
-## 4. Information Architecture
+## 4. Visitor Role System
 
-### 4.1 Public Pages
+### 4.1 Mandatory Role Selection
+
+Upon first visit to the website, users MUST select their role before accessing content.
+
+#### 4.1.1 Role Selection Flow
+
+```
+First Visit → Role Selection Popup → Store in localStorage → Personalize Experience
+```
+
+#### 4.1.2 Available Visitor Roles (Admin-Configurable)
+
+| Role | Name | Description |
+|------|------|-------------|
+| School Student | `school_student` | Currently in school, exploring career options after 12th |
+| College Student | `college_student` | Pursuing higher education, building career skills |
+| Mentor | `mentor` | Industry professional ready to guide students |
+| Institution | `institution` | Educational institution seeking partnerships |
+| Partner Company | `partner` | Company looking to hire or train talent |
+
+#### 4.1.3 Personalization Behavior
+
+- **Homepage sections**: Content adapts based on selected role
+- **CTAs**: Call-to-action buttons change per role
+- **Navigation**: Priority links change based on role
+- **Hero Section**: Title, subtitle, and primary CTA personalized
+
+#### 4.1.4 Technical Implementation
+
+```typescript
+// Role stored in localStorage
+const VISITOR_ROLE_KEY = 'ccc_visitor_role';
+const VISITOR_ROLE_ID_KEY = 'ccc_visitor_role_id';
+
+// Role-based content fetched from homepage_role_content table
+```
+
+### 4.2 Admin Management
+
+Administrators can:
+- Add/edit/remove visitor role types
+- Configure role-specific homepage content (title, subtitle, CTA)
+- Toggle role visibility
+- Reorder roles in selection popup
+
+---
+
+## 5. Information Architecture
+
+### 5.1 Public Pages
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Home | `/` | Landing page with hero, pillars, success stories |
+| Careers | `/careers` | Career listing with filters |
+| School Careers | `/school-careers` | After 12th career guide |
+| Career Detail | `/careers/:slug` | Individual career with graph |
+| Programs | `/programs` | Available learning programs |
+| Cafe | `/cafe` | Resource library |
+| About | `/about` | Platform information |
+| Blogs | `/blogs` | Blog articles |
+| Ambassador | `/ambassador` | Ambassador program info |
+| Partner | `/partner` | Partnership opportunities |
+| Institutions | `/institutions` | Institution directory |
+| Institution Profile | `/institutions/:id` | Individual institution page |
+
+### 5.2 Authenticated Pages
 
 | Page | Route | Description |
 |------|-------|-------------|
@@ -192,24 +268,32 @@ $$ LANGUAGE sql SECURITY DEFINER;
 | Signup | `/signup` | Guest |
 | Auth | `/auth` | Guest |
 
-### 4.3 Admin Pages
+### 5.3 Admin Pages
 
 | Page | Route | Required Role |
 |------|-------|---------------|
 | Dashboard | `/admin` | Admin |
-| Careers Management | `/admin/careers` | Admin |
-| Roadmaps Management | `/admin/roadmaps` | Admin |
-| Resources | `/admin/resources` | Admin |
-| Programs | `/admin/programs` | Admin |
-| Blogs | `/admin/blogs` | Admin |
-| Events | `/admin/events` | Admin |
-| Success Stories | `/admin/success-stories` | Admin |
+| Homepage Content | `/admin/homepage-content` | Admin |
+| Live Metrics | `/admin/metrics` | Admin |
+| Access Control | `/admin/access-control` | Super Admin |
+| Users | `/admin/users` | Admin |
+| Mentor Verification | `/admin/mentor-verification` | Admin |
+| Partners | `/admin/partners` | Admin |
+| Institutions | `/admin/institutions` | Admin |
 | Domains | `/admin/domains` | Admin |
 | Categories | `/admin/categories` | Admin |
+| Careers Management | `/admin/careers` | Admin |
+| Degrees | `/admin/degrees` | Admin |
+| Roadmaps Management | `/admin/roadmaps` | Admin |
 | Daily Tasks | `/admin/daily-tasks` | Admin |
+| Resources | `/admin/resources` | Admin |
 | Internships | `/admin/internships` | Admin |
-| Applications | `/admin/applications` | Admin |
+| Programs | `/admin/programs` | Admin |
 | Registrations | `/admin/registrations` | Admin |
+| Blogs | `/admin/blogs` | Admin |
+| Success Stories | `/admin/success-stories` | Admin |
+| Events | `/admin/events` | Admin |
+| Applications | `/admin/applications` | Admin |
 
 ### 4.4 Mentor Pages
 
@@ -277,7 +361,86 @@ $$ LANGUAGE sql SECURITY DEFINER;
 
 ---
 
-## 6. Careers Module
+## 7. School Student Career Flow
+
+### 7.1 Overview
+
+The School Student Career Flow guides 12th-grade students from stream selection to career discovery, bridging into the existing college roadmap system.
+
+#### 7.1.1 Strict User Flow (Non-Negotiable)
+
+```
+After Class 12 → Select Stream → Select Category → View Degree Requirements → Link to College Roadmap → Career Roles
+```
+
+### 7.2 Stream Selection (Step 1)
+
+**Mandatory** - Users cannot proceed without selecting a stream.
+
+| Stream | Description |
+|--------|-------------|
+| Science | Engineering, Medical, Data Science, Research, Defence |
+| Commerce | Finance, Business, Economics, Banking |
+| Arts / Humanities | Law, Design, Psychology, Media, Civil Services |
+| Exploring | Undecided students exploring options |
+
+### 7.3 Category Selection (Step 2)
+
+Categories are **stream-locked** - each stream shows only its own categories.
+
+#### Science Stream Categories
+- Engineering & Technology
+- Medical & Healthcare
+- Data & AI
+- Research & Pure Sciences
+- Defence & Aviation
+
+#### Commerce Stream Categories
+- Finance & Accounting
+- Business & Management
+- Economics
+- Entrepreneurship
+- Banking & Insurance
+
+#### Arts/Humanities Stream Categories
+- Law & Public Policy
+- Design & Creative Fields
+- Psychology
+- Media & Communication
+- Civil Services
+
+### 7.4 Roadmap View (Step 3)
+
+Each category displays a roadmap focused on landing the right degree/college.
+
+#### Roadmap Content Structure
+
+| Section | Content |
+|---------|---------|
+| School-Level Requirements | Required subjects, subject combinations, eligibility criteria |
+| Entrance & Preparation | Competitive exams, preparation timeline, skill-building |
+| Degree & College Pathways | Required degrees, course duration, career relevance |
+
+### 7.5 College System Connection (Step 4)
+
+**Critical**: Each degree MUST link to the existing college roadmap system.
+
+```
+School Roadmap → Degree Selection → Existing College Roadmap → Career Roles & Progression
+```
+
+🚫 **Do NOT duplicate college roadmaps** - reuse existing ones.
+
+### 7.6 School-Only Modules
+
+- Scholarships database
+- Olympiad preparation resources
+- Competitive exam guides
+- Early exposure programs
+
+---
+
+## 8. Careers Module
 
 ### 6.1 Career Cards
 
@@ -587,16 +750,25 @@ interface SkillGap {
 
 ---
 
-## 10. Admin Panel
+## 11. Admin Panel
 
-### 10.1 Dashboard
+### 11.1 Admin Hierarchy
 
-#### Metrics Displayed
-- Total users (with growth %)
-- Active roadmaps
-- Completion rates
-- Popular careers
-- Recent registrations
+| Role | Description | Capabilities |
+|------|-------------|--------------|
+| Super Admin | Platform owner | Full access, manage admins, view audit logs |
+| Admin | Content manager | All CRUD, user management, content approval |
+| Moderator | Content reviewer | Limited CRUD, content moderation |
+
+### 11.2 Dashboard
+
+#### Metrics Displayed (Live from Database)
+- Total students (from `profiles` table)
+- Total mentors (from `mentor_profiles` table)
+- Total partners (from `partners` table)
+- Total roadmaps (from `roadmaps` table)
+- Total events (from `events` table)
+- Total careers (from `careers` table)
 
 ### 10.2 Careers CRUD
 
@@ -679,9 +851,88 @@ interface SkillGap {
 
 ---
 
-## 11. Data Models & Relationships
+## 12. Live Metrics System
 
-### 11.1 Entity Relationship Diagram (Textual)
+### 12.1 Overview
+
+All numbers displayed on the website are **live and auto-updating** from the database. No hardcoded metrics.
+
+### 12.2 Metric Sources
+
+| Metric | Source Table | Display Label |
+|--------|--------------|---------------|
+| total_students | profiles | Students Guided |
+| total_mentors | mentor_profiles | Expert Mentors |
+| total_partners | partners | Partner Companies |
+| total_roadmaps | roadmaps | Career Paths |
+| total_events | events | Total Events |
+| total_careers | careers | Career Roles |
+
+### 12.3 Admin Control
+
+Administrators can:
+- Toggle metric visibility
+- Rename display labels
+- Reorder metrics
+- Add new metrics (with table source)
+
+### 12.4 Technical Implementation
+
+```typescript
+// Metrics fetched directly from database counts
+const [profilesResult, mentorsResult, partnersResult] = await Promise.all([
+  supabase.from('profiles').select('id', { count: 'exact', head: true }),
+  supabase.from('mentor_profiles').select('id', { count: 'exact', head: true }),
+  supabase.from('partners').select('id', { count: 'exact', head: true }).eq('is_visible', true),
+]);
+```
+
+---
+
+## 13. Three Pillars Section
+
+### 13.1 Overview
+
+The "3 Pillars to Success" is a **global, static structural section** on the homepage that is identical for all users regardless of role.
+
+### 13.2 Structure (IMMUTABLE)
+
+| Position | Pillar Name | Purpose |
+|----------|-------------|---------|
+| 1 | Career | Find the right career |
+| 2 | Craft | Build your skills |
+| 3 | Cafe | Access resources & community |
+
+### 13.3 Immutable Rules
+
+- ❌ Names CANNOT be changed
+- ❌ Order CANNOT be changed  
+- ❌ Number of pillars CANNOT be changed (always 3)
+- ✅ Same for ALL users, always visible on homepage
+
+### 13.4 Admin-Editable Content
+
+| Field | Editable |
+|-------|----------|
+| Subtitle | ✅ Yes |
+| Description | ✅ Yes |
+| CTA Link | ✅ Yes |
+| Icon | ✅ Yes |
+| Pillar Name | ❌ No (Locked) |
+| Pillar Order | ❌ No (Locked) |
+
+### 13.5 SRS Documentation Requirement
+
+This specification explicitly states:
+- "3 Pillars to Success is a global, static structural section"
+- "Career, Craft, Cafe are fixed semantic pillars of the platform"
+- "Only content inside pillars is configurable, not structure"
+
+---
+
+## 14. Data Models & Relationships
+
+### 14.1 Entity Relationship Diagram (Textual)
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
