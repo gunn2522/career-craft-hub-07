@@ -49,7 +49,6 @@ import AdminOlympiads from "./pages/admin/AdminOlympiads";
 import AdminModuleHero from "./pages/admin/AdminModuleHero";
 import AdminOrganizationPlans from "./pages/admin/AdminOrganizationPlans";
 import SchoolAssessment from "./pages/SchoolAssessment";
-import SchoolAssessment from "./pages/SchoolAssessment";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
 import MentorPrograms from "./pages/mentor/MentorPrograms";
@@ -126,7 +125,6 @@ const App = () => (
             <Route path="/admin/olympiads" element={<AdminOlympiads />} />
             <Route path="/admin/module-hero" element={<AdminModuleHero />} />
             <Route path="/admin/organization-plans" element={<AdminOrganizationPlans />} />
-            <Route path="/school-assessment" element={<SchoolAssessment />} />
             <Route path="/school-assessment" element={<SchoolAssessment />} />
             <Route path="/institutions" element={<Institutions />} />
             <Route path="/institutions/:id" element={<InstitutionProfileView />} />
