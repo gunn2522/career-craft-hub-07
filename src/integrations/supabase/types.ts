@@ -826,6 +826,45 @@ export type Database = {
           },
         ]
       }
+      event_gallery: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          event_date: string | null
+          id: string
+          image_url: string
+          is_featured: boolean | null
+          is_visible: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          event_date?: string | null
+          id?: string
+          image_url: string
+          is_featured?: boolean | null
+          is_visible?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          event_date?: string | null
+          id?: string
+          image_url?: string
+          is_featured?: boolean | null
+          is_visible?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           created_at: string

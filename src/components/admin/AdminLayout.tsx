@@ -17,17 +17,15 @@ import {
   Sparkles,
   ClipboardList,
   Building2,
-  LayoutList
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.png";
-
-import { 
+  LayoutList,
+  Image,
   Brain,
   FileCheck,
   Award,
   Medal
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const sidebarLinks = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
@@ -59,6 +57,7 @@ const sidebarLinks = [
   { name: "Legal Pages", path: "/admin/legal-pages", icon: FileText },
   { name: "Blogs", path: "/admin/blogs", icon: FileText },
   { name: "Success Stories", path: "/admin/success-stories", icon: Trophy },
+  { name: "Event Gallery", path: "/admin/event-gallery", icon: Image },
   { name: "Events", path: "/admin/events", icon: Calendar },
   { name: "Events Approval", path: "/admin/events-approval", icon: Calendar },
   { name: "Applications", path: "/admin/applications", icon: Users },

@@ -53,6 +53,7 @@ import AdminOrganizationPlans from "./pages/admin/AdminOrganizationPlans";
 import AdminFAQs from "./pages/admin/AdminFAQs";
 import AdminLegalPages from "./pages/admin/AdminLegalPages";
 import AdminSiteConfig from "./pages/admin/AdminSiteConfig";
+import AdminEventGallery from "./pages/admin/AdminEventGallery";
 import SchoolAssessment from "./pages/SchoolAssessment";
 import FAQs from "./pages/FAQs";
 import LegalPage from "./pages/LegalPage";
@@ -285,6 +286,11 @@ const App = () => (
             <Route path="/admin/site-config" element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <AdminSiteConfig />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/event-gallery" element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminEventGallery />
               </ProtectedRoute>
             } />
 
