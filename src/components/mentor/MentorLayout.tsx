@@ -3,9 +3,10 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   LayoutDashboard, 
-  ClipboardList, 
-  BookOpen, 
-  Briefcase, 
+  Lightbulb, 
+  Calendar, 
+  MessageCircle, 
+  Users, 
   FileText, 
   Library,
   LogOut,
@@ -22,10 +23,10 @@ interface MentorLayoutProps {
 
 const menuItems = [
   { name: "Dashboard", path: "/mentor", icon: LayoutDashboard },
-  { name: "Daily Guidance", path: "/mentor/guidance", icon: ClipboardList },
-  { name: "My Events", path: "/mentor/events", icon: BookOpen },
-  { name: "My Rooms", path: "/mentor/rooms", icon: Library },
-  { name: "Subscribers", path: "/mentor/subscribers", icon: Briefcase },
+  { name: "Daily Guidance", path: "/mentor/guidance", icon: Lightbulb },
+  { name: "My Events", path: "/mentor/events", icon: Calendar },
+  { name: "My Rooms", path: "/mentor/rooms", icon: MessageCircle },
+  { name: "Subscribers", path: "/mentor/subscribers", icon: Users },
   { name: "Blogs", path: "/mentor/blogs", icon: FileText },
   { name: "Resources", path: "/mentor/resources", icon: Library },
 ];

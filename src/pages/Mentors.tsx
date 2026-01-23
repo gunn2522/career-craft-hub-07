@@ -68,7 +68,7 @@ const Mentors = () => {
             .from("profiles")
             .select("full_name, avatar_url, institution")
             .eq("user_id", mentor.user_id)
-            .single();
+            .maybeSingle();
           
           return { ...mentor, profile };
         })

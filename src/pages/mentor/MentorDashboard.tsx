@@ -3,39 +3,63 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ClipboardList, BookOpen, Briefcase, FileText, Library } from "lucide-react";
+import { Users, BookOpen, MessageCircle, FileText, Lightbulb, Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const MentorDashboard = () => {
   const { user } = useAuth();
 
-  const { data: stats } = useQuery({
-    queryKey: ["mentor-stats", user?.id],
+  // First fetch mentor profile to check if it exists
+  const { data: mentorProfile } = useQuery({
+    queryKey: ["mentor-profile", user?.id],
     queryFn: async () => {
-      const [dailyTasks, programs, internships, blogs, resources] = await Promise.all([
-        supabase.from("daily_assignments").select("id", { count: "exact" }),
-        supabase.from("programs").select("id", { count: "exact" }).eq("created_by", user?.id || ""),
-        supabase.from("internships").select("id", { count: "exact" }),
+      const { data, error } = await supabase
+        .from("mentor_profiles")
+        .select("id, total_subscribers, total_earnings")
+        .eq("user_id", user?.id || "")
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["mentor-stats", user?.id, mentorProfile?.id],
+    queryFn: async () => {
+      const [blogs, events, rooms, subscribers, guidance] = await Promise.all([
         supabase.from("blogs").select("id", { count: "exact" }).eq("author_id", user?.id || ""),
-        supabase.from("resources").select("id", { count: "exact" }),
+        mentorProfile?.id 
+          ? supabase.from("mentor_events").select("id", { count: "exact" }).eq("mentor_id", mentorProfile.id)
+          : Promise.resolve({ count: 0 }),
+        mentorProfile?.id 
+          ? supabase.from("mentor_rooms").select("id", { count: "exact" }).eq("mentor_id", mentorProfile.id)
+          : Promise.resolve({ count: 0 }),
+        mentorProfile?.id 
+          ? supabase.from("mentor_subscriptions").select("id", { count: "exact" }).eq("mentor_id", mentorProfile.id).eq("status", "active")
+          : Promise.resolve({ count: 0 }),
+        mentorProfile?.id 
+          ? supabase.from("mentor_daily_guidance").select("id", { count: "exact" }).eq("mentor_id", mentorProfile.id)
+          : Promise.resolve({ count: 0 }),
       ]);
 
       return {
-        dailyTasks: dailyTasks.count || 0,
-        programs: programs.count || 0,
-        internships: internships.count || 0,
         blogs: blogs.count || 0,
-        resources: resources.count || 0,
+        events: (events as any).count || 0,
+        rooms: (rooms as any).count || 0,
+        subscribers: (subscribers as any).count || 0,
+        guidance: (guidance as any).count || 0,
       };
     },
     enabled: !!user,
   });
 
   const statCards = [
-    { title: "Daily Tasks", value: stats?.dailyTasks || 0, icon: ClipboardList, color: "text-blue-500" },
-    { title: "My Programs", value: stats?.programs || 0, icon: BookOpen, color: "text-green-500" },
-    { title: "Internships", value: stats?.internships || 0, icon: Briefcase, color: "text-purple-500" },
-    { title: "Blogs", value: stats?.blogs || 0, icon: FileText, color: "text-orange-500" },
-    { title: "Resources", value: stats?.resources || 0, icon: Library, color: "text-pink-500" },
+    { title: "Subscribers", value: stats?.subscribers || 0, icon: Users, color: "text-primary" },
+    { title: "Events", value: stats?.events || 0, icon: Calendar, color: "text-primary" },
+    { title: "Rooms", value: stats?.rooms || 0, icon: MessageCircle, color: "text-primary" },
+    { title: "Guidance Posts", value: stats?.guidance || 0, icon: Lightbulb, color: "text-primary" },
+    { title: "Blogs", value: stats?.blogs || 0, icon: FileText, color: "text-primary" },
   ];
 
   return (
@@ -70,36 +94,50 @@ const MentorDashboard = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <a
-                href="/mentor/daily-tasks"
+              <Link
+                to="/mentor/guidance"
                 className="block p-4 rounded-lg border border-border hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <ClipboardList className="h-5 w-5 text-primary" />
+                  <Lightbulb className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Create Daily Task</p>
+                    <p className="font-medium">Create Daily Guidance</p>
                     <p className="text-sm text-muted-foreground">
-                      Add new assignments for students
+                      Share tips, tasks, and challenges with subscribers
                     </p>
                   </div>
                 </div>
-              </a>
-              <a
-                href="/mentor/programs"
+              </Link>
+              <Link
+                to="/mentor/events"
                 className="block p-4 rounded-lg border border-border hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <BookOpen className="h-5 w-5 text-primary" />
+                  <Calendar className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Create Program</p>
+                    <p className="font-medium">Create Event</p>
                     <p className="text-sm text-muted-foreground">
-                      Host your own sessions and programs
+                      Host webinars, workshops, and AMA sessions
                     </p>
                   </div>
                 </div>
-              </a>
-              <a
-                href="/mentor/blogs"
+              </Link>
+              <Link
+                to="/mentor/rooms"
+                className="block p-4 rounded-lg border border-border hover:bg-accent transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <MessageCircle className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium">Create Room</p>
+                    <p className="text-sm text-muted-foreground">
+                      Build communities and discussion spaces
+                    </p>
+                  </div>
+                </div>
+              </Link>
+              <Link
+                to="/mentor/blogs"
                 className="block p-4 rounded-lg border border-border hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -111,7 +149,7 @@ const MentorDashboard = () => {
                     </p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </CardContent>
           </Card>
 
@@ -122,34 +160,34 @@ const MentorDashboard = () => {
             <CardContent className="space-y-4">
               <div className="flex items-start gap-3">
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <ClipboardList className="h-4 w-4 text-primary" />
+                  <Lightbulb className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium">Daily Tasks</p>
+                  <p className="font-medium">Daily Guidance</p>
                   <p className="text-sm text-muted-foreground">
-                    Create and manage daily assignments for roadmaps
+                    Share tips, challenges, and resources with your audience
                   </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <BookOpen className="h-4 w-4 text-primary" />
+                  <Calendar className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium">Programs</p>
+                  <p className="font-medium">Events & Monetization</p>
                   <p className="text-sm text-muted-foreground">
-                    Create your own programs and host sessions
+                    Host paid webinars and earn from your expertise
                   </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Briefcase className="h-4 w-4 text-primary" />
+                  <Users className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium">Hiring & Internships</p>
+                  <p className="font-medium">Subscriber Community</p>
                   <p className="text-sm text-muted-foreground">
-                    Post job openings and internship opportunities
+                    Build your subscriber base and engage with students
                   </p>
                 </div>
               </div>
