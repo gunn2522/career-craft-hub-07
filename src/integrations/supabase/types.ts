@@ -1108,43 +1108,61 @@ export type Database = {
       }
       institution_events: {
         Row: {
+          audience: string | null
           category_id: string | null
           created_at: string
+          current_registrations: number | null
           description: string | null
           event_date: string | null
+          event_type: string | null
           id: string
           institution_id: string
           is_active: boolean | null
+          is_approved: boolean | null
           location: string | null
+          max_attendees: number | null
           mode: string | null
+          registration_url: string | null
           stream_id: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          audience?: string | null
           category_id?: string | null
           created_at?: string
+          current_registrations?: number | null
           description?: string | null
           event_date?: string | null
+          event_type?: string | null
           id?: string
           institution_id: string
           is_active?: boolean | null
+          is_approved?: boolean | null
           location?: string | null
+          max_attendees?: number | null
           mode?: string | null
+          registration_url?: string | null
           stream_id?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          audience?: string | null
           category_id?: string | null
           created_at?: string
+          current_registrations?: number | null
           description?: string | null
           event_date?: string | null
+          event_type?: string | null
           id?: string
           institution_id?: string
           is_active?: boolean | null
+          is_approved?: boolean | null
           location?: string | null
+          max_attendees?: number | null
           mode?: string | null
+          registration_url?: string | null
           stream_id?: string | null
           title?: string
           updated_at?: string
@@ -1271,48 +1289,84 @@ export type Database = {
       }
       institutions: {
         Row: {
+          approval_status: string | null
+          contact_email: string | null
           created_at: string
           description: string | null
           display_order: number | null
+          email: string | null
+          focus_areas: string[] | null
           id: string
+          institution_type: string | null
+          is_approved: boolean | null
           is_verified: boolean | null
           is_visible: boolean | null
           location: string | null
           logo_url: string | null
           member_count: number | null
           name: string
+          past_collaborations: string[] | null
+          phone: string | null
+          programs_offered: string[] | null
+          social_links: Json | null
           type: string
           updated_at: string
+          user_id: string | null
+          vision: string | null
           website_url: string | null
         }
         Insert: {
+          approval_status?: string | null
+          contact_email?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
+          email?: string | null
+          focus_areas?: string[] | null
           id?: string
+          institution_type?: string | null
+          is_approved?: boolean | null
           is_verified?: boolean | null
           is_visible?: boolean | null
           location?: string | null
           logo_url?: string | null
           member_count?: number | null
           name: string
+          past_collaborations?: string[] | null
+          phone?: string | null
+          programs_offered?: string[] | null
+          social_links?: Json | null
           type?: string
           updated_at?: string
+          user_id?: string | null
+          vision?: string | null
           website_url?: string | null
         }
         Update: {
+          approval_status?: string | null
+          contact_email?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
+          email?: string | null
+          focus_areas?: string[] | null
           id?: string
+          institution_type?: string | null
+          is_approved?: boolean | null
           is_verified?: boolean | null
           is_visible?: boolean | null
           location?: string | null
           logo_url?: string | null
           member_count?: number | null
           name?: string
+          past_collaborations?: string[] | null
+          phone?: string | null
+          programs_offered?: string[] | null
+          social_links?: Json | null
           type?: string
           updated_at?: string
+          user_id?: string | null
+          vision?: string | null
           website_url?: string | null
         }
         Relationships: []
@@ -2115,6 +2169,42 @@ export type Database = {
         }
         Relationships: []
       }
+      mou_documents: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          document_url: string | null
+          id: string
+          is_active: boolean | null
+          target_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          document_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          target_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          document_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          target_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       olympiads: {
         Row: {
           benefits: string | null
@@ -2183,42 +2273,323 @@ export type Database = {
           },
         ]
       }
+      organization_inquiries: {
+        Row: {
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          created_at: string
+          id: string
+          inquiry_status: string | null
+          message: string | null
+          notes: string | null
+          organization_name: string
+          organization_type: string
+          plan_interested_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          inquiry_status?: string | null
+          message?: string | null
+          notes?: string | null
+          organization_name: string
+          organization_type: string
+          plan_interested_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          inquiry_status?: string | null
+          message?: string | null
+          notes?: string | null
+          organization_name?: string
+          organization_type?: string
+          plan_interested_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_inquiries_plan_interested_id_fkey"
+            columns: ["plan_interested_id"]
+            isOneToOne: false
+            referencedRelation: "organization_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_plans: {
+        Row: {
+          billing_cycle: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          display_order: number | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          max_events: number | null
+          max_resources: number | null
+          name: string
+          plan_type: string
+          price: number | null
+          support_level: string | null
+          updated_at: string
+          visibility_level: string | null
+        }
+        Insert: {
+          billing_cycle?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_events?: number | null
+          max_resources?: number | null
+          name: string
+          plan_type: string
+          price?: number | null
+          support_level?: string | null
+          updated_at?: string
+          visibility_level?: string | null
+        }
+        Update: {
+          billing_cycle?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_events?: number | null
+          max_resources?: number | null
+          name?: string
+          plan_type?: string
+          price?: number | null
+          support_level?: string | null
+          updated_at?: string
+          visibility_level?: string | null
+        }
+        Relationships: []
+      }
+      organization_subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          organization_id: string
+          organization_type: string
+          payment_amount: number | null
+          payment_reference: string | null
+          plan_id: string | null
+          started_at: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          organization_id: string
+          organization_type: string
+          payment_amount?: number | null
+          payment_reference?: string | null
+          plan_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          organization_id?: string
+          organization_type?: string
+          payment_amount?: number | null
+          payment_reference?: string | null
+          plan_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "organization_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_events: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          current_registrations: number | null
+          description: string | null
+          event_date: string | null
+          event_type: string | null
+          id: string
+          is_active: boolean | null
+          is_approved: boolean | null
+          location: string | null
+          max_attendees: number | null
+          mode: string | null
+          partner_id: string
+          registration_url: string | null
+          stream_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          current_registrations?: number | null
+          description?: string | null
+          event_date?: string | null
+          event_type?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_approved?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          mode?: string | null
+          partner_id: string
+          registration_url?: string | null
+          stream_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          current_registrations?: number | null
+          description?: string | null
+          event_date?: string | null
+          event_type?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_approved?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          mode?: string | null
+          partner_id?: string
+          registration_url?: string | null
+          stream_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_events_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_events_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_events_stream_id_fkey"
+            columns: ["stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_profiles: {
         Row: {
+          approval_status: string | null
           company_description: string | null
           company_name: string | null
           company_website: string | null
           created_at: string
+          email: string | null
+          events_initiatives: string | null
+          hiring_focus: string[] | null
           id: string
           industry: string | null
+          internship_opportunities: string | null
+          is_approved: boolean | null
+          is_visible: boolean | null
           jobs_posted: number | null
+          logo_url: string | null
           partner_id: string | null
+          phone: string | null
+          profile_views: number | null
+          project_opportunities: string | null
+          social_links: Json | null
           students_engaged: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          approval_status?: string | null
           company_description?: string | null
           company_name?: string | null
           company_website?: string | null
           created_at?: string
+          email?: string | null
+          events_initiatives?: string | null
+          hiring_focus?: string[] | null
           id?: string
           industry?: string | null
+          internship_opportunities?: string | null
+          is_approved?: boolean | null
+          is_visible?: boolean | null
           jobs_posted?: number | null
+          logo_url?: string | null
           partner_id?: string | null
+          phone?: string | null
+          profile_views?: number | null
+          project_opportunities?: string | null
+          social_links?: Json | null
           students_engaged?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          approval_status?: string | null
           company_description?: string | null
           company_name?: string | null
           company_website?: string | null
           created_at?: string
+          email?: string | null
+          events_initiatives?: string | null
+          hiring_focus?: string[] | null
           id?: string
           industry?: string | null
+          internship_opportunities?: string | null
+          is_approved?: boolean | null
+          is_visible?: boolean | null
           jobs_posted?: number | null
+          logo_url?: string | null
           partner_id?: string | null
+          phone?: string | null
+          profile_views?: number | null
+          project_opportunities?: string | null
+          social_links?: Json | null
           students_engaged?: number | null
           updated_at?: string
           user_id?: string
@@ -2239,11 +2610,13 @@ export type Database = {
           description: string | null
           display_order: number | null
           id: string
+          is_verified: boolean | null
           is_visible: boolean | null
           logo_url: string | null
           name: string
           partner_type: string | null
           updated_at: string
+          user_id: string | null
           website_url: string | null
         }
         Insert: {
@@ -2251,11 +2624,13 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           id?: string
+          is_verified?: boolean | null
           is_visible?: boolean | null
           logo_url?: string | null
           name: string
           partner_type?: string | null
           updated_at?: string
+          user_id?: string | null
           website_url?: string | null
         }
         Update: {
@@ -2263,11 +2638,13 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           id?: string
+          is_verified?: boolean | null
           is_visible?: boolean | null
           logo_url?: string | null
           name?: string
           partner_type?: string | null
           updated_at?: string
+          user_id?: string | null
           website_url?: string | null
         }
         Relationships: []
@@ -3026,6 +3403,41 @@ export type Database = {
           value_type?: string | null
         }
         Relationships: []
+      }
+      student_stream_selections: {
+        Row: {
+          id: string
+          is_confirmed: boolean | null
+          psychometric_response_id: string | null
+          selected_at: string
+          selected_stream: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          is_confirmed?: boolean | null
+          psychometric_response_id?: string | null
+          selected_at?: string
+          selected_stream: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          is_confirmed?: boolean | null
+          psychometric_response_id?: string | null
+          selected_at?: string
+          selected_stream?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_stream_selections_psychometric_response_id_fkey"
+            columns: ["psychometric_response_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_responses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       success_stories: {
         Row: {
