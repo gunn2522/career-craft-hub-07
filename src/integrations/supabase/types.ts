@@ -861,6 +861,120 @@ export type Database = {
         }
         Relationships: []
       }
+      exam_career_mapping: {
+        Row: {
+          career_id: string
+          created_at: string | null
+          exam_id: string
+          id: string
+          is_mandatory: boolean | null
+        }
+        Insert: {
+          career_id: string
+          created_at?: string | null
+          exam_id: string
+          id?: string
+          is_mandatory?: boolean | null
+        }
+        Update: {
+          career_id?: string
+          created_at?: string | null
+          exam_id?: string
+          id?: string
+          is_mandatory?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_career_mapping_career_id_fkey"
+            columns: ["career_id"]
+            isOneToOne: false
+            referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_career_mapping_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "government_exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      government_exams: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          eligibility_criteria: string | null
+          exam_date: string | null
+          exam_pattern: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          official_website: string | null
+          preparation_tips: string | null
+          registration_deadline: string | null
+          short_name: string | null
+          stream_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          eligibility_criteria?: string | null
+          exam_date?: string | null
+          exam_pattern?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          official_website?: string | null
+          preparation_tips?: string | null
+          registration_deadline?: string | null
+          short_name?: string | null
+          stream_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          eligibility_criteria?: string | null
+          exam_date?: string | null
+          exam_pattern?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          official_website?: string | null
+          preparation_tips?: string | null
+          registration_deadline?: string | null
+          short_name?: string | null
+          stream_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "government_exams_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "government_exams_stream_id_fkey"
+            columns: ["stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homepage_role_content: {
         Row: {
           content: Json | null
@@ -1358,6 +1472,122 @@ export type Database = {
           },
         ]
       }
+      module_hero_content: {
+        Row: {
+          background_image: string | null
+          created_at: string | null
+          cta_link: string | null
+          cta_text: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          module_key: string
+          secondary_cta_link: string | null
+          secondary_cta_text: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          background_image?: string | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          module_key: string
+          secondary_cta_link?: string | null
+          secondary_cta_text?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          background_image?: string | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          module_key?: string
+          secondary_cta_link?: string | null
+          secondary_cta_text?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      olympiads: {
+        Row: {
+          benefits: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          eligibility_criteria: string | null
+          exam_date: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          is_international: boolean | null
+          name: string
+          official_website: string | null
+          registration_deadline: string | null
+          short_name: string | null
+          stream_id: string | null
+          subjects: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          benefits?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          eligibility_criteria?: string | null
+          exam_date?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_international?: boolean | null
+          name: string
+          official_website?: string | null
+          registration_deadline?: string | null
+          short_name?: string | null
+          stream_id?: string | null
+          subjects?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          benefits?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          eligibility_criteria?: string | null
+          exam_date?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_international?: boolean | null
+          name?: string
+          official_website?: string | null
+          registration_deadline?: string | null
+          short_name?: string | null
+          stream_id?: string | null
+          subjects?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "olympiads_stream_id_fkey"
+            columns: ["stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_profiles: {
         Row: {
           company_description: string | null
@@ -1449,6 +1679,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_module: string | null
           avatar_url: string | null
           bio: string | null
           career_goals: string | null
@@ -1479,6 +1710,7 @@ export type Database = {
           years_experience: number | null
         }
         Insert: {
+          active_module?: string | null
           avatar_url?: string | null
           bio?: string | null
           career_goals?: string | null
@@ -1509,6 +1741,7 @@ export type Database = {
           years_experience?: number | null
         }
         Update: {
+          active_module?: string | null
           avatar_url?: string | null
           bio?: string | null
           career_goals?: string | null
@@ -1653,6 +1886,257 @@ export type Database = {
           price?: number | null
           start_date?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      psychometric_answers: {
+        Row: {
+          created_at: string | null
+          id: string
+          option_id: string | null
+          question_id: string
+          response_id: string
+          score_earned: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          option_id?: string | null
+          question_id: string
+          response_id: string
+          score_earned?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          option_id?: string | null
+          question_id?: string
+          response_id?: string
+          score_earned?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychometric_answers_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "psychometric_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "psychometric_answers_response_id_fkey"
+            columns: ["response_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_responses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      psychometric_options: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          option_text: string
+          question_id: string
+          score_value: number | null
+          stream_mapping: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          option_text: string
+          question_id: string
+          score_value?: number | null
+          stream_mapping?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          option_text?: string
+          question_id?: string
+          score_value?: number | null
+          stream_mapping?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychometric_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "psychometric_options_stream_mapping_fkey"
+            columns: ["stream_mapping"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      psychometric_questions: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_required: boolean | null
+          question_text: string
+          question_type: Database["public"]["Enums"]["question_type"]
+          section_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_required?: boolean | null
+          question_text: string
+          question_type?: Database["public"]["Enums"]["question_type"]
+          section_id: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_required?: boolean | null
+          question_text?: string
+          question_type?: Database["public"]["Enums"]["question_type"]
+          section_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychometric_questions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      psychometric_responses: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          recommended_stream_id: string | null
+          test_id: string
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          recommended_stream_id?: string | null
+          test_id: string
+          total_score?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          recommended_stream_id?: string | null
+          test_id?: string
+          total_score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychometric_responses_recommended_stream_id_fkey"
+            columns: ["recommended_stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "psychometric_responses_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      psychometric_sections: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          test_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          test_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          test_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychometric_sections_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "psychometric_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      psychometric_tests: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          duration_minutes: number | null
+          id: string
+          instructions: string | null
+          is_active: boolean | null
+          target_role: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          duration_minutes?: number | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          target_role?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          duration_minutes?: number | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          target_role?: string | null
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -1830,6 +2314,78 @@ export type Database = {
             columns: ["roadmap_id"]
             isOneToOne: false
             referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scholarships: {
+        Row: {
+          amount: string | null
+          application_deadline: string | null
+          application_link: string | null
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          eligibility_criteria: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          is_government: boolean | null
+          name: string
+          provider: string | null
+          stream_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount?: string | null
+          application_deadline?: string | null
+          application_link?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          eligibility_criteria?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_government?: boolean | null
+          name: string
+          provider?: string | null
+          stream_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: string | null
+          application_deadline?: string | null
+          application_link?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          eligibility_criteria?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_government?: boolean | null
+          name?: string
+          provider?: string | null
+          stream_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scholarships_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scholarships_stream_id_fkey"
+            columns: ["stream_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
             referencedColumns: ["id"]
           },
         ]
@@ -2184,6 +2740,7 @@ export type Database = {
       admin_tier: "super_admin" | "admin" | "moderator"
       app_role: "admin" | "moderator" | "user" | "mentor" | "partner"
       experience_level: "entry" | "mid" | "senior"
+      question_type: "mcq" | "likert"
       user_type: "school_student" | "college_student"
     }
     CompositeTypes: {
@@ -2315,6 +2872,7 @@ export const Constants = {
       admin_tier: ["super_admin", "admin", "moderator"],
       app_role: ["admin", "moderator", "user", "mentor", "partner"],
       experience_level: ["entry", "mid", "senior"],
+      question_type: ["mcq", "likert"],
       user_type: ["school_student", "college_student"],
     },
   },
