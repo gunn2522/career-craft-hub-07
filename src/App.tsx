@@ -66,8 +66,13 @@ import Institutions from "./pages/Institutions";
 import InstitutionProfileView from "./pages/InstitutionProfile";
 import InstitutionDashboard from "./pages/institution/InstitutionDashboard";
 import InstitutionProfilePage from "./pages/institution/InstitutionProfilePage";
+import InstitutionEvents from "./pages/institution/InstitutionEvents";
+import InstitutionMoU from "./pages/institution/InstitutionMoU";
+import InstitutionPreview from "./pages/institution/InstitutionPreview";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerProfilePage from "./pages/partner/PartnerProfilePage";
+import PartnerEvents from "./pages/partner/PartnerEvents";
+import PlansAndPricing from "./pages/PlansAndPricing";
 
 const queryClient = new QueryClient();
 
@@ -131,9 +136,15 @@ const App = () => (
             {/* Institution Dashboard Routes */}
             <Route path="/institution" element={<InstitutionDashboard />} />
             <Route path="/institution/profile" element={<InstitutionProfilePage />} />
+            <Route path="/institution/events" element={<InstitutionEvents />} />
+            <Route path="/institution/mou" element={<InstitutionMoU />} />
+            <Route path="/institution/preview" element={<InstitutionPreview />} />
             {/* Partner Dashboard Routes */}
             <Route path="/partner-dashboard" element={<PartnerDashboard />} />
             <Route path="/partner-dashboard/profile" element={<PartnerProfilePage />} />
+            <Route path="/partner-dashboard/events" element={<PartnerEvents />} />
+            {/* Plans & Pricing */}
+            <Route path="/plans" element={<PlansAndPricing />} />
             {/* Mentor Dashboard Routes */}
             <Route path="/mentor" element={<MentorDashboard />} />
             <Route path="/mentor/profile" element={<MentorMyProfile />} />
