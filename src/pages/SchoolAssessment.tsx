@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
+import { StreamSelection } from "@/components/school/StreamSelection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -65,7 +66,7 @@ interface Domain {
   description: string | null;
 }
 
-type AssessmentStage = 'intro' | 'test' | 'result';
+type AssessmentStage = 'intro' | 'test' | 'result' | 'stream_selection';
 
 const SchoolAssessment = () => {
   const [stage, setStage] = useState<AssessmentStage>('intro');
@@ -251,8 +252,12 @@ const SchoolAssessment = () => {
       }
     }
 
-    setStage('result');
+    setStage('stream_selection');
     setSubmitting(false);
+  };
+
+  const handleStreamComplete = (stream: string) => {
+    navigate(`/school-careers?stream=${stream}`);
   };
 
   const getOptionsForQuestion = (questionId: string) => {
@@ -514,6 +519,24 @@ const SchoolAssessment = () => {
                 )}
               </Button>
             </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Stream Selection Stage
+  if (stage === 'stream_selection') {
+    return (
+      <Layout>
+        <div className="min-h-screen py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <Trophy className="w-12 h-12 mx-auto text-primary mb-4" />
+              <h1 className="font-display text-2xl font-bold mb-2">Assessment Complete!</h1>
+              <p className="text-muted-foreground">Now select your preferred stream to explore careers</p>
+            </div>
+            <StreamSelection onComplete={handleStreamComplete} />
           </div>
         </div>
       </Layout>
