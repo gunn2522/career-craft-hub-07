@@ -7,6 +7,7 @@ import { Check, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
+import { Json } from "@/integrations/supabase/types";
 
 interface Plan {
   id: string;
@@ -14,8 +15,16 @@ interface Plan {
   description: string | null;
   price: number;
   billing_cycle: string;
-  features: string[] | null;
+  features: string[];
 }
+
+const parseFeatures = (features: Json | null): string[] => {
+  if (!features) return [];
+  if (Array.isArray(features)) {
+    return features.filter((f): f is string => typeof f === "string");
+  }
+  return [];
+};
 
 const InstitutionPlans = () => {
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -27,14 +36,33 @@ const InstitutionPlans = () => {
 
   const fetchPlans = async () => {
     try {
-      const { data } = await supabase
+      // Using or filter instead of .in() to avoid deep type instantiation
+      const { data, error } = await supabase
         .from("organization_plans")
-        .select("*")
+        .select("id, name, description, price, billing_cycle, features")
         .eq("is_active", true)
-        .in("target_type", ["institution", "school", "college", "all"])
+        .or("target_type.eq.institution,target_type.eq.school,target_type.eq.college,target_type.eq.all")
         .order("display_order");
       
-      setPlans(data || []);
+      if (error) throw error;
+      
+      const mappedPlans: Plan[] = ((data as unknown) as Array<{
+        id: string;
+        name: string;
+        description: string | null;
+        price: number;
+        billing_cycle: string;
+        features: Json | null;
+      }> || []).map((row) => ({
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        price: row.price,
+        billing_cycle: row.billing_cycle,
+        features: parseFeatures(row.features),
+      }));
+      
+      setPlans(mappedPlans);
     } catch (error) {
       console.error("Error fetching plans:", error);
     } finally {
@@ -75,13 +103,13 @@ const InstitutionPlans = () => {
           </Card>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <Card 
                 key={plan.id} 
-                className={`flex flex-col ${plan.is_popular ? "border-primary shadow-lg" : ""}`}
+                className={`flex flex-col ${index === 1 ? "border-primary shadow-lg" : ""}`}
               >
                 <CardHeader>
-                  {plan.is_popular && (
+                  {index === 1 && (
                     <Badge className="w-fit mb-2">Most Popular</Badge>
                   )}
                   <CardTitle>{plan.name}</CardTitle>
@@ -93,7 +121,7 @@ const InstitutionPlans = () => {
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col">
                   <ul className="space-y-3 flex-1">
-                    {plan.features?.map((feature, idx) => (
+                    {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm">
                         <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                         {feature}
@@ -102,7 +130,7 @@ const InstitutionPlans = () => {
                   </ul>
                   <Button 
                     className="w-full mt-6" 
-                    variant={plan.is_popular ? "default" : "outline"}
+                    variant={index === 1 ? "default" : "outline"}
                     asChild
                   >
                     <Link to="/institution/inquiries">Get Started</Link>
