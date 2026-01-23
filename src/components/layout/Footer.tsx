@@ -63,7 +63,7 @@ export const Footer = () => {
             <ul className="space-y-3">
               {[
                 { name: "Blog", path: "/blogs" },
-                { name: "Success Stories", path: "/stories" },
+                { name: "Success Stories", path: "/about" },
                 { name: "FAQs", path: "/faqs" },
                 { name: "Privacy Policy", path: "/privacy" },
                 { name: "Terms of Service", path: "/terms" },

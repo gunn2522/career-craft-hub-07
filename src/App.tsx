@@ -48,7 +48,12 @@ import AdminScholarships from "./pages/admin/AdminScholarships";
 import AdminOlympiads from "./pages/admin/AdminOlympiads";
 import AdminModuleHero from "./pages/admin/AdminModuleHero";
 import AdminOrganizationPlans from "./pages/admin/AdminOrganizationPlans";
+import AdminFAQs from "./pages/admin/AdminFAQs";
+import AdminLegalPages from "./pages/admin/AdminLegalPages";
+import AdminSiteConfig from "./pages/admin/AdminSiteConfig";
 import SchoolAssessment from "./pages/SchoolAssessment";
+import FAQs from "./pages/FAQs";
+import LegalPage from "./pages/LegalPage";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
 import MentorPrograms from "./pages/mentor/MentorPrograms";
@@ -130,7 +135,13 @@ const App = () => (
             <Route path="/admin/olympiads" element={<AdminOlympiads />} />
             <Route path="/admin/module-hero" element={<AdminModuleHero />} />
             <Route path="/admin/organization-plans" element={<AdminOrganizationPlans />} />
+            <Route path="/admin/faqs" element={<AdminFAQs />} />
+            <Route path="/admin/legal-pages" element={<AdminLegalPages />} />
+            <Route path="/admin/site-config" element={<AdminSiteConfig />} />
             <Route path="/school-assessment" element={<SchoolAssessment />} />
+            <Route path="/faqs" element={<FAQs />} />
+            <Route path="/privacy" element={<LegalPage />} />
+            <Route path="/terms" element={<LegalPage />} />
             <Route path="/institutions" element={<Institutions />} />
             <Route path="/institutions/:id" element={<InstitutionProfileView />} />
             {/* Institution Dashboard Routes */}
