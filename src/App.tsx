@@ -54,6 +54,12 @@ import MentorPrograms from "./pages/mentor/MentorPrograms";
 import MentorInternships from "./pages/mentor/MentorInternships";
 import MentorBlogs from "./pages/mentor/MentorBlogs";
 import MentorResources from "./pages/mentor/MentorResources";
+import MentorEvents from "./pages/mentor/MentorEvents";
+import MentorRooms from "./pages/mentor/MentorRooms";
+import MentorSubscribers from "./pages/mentor/MentorSubscribers";
+import MentorGuidance from "./pages/mentor/MentorGuidance";
+import Mentors from "./pages/Mentors";
+import MentorProfile from "./pages/MentorProfile";
 import Institutions from "./pages/Institutions";
 import InstitutionProfile from "./pages/InstitutionProfile";
 
@@ -121,6 +127,12 @@ const App = () => (
             <Route path="/mentor/internships" element={<MentorInternships />} />
             <Route path="/mentor/blogs" element={<MentorBlogs />} />
             <Route path="/mentor/resources" element={<MentorResources />} />
+            <Route path="/mentor/events" element={<MentorEvents />} />
+            <Route path="/mentor/rooms" element={<MentorRooms />} />
+            <Route path="/mentor/subscribers" element={<MentorSubscribers />} />
+            <Route path="/mentor/guidance" element={<MentorGuidance />} />
+            <Route path="/mentors" element={<Mentors />} />
+            <Route path="/mentors/:mentorId" element={<MentorProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

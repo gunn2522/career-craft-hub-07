@@ -718,6 +718,51 @@ export type Database = {
           },
         ]
       }
+      degree_career_mapping: {
+        Row: {
+          career_id: string
+          created_at: string
+          degree_id: string
+          id: string
+          is_primary: boolean | null
+          notes: string | null
+          relevance_score: number | null
+        }
+        Insert: {
+          career_id: string
+          created_at?: string
+          degree_id: string
+          id?: string
+          is_primary?: boolean | null
+          notes?: string | null
+          relevance_score?: number | null
+        }
+        Update: {
+          career_id?: string
+          created_at?: string
+          degree_id?: string
+          id?: string
+          is_primary?: boolean | null
+          notes?: string | null
+          relevance_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "degree_career_mapping_career_id_fkey"
+            columns: ["career_id"]
+            isOneToOne: false
+            referencedRelation: "careers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "degree_career_mapping_degree_id_fkey"
+            columns: ["degree_id"]
+            isOneToOne: false
+            referencedRelation: "degrees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       degrees: {
         Row: {
           category_id: string | null
@@ -1323,6 +1368,271 @@ export type Database = {
         }
         Relationships: []
       }
+      mentor_daily_guidance: {
+        Row: {
+          content: string | null
+          created_at: string
+          guidance_type: string | null
+          id: string
+          is_published: boolean | null
+          likes_count: number | null
+          mentor_id: string
+          scheduled_date: string | null
+          target_audience: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          guidance_type?: string | null
+          id?: string
+          is_published?: boolean | null
+          likes_count?: number | null
+          mentor_id: string
+          scheduled_date?: string | null
+          target_audience?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          guidance_type?: string | null
+          id?: string
+          is_published?: boolean | null
+          likes_count?: number | null
+          mentor_id?: string
+          scheduled_date?: string | null
+          target_audience?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_daily_guidance_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_event_registrations: {
+        Row: {
+          attended: boolean | null
+          event_id: string
+          id: string
+          payment_amount: number | null
+          payment_reference: string | null
+          payment_status: string | null
+          registered_at: string
+          user_id: string
+        }
+        Insert: {
+          attended?: boolean | null
+          event_id: string
+          id?: string
+          payment_amount?: number | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          registered_at?: string
+          user_id: string
+        }
+        Update: {
+          attended?: boolean | null
+          event_id?: string
+          id?: string
+          payment_amount?: number | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          registered_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_events: {
+        Row: {
+          cover_image: string | null
+          created_at: string
+          currency: string | null
+          current_registrations: number | null
+          description: string | null
+          duration_minutes: number | null
+          end_time: string | null
+          event_type: string | null
+          id: string
+          is_active: boolean | null
+          is_paid: boolean | null
+          max_participants: number | null
+          meeting_link: string | null
+          mentor_id: string
+          price: number | null
+          recording_url: string | null
+          start_time: string
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image?: string | null
+          created_at?: string
+          currency?: string | null
+          current_registrations?: number | null
+          description?: string | null
+          duration_minutes?: number | null
+          end_time?: string | null
+          event_type?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_paid?: boolean | null
+          max_participants?: number | null
+          meeting_link?: string | null
+          mentor_id: string
+          price?: number | null
+          recording_url?: string | null
+          start_time: string
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image?: string | null
+          created_at?: string
+          currency?: string | null
+          current_registrations?: number | null
+          description?: string | null
+          duration_minutes?: number | null
+          end_time?: string | null
+          event_type?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_paid?: boolean | null
+          max_participants?: number | null
+          meeting_link?: string | null
+          mentor_id?: string
+          price?: number | null
+          recording_url?: string | null
+          start_time?: string
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_events_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          mentor_id: string
+          message: string | null
+          notification_type: string
+          recipient_id: string
+          reference_id: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          mentor_id: string
+          message?: string | null
+          notification_type: string
+          recipient_id: string
+          reference_id?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          mentor_id?: string
+          message?: string | null
+          notification_type?: string
+          recipient_id?: string
+          reference_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_notifications_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_payouts: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string | null
+          id: string
+          mentor_id: string
+          net_amount: number | null
+          payout_type: string | null
+          platform_fee: number | null
+          processed_at: string | null
+          source_id: string | null
+          status: string | null
+          transaction_reference: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string | null
+          id?: string
+          mentor_id: string
+          net_amount?: number | null
+          payout_type?: string | null
+          platform_fee?: number | null
+          processed_at?: string | null
+          source_id?: string | null
+          status?: string | null
+          transaction_reference?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string | null
+          id?: string
+          mentor_id?: string
+          net_amount?: number | null
+          payout_type?: string | null
+          platform_fee?: number | null
+          processed_at?: string | null
+          source_id?: string | null
+          status?: string | null
+          transaction_reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_payouts_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mentor_posts: {
         Row: {
           content: string | null
@@ -1364,12 +1674,18 @@ export type Database = {
       }
       mentor_profiles: {
         Row: {
+          achievements: string[] | null
           availability_status: string | null
           bio: string | null
+          certifications: string[] | null
+          consultation_rate: number | null
           created_at: string
           expertise: string[] | null
+          featured_video_url: string | null
           hourly_rate: number | null
           id: string
+          is_featured: boolean | null
+          languages: string[] | null
           linkedin_url: string | null
           portfolio_url: string | null
           rating: number | null
@@ -1377,6 +1693,8 @@ export type Database = {
           sessions_conducted: number | null
           specialization: string | null
           students_mentored: number | null
+          total_earnings: number | null
+          total_subscribers: number | null
           updated_at: string
           user_id: string
           verification_status: string | null
@@ -1385,12 +1703,18 @@ export type Database = {
           years_of_experience: number | null
         }
         Insert: {
+          achievements?: string[] | null
           availability_status?: string | null
           bio?: string | null
+          certifications?: string[] | null
+          consultation_rate?: number | null
           created_at?: string
           expertise?: string[] | null
+          featured_video_url?: string | null
           hourly_rate?: number | null
           id?: string
+          is_featured?: boolean | null
+          languages?: string[] | null
           linkedin_url?: string | null
           portfolio_url?: string | null
           rating?: number | null
@@ -1398,6 +1722,8 @@ export type Database = {
           sessions_conducted?: number | null
           specialization?: string | null
           students_mentored?: number | null
+          total_earnings?: number | null
+          total_subscribers?: number | null
           updated_at?: string
           user_id: string
           verification_status?: string | null
@@ -1406,12 +1732,18 @@ export type Database = {
           years_of_experience?: number | null
         }
         Update: {
+          achievements?: string[] | null
           availability_status?: string | null
           bio?: string | null
+          certifications?: string[] | null
+          consultation_rate?: number | null
           created_at?: string
           expertise?: string[] | null
+          featured_video_url?: string | null
           hourly_rate?: number | null
           id?: string
+          is_featured?: boolean | null
+          languages?: string[] | null
           linkedin_url?: string | null
           portfolio_url?: string | null
           rating?: number | null
@@ -1419,6 +1751,8 @@ export type Database = {
           sessions_conducted?: number | null
           specialization?: string | null
           students_mentored?: number | null
+          total_earnings?: number | null
+          total_subscribers?: number | null
           updated_at?: string
           user_id?: string
           verification_status?: string | null
@@ -1427,6 +1761,267 @@ export type Database = {
           years_of_experience?: number | null
         }
         Relationships: []
+      }
+      mentor_room_members: {
+        Row: {
+          id: string
+          is_muted: boolean | null
+          joined_at: string
+          role: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          is_muted?: boolean | null
+          joined_at?: string
+          role?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          is_muted?: boolean | null
+          joined_at?: string
+          role?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_room_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_room_messages: {
+        Row: {
+          content: string
+          created_at: string
+          file_url: string | null
+          id: string
+          is_edited: boolean | null
+          is_pinned: boolean | null
+          message_type: string | null
+          parent_message_id: string | null
+          room_id: string
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          is_edited?: boolean | null
+          is_pinned?: boolean | null
+          message_type?: string | null
+          parent_message_id?: string | null
+          room_id: string
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          is_edited?: boolean | null
+          is_pinned?: boolean | null
+          message_type?: string | null
+          parent_message_id?: string | null
+          room_id?: string
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_room_messages_parent_message_id_fkey"
+            columns: ["parent_message_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_room_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_room_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_rooms: {
+        Row: {
+          access_type: string | null
+          cover_image: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          max_members: number | null
+          mentor_id: string
+          name: string
+          price: number | null
+          room_type: string | null
+          rules: Json | null
+          topic: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_type?: string | null
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_members?: number | null
+          mentor_id: string
+          name: string
+          price?: number | null
+          room_type?: string | null
+          rules?: Json | null
+          topic?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_type?: string | null
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_members?: number | null
+          mentor_id?: string
+          name?: string
+          price?: number | null
+          room_type?: string | null
+          rules?: Json | null
+          topic?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_rooms_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_subscription_plans: {
+        Row: {
+          billing_cycle: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          max_subscribers: number | null
+          mentor_id: string
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          billing_cycle?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_subscribers?: number | null
+          mentor_id: string
+          name: string
+          price?: number
+          updated_at?: string
+        }
+        Update: {
+          billing_cycle?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_subscribers?: number | null
+          mentor_id?: string
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_subscription_plans_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          mentor_id: string
+          payment_reference: string | null
+          plan_id: string | null
+          started_at: string
+          status: string | null
+          student_id: string
+          subscription_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          mentor_id: string
+          payment_reference?: string | null
+          plan_id?: string | null
+          started_at?: string
+          status?: string | null
+          student_id: string
+          subscription_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          mentor_id?: string
+          payment_reference?: string | null
+          plan_id?: string | null
+          started_at?: string
+          status?: string | null
+          student_id?: string
+          subscription_type?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_subscriptions_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
