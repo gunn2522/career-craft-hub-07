@@ -6,12 +6,15 @@ import { ConsultancySection } from "@/components/home/ConsultancySection";
 import { SignupCTA } from "@/components/home/SignupCTA";
 import { SuccessStories } from "@/components/home/SuccessStories";
 import { PartnersSection } from "@/components/home/PartnersSection";
+import { InstitutionsLogosSection } from "@/components/home/InstitutionsLogosSection";
+
 const Index = () => {
   return (
     <Layout>
       <HeroSection />
       <ThreePillars />
       <PartnersSection />
+      <InstitutionsLogosSection />
       <SuccessStories />
       <AmbassadorSection />
       <ConsultancySection />

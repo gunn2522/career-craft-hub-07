@@ -3,78 +3,51 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   LayoutDashboard, 
-  Briefcase, 
-  Map, 
-  BookOpen, 
-  GraduationCap, 
-  FileText, 
-  Trophy, 
+  Building2, 
   Calendar, 
+  FileText, 
   Users, 
   LogOut,
-  Settings,
   Home,
-  Sparkles,
-  ClipboardList,
-  Building2,
-  LayoutList
+  Settings,
+  MessageSquare,
+  BookOpen,
+  FileSignature,
+  CreditCard,
+  Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
-import { 
-  Brain,
-  FileCheck,
-  Award,
-  Medal
-} from "lucide-react";
-
 const sidebarLinks = [
-  { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
-  { name: "Homepage Content", path: "/admin/homepage-content", icon: LayoutList },
-  { name: "Module Hero", path: "/admin/module-hero", icon: LayoutList },
-  { name: "Live Metrics", path: "/admin/metrics", icon: Settings },
-  { name: "Access Control", path: "/admin/access-control", icon: Settings },
-  { name: "Users", path: "/admin/users", icon: Users },
-  { name: "Mentor Verification", path: "/admin/mentor-verification", icon: Users },
-  { name: "Partners", path: "/admin/partners", icon: Building2 },
-  { name: "Institutions", path: "/admin/institutions", icon: Building2 },
-  { name: "Organization Plans", path: "/admin/organization-plans", icon: ClipboardList },
-  { name: "Domains", path: "/admin/domains", icon: Briefcase },
-  { name: "Categories", path: "/admin/categories", icon: Briefcase },
-  { name: "Careers", path: "/admin/careers", icon: Briefcase },
-  { name: "Degrees", path: "/admin/degrees", icon: GraduationCap },
-  { name: "Roadmaps", path: "/admin/roadmaps", icon: Map },
-  { name: "Psychometric Tests", path: "/admin/psychometric-tests", icon: Brain },
-  { name: "Government Exams", path: "/admin/government-exams", icon: FileCheck },
-  { name: "Scholarships", path: "/admin/scholarships", icon: Award },
-  { name: "Olympiads", path: "/admin/olympiads", icon: Medal },
-  { name: "Daily Tasks", path: "/admin/daily-tasks", icon: ClipboardList },
-  { name: "Resources", path: "/admin/resources", icon: BookOpen },
-  { name: "Internships", path: "/admin/internships", icon: GraduationCap },
-  { name: "Programs", path: "/admin/programs", icon: Sparkles },
-  { name: "Registrations", path: "/admin/registrations", icon: Settings },
-  { name: "Blogs", path: "/admin/blogs", icon: FileText },
-  { name: "Success Stories", path: "/admin/success-stories", icon: Trophy },
-  { name: "Events", path: "/admin/events", icon: Calendar },
-  { name: "Applications", path: "/admin/applications", icon: Users },
+  { name: "Dashboard", path: "/institution", icon: LayoutDashboard },
+  { name: "My Profile", path: "/institution/profile", icon: Building2 },
+  { name: "Preview Page", path: "/institution/preview", icon: Eye },
+  { name: "Events", path: "/institution/events", icon: Calendar },
+  { name: "Resources", path: "/institution/resources", icon: BookOpen },
+  { name: "Members", path: "/institution/members", icon: Users },
+  { name: "Programs", path: "/institution/programs", icon: FileText },
+  { name: "MoU & Onboarding", path: "/institution/mou", icon: FileSignature },
+  { name: "Plans & Pricing", path: "/institution/plans", icon: CreditCard },
+  { name: "Inquiries", path: "/institution/inquiries", icon: MessageSquare },
+  { name: "Settings", path: "/institution/settings", icon: Settings },
 ];
 
-interface AdminLayoutProps {
+interface InstitutionLayoutProps {
   children: ReactNode;
   title: string;
 }
 
-export const AdminLayout = ({ children, title }: AdminLayoutProps) => {
-  const { user, isAdmin, isLoading, signOut } = useAuth();
+export const InstitutionLayout = ({ children, title }: InstitutionLayoutProps) => {
+  const { user, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!isLoading && (!user || !isAdmin)) {
+    if (!isLoading && !user) {
       navigate("/auth");
     }
-  }, [user, isAdmin, isLoading, navigate]);
+  }, [user, isLoading, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -89,7 +62,7 @@ export const AdminLayout = ({ children, title }: AdminLayoutProps) => {
     );
   }
 
-  if (!user || !isAdmin) {
+  if (!user) {
     return null;
   }
 
@@ -105,7 +78,7 @@ export const AdminLayout = ({ children, title }: AdminLayoutProps) => {
               className="h-10 w-auto dark:brightness-0 dark:invert"
             />
           </Link>
-          <p className="text-xs text-muted-foreground mt-2">Admin Dashboard</p>
+          <p className="text-xs text-muted-foreground mt-2">Institution Dashboard</p>
         </div>
 
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
