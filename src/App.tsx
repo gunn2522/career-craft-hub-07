@@ -58,6 +58,7 @@ import MentorEvents from "./pages/mentor/MentorEvents";
 import MentorRooms from "./pages/mentor/MentorRooms";
 import MentorSubscribers from "./pages/mentor/MentorSubscribers";
 import MentorGuidance from "./pages/mentor/MentorGuidance";
+import MentorMyProfile from "./pages/mentor/MentorMyProfile";
 import Mentors from "./pages/Mentors";
 import MentorProfile from "./pages/MentorProfile";
 import Institutions from "./pages/Institutions";
@@ -122,6 +123,7 @@ const App = () => (
             <Route path="/institutions" element={<Institutions />} />
             <Route path="/institutions/:id" element={<InstitutionProfile />} />
             <Route path="/mentor" element={<MentorDashboard />} />
+            <Route path="/mentor/profile" element={<MentorMyProfile />} />
             <Route path="/mentor/daily-tasks" element={<MentorDailyTasks />} />
             <Route path="/mentor/programs" element={<MentorPrograms />} />
             <Route path="/mentor/internships" element={<MentorInternships />} />

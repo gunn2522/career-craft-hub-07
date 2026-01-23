@@ -11,7 +11,8 @@ import {
   Library,
   LogOut,
   Menu,
-  X
+  X,
+  UserCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -23,6 +24,7 @@ interface MentorLayoutProps {
 
 const menuItems = [
   { name: "Dashboard", path: "/mentor", icon: LayoutDashboard },
+  { name: "My Profile", path: "/mentor/profile", icon: UserCircle },
   { name: "Daily Guidance", path: "/mentor/guidance", icon: Lightbulb },
   { name: "My Events", path: "/mentor/events", icon: Calendar },
   { name: "My Rooms", path: "/mentor/rooms", icon: MessageCircle },
