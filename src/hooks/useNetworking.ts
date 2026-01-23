@@ -3,6 +3,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
+// Public profile interface for discovery (limited fields from public_profiles view)
+export interface PublicProfileDiscovery {
+  user_id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  bio: string | null;
+  user_type: string | null;
+  institution: string | null;
+  skills: string[] | null;
+  is_public: boolean;
+}
+
+// Full public profile interface (for connected users only)
 export interface PublicProfile {
   user_id: string;
   full_name: string | null;
@@ -74,7 +87,7 @@ export const useNetworking = () => {
   const [connections, setConnections] = useState<Connection[]>([]);
   const [connectionRequests, setConnectionRequests] = useState<ConnectionRequest[]>([]);
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
-  const [discoverPeople, setDiscoverPeople] = useState<PublicProfile[]>([]);
+  const [discoverPeople, setDiscoverPeople] = useState<PublicProfileDiscovery[]>([]);
   const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -243,15 +256,15 @@ export const useNetworking = () => {
   const fetchDiscoverPeople = async () => {
     if (!user) return;
 
+    // Use the secure public_profiles view which only exposes non-sensitive data
     const { data } = await supabase
-      .from("profiles")
-      .select("user_id, full_name, avatar_url, bio, job_title, current_company, skills, is_mentor, is_recruiter, years_experience")
-      .eq("is_public", true)
+      .from("public_profiles")
+      .select("user_id, full_name, avatar_url, bio, user_type, institution, skills, is_public")
       .neq("user_id", user.id)
       .limit(20);
 
     if (data) {
-      setDiscoverPeople(data as PublicProfile[]);
+      setDiscoverPeople(data as PublicProfileDiscovery[]);
     }
   };
 
