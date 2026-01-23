@@ -60,6 +60,7 @@ const sidebarLinks = [
   { name: "Blogs", path: "/admin/blogs", icon: FileText },
   { name: "Success Stories", path: "/admin/success-stories", icon: Trophy },
   { name: "Events", path: "/admin/events", icon: Calendar },
+  { name: "Events Approval", path: "/admin/events-approval", icon: Calendar },
   { name: "Applications", path: "/admin/applications", icon: Users },
 ];
 

@@ -63,7 +63,7 @@ interface PartnerEvent {
   location: string | null;
   mode: string | null;
   max_attendees: number | null;
-  approval_status: string | null;
+  is_approved: boolean | null;
   is_active: boolean | null;
   partner_id: string;
   created_at: string;
@@ -155,7 +155,7 @@ const AdminEventsApproval = () => {
     mutationFn: async (eventId: string) => {
       const { error } = await (supabase as any)
         .from("partner_events")
-        .update({ approval_status: "approved" })
+        .update({ is_approved: true })
         .eq("id", eventId);
       if (error) throw error;
     },
@@ -171,7 +171,7 @@ const AdminEventsApproval = () => {
     mutationFn: async (eventId: string) => {
       const { error } = await (supabase as any)
         .from("partner_events")
-        .update({ approval_status: "rejected", is_active: false })
+        .update({ is_approved: false, is_active: false })
         .eq("id", eventId);
       if (error) throw error;
     },
@@ -198,21 +198,19 @@ const AdminEventsApproval = () => {
     if (type === "institution") {
       const instEvent = event as InstitutionEvent;
       if (instEvent.is_approved === true) {
-        return <Badge className="bg-green-500">Approved</Badge>;
+        return <Badge className="bg-primary text-primary-foreground">Approved</Badge>;
       } else if (instEvent.is_approved === false) {
         return <Badge variant="destructive">Rejected</Badge>;
       }
       return <Badge variant="secondary">Pending</Badge>;
     } else {
       const partEvent = event as PartnerEvent;
-      switch (partEvent.approval_status) {
-        case "approved":
-          return <Badge className="bg-green-500">Approved</Badge>;
-        case "rejected":
-          return <Badge variant="destructive">Rejected</Badge>;
-        default:
-          return <Badge variant="secondary">Pending</Badge>;
+      if (partEvent.is_approved === true) {
+        return <Badge className="bg-primary text-primary-foreground">Approved</Badge>;
+      } else if (partEvent.is_approved === false) {
+        return <Badge variant="destructive">Rejected</Badge>;
       }
+      return <Badge variant="secondary">Pending</Badge>;
     }
   };
 
@@ -285,7 +283,7 @@ const AdminEventsApproval = () => {
                       <Eye className="w-4 h-4" />
                     </Button>
                     {((type === "institution" && (event as InstitutionEvent).is_approved === null) ||
-                      (type === "partner" && (event as PartnerEvent).approval_status === "pending")) && (
+                      (type === "partner" && (event as PartnerEvent).is_approved === null)) && (
                       <>
                         <Button
                           variant="ghost"
@@ -324,7 +322,7 @@ const AdminEventsApproval = () => {
 
   // Count pending events
   const pendingInstitution = institutionEvents.filter((e) => e.is_approved === null).length;
-  const pendingPartner = partnerEvents.filter((e) => e.approval_status === "pending" || !e.approval_status).length;
+  const pendingPartner = partnerEvents.filter((e) => e.is_approved === null).length;
 
   return (
     <AdminLayout title="Events Approval">
