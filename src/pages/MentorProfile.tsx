@@ -100,7 +100,7 @@ const MentorProfile = () => {
         .from("profiles")
         .select("full_name, avatar_url, institution")
         .eq("user_id", mentorData.user_id)
-        .single();
+        .maybeSingle();
       
       setProfile(profileData);
 

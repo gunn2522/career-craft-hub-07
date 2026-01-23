@@ -42,7 +42,7 @@ const MentorSubscribers = () => {
         .from("mentor_profiles")
         .select("id, total_subscribers, total_earnings")
         .eq("user_id", user?.id || "")
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -68,7 +68,7 @@ const MentorSubscribers = () => {
             .from("profiles")
             .select("full_name, avatar_url, email, institution")
             .eq("user_id", sub.student_id)
-            .single();
+            .maybeSingle();
           return { ...sub, profile } as Subscriber;
         })
       );
