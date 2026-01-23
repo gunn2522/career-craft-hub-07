@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { 
   BookOpen, Code, Target, Trophy, Users, ArrowRight, 
-  Star, Clock, ChevronDown
+  Star, Clock, ChevronDown, Layers
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { TorchLoader } from "@/components/ui/TorchLoader";
 import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import heroBg from "@/assets/hero-bg.jpg";
+
+interface Domain {
+  id: string;
+  name: string;
+}
 
 interface Roadmap {
   id: string;
@@ -19,31 +23,43 @@ interface Roadmap {
   duration: string | null;
   difficulty: string | null;
   category: string | null;
+  domain_id: string | null;
 }
 
 const Craft = () => {
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
+  const [domains, setDomains] = useState<Domain[]>([]);
+  const [activeDomain, setActiveDomain] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchRoadmaps();
+    fetchData();
   }, []);
 
-  const fetchRoadmaps = async () => {
+  const fetchData = async () => {
     try {
-      const { data, error } = await supabase
-        .from("roadmaps")
-        .select("*")
-        .order("created_at", { ascending: false });
+      // Fetch domains and roadmaps in parallel
+      const [domainsRes, roadmapsRes] = await Promise.all([
+        supabase.from("career_domains").select("id, name").order("name"),
+        supabase.from("roadmaps").select("*").order("created_at", { ascending: false })
+      ]);
 
-      if (error) throw error;
-      setRoadmaps(data || []);
+      if (domainsRes.error) throw domainsRes.error;
+      if (roadmapsRes.error) throw roadmapsRes.error;
+
+      setDomains(domainsRes.data || []);
+      setRoadmaps(roadmapsRes.data || []);
     } catch (error) {
-      console.error("Error fetching roadmaps:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Filter roadmaps by active domain
+  const filteredRoadmaps = activeDomain
+    ? roadmaps.filter(r => r.domain_id === activeDomain)
+    : roadmaps;
 
   return (
     <Layout>
@@ -133,13 +149,48 @@ const Craft = () => {
         <div className="container mx-auto px-4">
           <h2 className="font-display text-2xl md:text-3xl font-bold mb-8">Available Roadmaps</h2>
           
+          {/* Domain Filter Tabs */}
+          {domains.length > 0 && (
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <Layers className="w-5 h-5 text-primary" />
+                <span className="font-medium">Filter by Domain</span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => setActiveDomain(null)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    activeDomain === null
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  }`}
+                >
+                  All Domains
+                </button>
+                {domains.map((domain) => (
+                  <button
+                    key={domain.id}
+                    onClick={() => setActiveDomain(domain.id)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      activeDomain === domain.id
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    }`}
+                  >
+                    {domain.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
               <TorchLoader size="lg" text="Loading roadmaps..." />
             </div>
-          ) : roadmaps.length > 0 ? (
+          ) : filteredRoadmaps.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {roadmaps.map((roadmap) => (
+              {filteredRoadmaps.map((roadmap) => (
                 <div key={roadmap.id} className="glass-card rounded-2xl p-6 hover:border-primary/50 transition-all">
                   <div className="flex items-start justify-between mb-4">
                     <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
@@ -180,7 +231,11 @@ const Craft = () => {
             </div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-muted-foreground text-lg">No roadmaps available yet. Check back soon!</p>
+              <p className="text-muted-foreground text-lg">
+                {activeDomain 
+                  ? "No roadmaps available in this domain yet." 
+                  : "No roadmaps available yet. Check back soon!"}
+              </p>
             </div>
           )}
         </div>
