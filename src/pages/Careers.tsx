@@ -46,6 +46,8 @@ interface Career {
   search_keywords: string[] | null;
 }
 
+const EXPERIENCE_LEVEL_KEY = 'ccc_experience_level';
+
 const Careers = () => {
   const { user } = useAuth();
   const [search, setSearch] = useState("");
@@ -55,10 +57,14 @@ const Careers = () => {
   const [activeDomain, setActiveDomain] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Experience level state
-  const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel | null>(null);
+  // Experience level state - initialize from localStorage
+  const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(EXPERIENCE_LEVEL_KEY) as ExperienceLevel | null;
+    }
+    return null;
+  });
   const [showExperienceSelector, setShowExperienceSelector] = useState(false);
-  const [hasShownInitialSelector, setHasShownInitialSelector] = useState(false);
   
   // Skill filters
   const [activeSkillFilters, setActiveSkillFilters] = useState<string[]>([]);
@@ -68,15 +74,22 @@ const Careers = () => {
     loadUserPreference();
   }, [user]);
 
-  // Show experience selector on initial load if no preference
+  // Show experience selector on initial load if no preference saved
   useEffect(() => {
-    if (!isLoading && !hasShownInitialSelector && !experienceLevel) {
+    if (!isLoading && !experienceLevel) {
       setShowExperienceSelector(true);
-      setHasShownInitialSelector(true);
     }
-  }, [isLoading, hasShownInitialSelector, experienceLevel]);
+  }, [isLoading, experienceLevel]);
 
   const loadUserPreference = async () => {
+    // First check localStorage
+    const storedLevel = localStorage.getItem(EXPERIENCE_LEVEL_KEY) as ExperienceLevel | null;
+    if (storedLevel) {
+      setExperienceLevel(storedLevel);
+      return;
+    }
+    
+    // Then check user profile if logged in
     if (!user) return;
     
     try {
@@ -87,12 +100,19 @@ const Careers = () => {
         .maybeSingle();
 
       if (!error && data?.preferred_experience_level) {
-        setExperienceLevel(data.preferred_experience_level as ExperienceLevel);
-        setHasShownInitialSelector(true);
+        const level = data.preferred_experience_level as ExperienceLevel;
+        setExperienceLevel(level);
+        localStorage.setItem(EXPERIENCE_LEVEL_KEY, level);
       }
     } catch (error) {
       console.error("Error loading user preference:", error);
     }
+  };
+
+  // Handle experience level selection and persist to localStorage
+  const handleExperienceLevelSelect = (level: ExperienceLevel) => {
+    setExperienceLevel(level);
+    localStorage.setItem(EXPERIENCE_LEVEL_KEY, level);
   };
 
   const fetchData = async () => {
@@ -196,7 +216,7 @@ const Careers = () => {
       <ExperienceLevelSelector
         isOpen={showExperienceSelector}
         onClose={() => setShowExperienceSelector(false)}
-        onSelect={setExperienceLevel}
+        onSelect={handleExperienceLevelSelect}
         currentLevel={experienceLevel}
       />
 
