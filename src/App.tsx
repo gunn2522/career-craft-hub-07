@@ -42,6 +42,12 @@ import AdminMentorVerification from "./pages/admin/AdminMentorVerification";
 import AdminInstitutions from "./pages/admin/AdminInstitutions";
 import AdminMetrics from "./pages/admin/AdminMetrics";
 import AdminAccessControl from "./pages/admin/AdminAccessControl";
+import AdminPsychometricTests from "./pages/admin/AdminPsychometricTests";
+import AdminGovernmentExams from "./pages/admin/AdminGovernmentExams";
+import AdminScholarships from "./pages/admin/AdminScholarships";
+import AdminOlympiads from "./pages/admin/AdminOlympiads";
+import AdminModuleHero from "./pages/admin/AdminModuleHero";
+import SchoolAssessment from "./pages/SchoolAssessment";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
 import MentorPrograms from "./pages/mentor/MentorPrograms";
@@ -101,6 +107,12 @@ const App = () => (
             <Route path="/admin/institutions" element={<AdminInstitutions />} />
             <Route path="/admin/metrics" element={<AdminMetrics />} />
             <Route path="/admin/access-control" element={<AdminAccessControl />} />
+            <Route path="/admin/psychometric-tests" element={<AdminPsychometricTests />} />
+            <Route path="/admin/government-exams" element={<AdminGovernmentExams />} />
+            <Route path="/admin/scholarships" element={<AdminScholarships />} />
+            <Route path="/admin/olympiads" element={<AdminOlympiads />} />
+            <Route path="/admin/module-hero" element={<AdminModuleHero />} />
+            <Route path="/school-assessment" element={<SchoolAssessment />} />
             <Route path="/institutions" element={<Institutions />} />
             <Route path="/institutions/:id" element={<InstitutionProfile />} />
             <Route path="/mentor" element={<MentorDashboard />} />

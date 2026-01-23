@@ -22,9 +22,17 @@ import {
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
+import { 
+  Brain,
+  FileCheck,
+  Award,
+  Medal
+} from "lucide-react";
+
 const sidebarLinks = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { name: "Homepage Content", path: "/admin/homepage-content", icon: LayoutList },
+  { name: "Module Hero", path: "/admin/module-hero", icon: LayoutList },
   { name: "Live Metrics", path: "/admin/metrics", icon: Settings },
   { name: "Access Control", path: "/admin/access-control", icon: Settings },
   { name: "Users", path: "/admin/users", icon: Users },
@@ -36,6 +44,10 @@ const sidebarLinks = [
   { name: "Careers", path: "/admin/careers", icon: Briefcase },
   { name: "Degrees", path: "/admin/degrees", icon: GraduationCap },
   { name: "Roadmaps", path: "/admin/roadmaps", icon: Map },
+  { name: "Psychometric Tests", path: "/admin/psychometric-tests", icon: Brain },
+  { name: "Government Exams", path: "/admin/government-exams", icon: FileCheck },
+  { name: "Scholarships", path: "/admin/scholarships", icon: Award },
+  { name: "Olympiads", path: "/admin/olympiads", icon: Medal },
   { name: "Daily Tasks", path: "/admin/daily-tasks", icon: ClipboardList },
   { name: "Resources", path: "/admin/resources", icon: BookOpen },
   { name: "Internships", path: "/admin/internships", icon: GraduationCap },
