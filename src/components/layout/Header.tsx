@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Handshake, LogOut, LayoutDashboard, User, GraduationCap } from "lucide-react";
+import { Menu, X, Handshake, LogOut, LayoutDashboard, User, GraduationCap, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
@@ -21,7 +21,7 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAdmin, isMentor, signOut } = useAuth();
+  const { user, isAdmin, isMentor, isPartner, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -83,6 +83,14 @@ export const Header = () => {
                     </Link>
                   </Button>
                 )}
+                {isPartner && !isAdmin && !isMentor && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/partner-dashboard" className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4" />
+                      Partner
+                    </Link>
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" onClick={handleSignOut} className="flex items-center gap-2">
                   <LogOut className="w-4 h-4" />
                   Sign Out
@@ -141,6 +149,11 @@ export const Header = () => {
                     {isMentor && !isAdmin && (
                       <Button variant="outline" asChild>
                         <Link to="/mentor" onClick={() => setIsOpen(false)}>Mentor Dashboard</Link>
+                      </Button>
+                    )}
+                    {isPartner && !isAdmin && !isMentor && (
+                      <Button variant="outline" asChild>
+                        <Link to="/partner-dashboard" onClick={() => setIsOpen(false)}>Partner Dashboard</Link>
                       </Button>
                     )}
                     <Button variant="gradient" onClick={handleSignOut}>Sign Out</Button>

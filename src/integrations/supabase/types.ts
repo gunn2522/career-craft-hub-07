@@ -3159,6 +3159,35 @@ export type Database = {
           },
         ]
       }
+      roadmap_enrollments: {
+        Row: {
+          enrolled_at: string
+          id: string
+          roadmap_id: string
+          user_id: string
+        }
+        Insert: {
+          enrolled_at?: string
+          id?: string
+          roadmap_id: string
+          user_id: string
+        }
+        Update: {
+          enrolled_at?: string
+          id?: string
+          roadmap_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_enrollments_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       roadmaps: {
         Row: {
           career_id: string | null

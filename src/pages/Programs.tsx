@@ -191,9 +191,11 @@ const Programs = () => {
   const highlightedPrograms = programs.filter(p => p.is_highlighted);
   const regularPrograms = programs.filter(p => !p.is_highlighted);
 
+  // These will be fetched from site_metrics in the future
+  // For now, using placeholder values that can be managed via admin
   const stats = [
     { icon: Users, value: "5000+", label: "Students Trained" },
-    { icon: Trophy, value: "50+", label: "Programs Offered" },
+    { icon: Trophy, value: `${programs.length}+`, label: "Programs Offered" },
     { icon: Target, value: "85%", label: "Success Rate" },
     { icon: Briefcase, value: "500+", label: "Placements" },
   ];

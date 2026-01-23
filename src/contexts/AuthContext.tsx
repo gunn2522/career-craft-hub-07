@@ -11,10 +11,10 @@ interface AuthContextType {
   isLoading: boolean;
   isAdmin: boolean;
   isMentor: boolean;
+  isPartner: boolean;
   userRole: AppRole | null;
   signUp: (email: string, password: string, fullName: string, userType: UserType, institution?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  
   signOut: () => Promise<void>;
 }
 
@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMentor, setIsMentor] = useState(false);
+  const [isPartner, setIsPartner] = useState(false);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } else {
           setIsAdmin(false);
           setIsMentor(false);
+          setIsPartner(false);
           setUserRole(null);
         }
       }
@@ -74,6 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error checking user role:", error);
         setIsAdmin(false);
         setIsMentor(false);
+        setIsPartner(false);
         setUserRole(null);
         return;
       }
@@ -83,15 +86,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUserRole(role);
         setIsAdmin(role === "admin");
         setIsMentor(role === "mentor");
+        setIsPartner(role === "partner");
       } else {
         setUserRole(null);
         setIsAdmin(false);
         setIsMentor(false);
+        setIsPartner(false);
       }
     } catch (error) {
       console.error("Error checking user role:", error);
       setIsAdmin(false);
       setIsMentor(false);
+      setIsPartner(false);
       setUserRole(null);
     }
   };
@@ -137,6 +143,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setSession(null);
     setIsAdmin(false);
     setIsMentor(false);
+    setIsPartner(false);
     setUserRole(null);
   };
 
@@ -148,10 +155,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         isAdmin,
         isMentor,
+        isPartner,
         userRole,
         signUp,
         signIn,
-        
         signOut,
       }}
     >
