@@ -11,7 +11,7 @@ import { useVisitorRole } from "@/hooks/useVisitorRole";
 import { TorchLoader } from "@/components/ui/TorchLoader";
 import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import { ExperienceLevelSelector, ExperienceLevel } from "@/components/careers/ExperienceLevelSelector";
-import { CareersWelcomePopup } from "@/components/careers/CareersWelcomePopup";
+
 import { CareerFilters } from "@/components/careers/CareerFilters";
 import { CareerCard } from "@/components/careers/CareerCard";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -49,7 +49,6 @@ interface Career {
 }
 
 const EXPERIENCE_LEVEL_KEY = 'ccc_experience_level';
-const CAREERS_WELCOMED_KEY = 'ccc_careers_welcomed';
 
 const Careers = () => {
   const { user } = useAuth();
@@ -60,16 +59,6 @@ const Careers = () => {
   const [careers, setCareers] = useState<Career[]>([]);
   const [activeDomain, setActiveDomain] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
-  // Welcome popup state - only show if user has selected a role (hasVisited)
-  const [showWelcome, setShowWelcome] = useState(false);
-  
-  // Check if we should show welcome after visitor role is set
-  useEffect(() => {
-    if (visitorRole && localStorage.getItem(CAREERS_WELCOMED_KEY) !== 'true') {
-      setShowWelcome(true);
-    }
-  }, [visitorRole]);
   
   // Experience level state - initialize from localStorage
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel | null>(() => {
@@ -88,16 +77,12 @@ const Careers = () => {
     loadUserPreference();
   }, [user]);
 
-  // Handle welcome popup close - show experience selector only for college students
-  const handleWelcomeClose = () => {
-    localStorage.setItem(CAREERS_WELCOMED_KEY, 'true');
-    setShowWelcome(false);
-    
-    // Only show experience selector for college students who haven't set their level
-    if (visitorRole === 'college_student' && !experienceLevel) {
+  // Show experience selector for college students who haven't set their level
+  useEffect(() => {
+    if (!isLoading && visitorRole === 'college_student' && !experienceLevel) {
       setShowExperienceSelector(true);
     }
-  };
+  }, [isLoading, visitorRole, experienceLevel]);
 
   const loadUserPreference = async () => {
     // First check localStorage
@@ -230,12 +215,6 @@ const Careers = () => {
 
   return (
     <Layout>
-      {/* Welcome Popup */}
-      <CareersWelcomePopup 
-        isOpen={showWelcome} 
-        onClose={handleWelcomeClose} 
-      />
-
       {/* Experience Level Selector Modal - Only for college students */}
       <ExperienceLevelSelector
         isOpen={showExperienceSelector}
