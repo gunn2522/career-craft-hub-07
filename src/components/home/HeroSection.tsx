@@ -4,25 +4,38 @@ import { ArrowRight, Compass, ChevronDown } from "lucide-react";
 import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
 import { TorchElements3D } from "@/components/ui/TorchElements3D";
 import { LiveStats } from "@/components/home/LiveStats";
-import { useHomepageSection } from "@/hooks/useHomepageContent";
+import { useHomepageSection, useRoleBasedSection } from "@/hooks/useHomepageContent";
 import { useVisitorRole } from "@/hooks/useVisitorRole";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const HeroSection = () => {
   const heroSection = useHomepageSection('hero');
+  const roleBasedHero = useRoleBasedSection('hero');
   const { visitorRole } = useVisitorRole();
 
   const scrollToContent = () => {
     window.scrollTo({ top: window.innerHeight - 100, behavior: "smooth" });
   };
 
-  // Dynamic CTA based on visitor role
+  // Use role-based content if available, fallback to default
+  const displayTitle = roleBasedHero.is_role_specific && roleBasedHero.title 
+    ? roleBasedHero.title 
+    : heroSection?.title || 'Craft Your Career. Build Your Future.';
+  
+  const displaySubtitle = roleBasedHero.is_role_specific && roleBasedHero.subtitle 
+    ? roleBasedHero.subtitle 
+    : heroSection?.subtitle || 'Discover your perfect career path, master in-demand skills, and connect with opportunities that transform your potential into success.';
+
+  // Dynamic CTA based on visitor role - use role-based content if available
   const getPrimaryCTA = () => {
+    if (roleBasedHero.is_role_specific && roleBasedHero.cta_text && roleBasedHero.cta_link) {
+      return { text: roleBasedHero.cta_text, link: roleBasedHero.cta_link };
+    }
     switch (visitorRole) {
       case 'school_student':
-        return { text: 'Explore After 12th', link: '/careers' };
+        return { text: 'Explore After 12th', link: '/school-careers' };
       case 'mentor':
-        return { text: 'Become a Mentor', link: '/auth' };
+        return { text: 'Become a Mentor', link: '/signup' };
       case 'partner':
         return { text: 'Partner With Us', link: '/partner' };
       case 'institution':
@@ -63,30 +76,28 @@ export const HeroSection = () => {
               Your Career Journey Starts Here
             </div>
 
-            {/* Main Headline - Dynamic from database */}
+            {/* Main Headline - Dynamic from database with role-based personalization */}
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              {heroSection?.title?.split('.').map((part, i) => (
-                <span key={i}>
-                  {i === 0 ? part + '.' : null}
-                  {i === 1 ? (
-                    <>
-                      <br />
-                      <span className="gradient-text">{part.trim()}</span>
-                    </>
-                  ) : null}
-                </span>
-              )) || (
-                <>
-                  Craft Your Career.
-                  <br />
-                  <span className="gradient-text">Build Your Future.</span>
-                </>
+              {displayTitle.includes('.') ? (
+                displayTitle.split('.').map((part, i) => (
+                  <span key={i}>
+                    {i === 0 ? part + '.' : null}
+                    {i === 1 && part.trim() ? (
+                      <>
+                        <br />
+                        <span className="gradient-text">{part.trim()}</span>
+                      </>
+                    ) : null}
+                  </span>
+                ))
+              ) : (
+                <span className="gradient-text">{displayTitle}</span>
               )}
             </h1>
 
-            {/* Subheadline - Dynamic from database */}
+            {/* Subheadline - Dynamic from database with role-based personalization */}
             <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              {heroSection?.subtitle || 'Discover your perfect career path, master in-demand skills, and connect with opportunities that transform your potential into success.'}
+              {displaySubtitle}
             </p>
 
             {/* CTA Buttons - Dynamic based on role */}

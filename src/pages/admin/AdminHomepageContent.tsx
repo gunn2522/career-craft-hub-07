@@ -46,6 +46,17 @@ interface SiteMetric {
   is_visible: boolean;
 }
 
+interface HomepageRoleContent {
+  id: string;
+  visitor_role_id: string | null;
+  section_key: string;
+  title: string | null;
+  subtitle: string | null;
+  cta_text: string | null;
+  cta_link: string | null;
+  is_visible: boolean;
+}
+
 interface PillarContent {
   subtitle: string;
   description: string;
@@ -124,6 +135,21 @@ const AdminHomepageContent = () => {
       return data as SiteMetric[];
     },
   });
+
+  // Fetch role-based content
+  const { data: roleContent, isLoading: roleContentLoading } = useQuery({
+    queryKey: ['admin-role-content'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('homepage_role_content')
+        .select('*')
+        .order('section_key');
+      if (error) throw error;
+      return data as HomepageRoleContent[];
+    },
+  });
+
+  const [editingRoleContent, setEditingRoleContent] = useState<HomepageRoleContent | null>(null);
 
   // Load pillars content from three_pillars section
   useEffect(() => {
@@ -290,6 +316,35 @@ const AdminHomepageContent = () => {
     onError: () => toast.error('Failed to update metric'),
   });
 
+  // Update role content mutation
+  const updateRoleContent = useMutation({
+    mutationFn: async (content: HomepageRoleContent) => {
+      const { error } = await supabase
+        .from('homepage_role_content')
+        .update({
+          title: content.title,
+          subtitle: content.subtitle,
+          cta_text: content.cta_text,
+          cta_link: content.cta_link,
+          is_visible: content.is_visible,
+        })
+        .eq('id', content.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-role-content'] });
+      queryClient.invalidateQueries({ queryKey: ['homepage-role-content'] });
+      setEditingRoleContent(null);
+      toast.success('Role-based content updated successfully');
+    },
+    onError: () => toast.error('Failed to update role-based content'),
+  });
+
+  const getRoleName = (roleId: string | null) => {
+    if (!roleId) return 'Default';
+    return roles?.find(r => r.id === roleId)?.display_name || 'Unknown';
+  };
+
   const iconOptions = ['GraduationCap', 'BookOpen', 'Users', 'Building2', 'Briefcase'];
 
   return (
@@ -297,6 +352,7 @@ const AdminHomepageContent = () => {
       <Tabs defaultValue="sections" className="space-y-6">
         <TabsList>
           <TabsTrigger value="sections">Page Sections</TabsTrigger>
+          <TabsTrigger value="role-content">Role-Based Content</TabsTrigger>
           <TabsTrigger value="pillars">3 Pillars to Success</TabsTrigger>
           <TabsTrigger value="roles">Visitor Roles</TabsTrigger>
           <TabsTrigger value="metrics">Live Metrics</TabsTrigger>
@@ -371,6 +427,108 @@ const AdminHomepageContent = () => {
                             </div>
                           ) : (
                             <Button size="sm" variant="outline" onClick={() => setEditingSection(section)}>
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Role-Based Content Tab */}
+        <TabsContent value="role-content">
+          <Card>
+            <CardHeader>
+              <CardTitle>Role-Based Homepage Content</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Customize homepage content for each visitor role. This content overrides the default section content when a user selects that role.
+              </p>
+            </CardHeader>
+            <CardContent>
+              {roleContentLoading ? (
+                <p>Loading...</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Section</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Title</TableHead>
+                      <TableHead>CTA Text</TableHead>
+                      <TableHead>CTA Link</TableHead>
+                      <TableHead>Visible</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {roleContent?.map((content) => (
+                      <TableRow key={content.id}>
+                        <TableCell className="font-medium capitalize">
+                          {content.section_key.replace(/_/g, ' ')}
+                        </TableCell>
+                        <TableCell>
+                          {getRoleName(content.visitor_role_id)}
+                        </TableCell>
+                        <TableCell className="max-w-xs">
+                          {editingRoleContent?.id === content.id ? (
+                            <Input
+                              value={editingRoleContent.title || ''}
+                              onChange={(e) => setEditingRoleContent({ ...editingRoleContent, title: e.target.value })}
+                              placeholder="Role-specific title"
+                            />
+                          ) : (
+                            <span className="truncate">{content.title}</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingRoleContent?.id === content.id ? (
+                            <Input
+                              value={editingRoleContent.cta_text || ''}
+                              onChange={(e) => setEditingRoleContent({ ...editingRoleContent, cta_text: e.target.value })}
+                              placeholder="Button text"
+                            />
+                          ) : (
+                            content.cta_text
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingRoleContent?.id === content.id ? (
+                            <Input
+                              value={editingRoleContent.cta_link || ''}
+                              onChange={(e) => setEditingRoleContent({ ...editingRoleContent, cta_link: e.target.value })}
+                              placeholder="/path"
+                            />
+                          ) : (
+                            <span className="font-mono text-sm">{content.cta_link}</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingRoleContent?.id === content.id ? (
+                            <Switch
+                              checked={editingRoleContent.is_visible}
+                              onCheckedChange={(checked) => setEditingRoleContent({ ...editingRoleContent, is_visible: checked })}
+                            />
+                          ) : (
+                            <Switch checked={content.is_visible} disabled />
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingRoleContent?.id === content.id ? (
+                            <div className="flex gap-2">
+                              <Button size="sm" onClick={() => updateRoleContent.mutate(editingRoleContent)}>
+                                <Save className="w-4 h-4" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => setEditingRoleContent(null)}>
+                                Cancel
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button size="sm" variant="outline" onClick={() => setEditingRoleContent(content)}>
                               <Pencil className="w-4 h-4" />
                             </Button>
                           )}
