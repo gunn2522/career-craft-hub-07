@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useNetworking, PublicProfile } from "@/hooks/useNetworking";
+import { useNetworking, PublicProfile, PublicProfileDiscovery } from "@/hooks/useNetworking";
 
 export const NetworkingPanel = () => {
   const {
@@ -23,15 +23,17 @@ export const NetworkingPanel = () => {
   } = useNetworking();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedPerson, setSelectedPerson] = useState<PublicProfile | null>(null);
+  const [selectedPerson, setSelectedPerson] = useState<PublicProfileDiscovery | null>(null);
   const [connectPurpose, setConnectPurpose] = useState("");
   const [connectMessage, setConnectMessage] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // Filter discover people by name, user_type, institution, or skills (limited public data)
   const filteredPeople = discoverPeople.filter(
     (person) =>
       person.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      person.job_title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      person.user_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      person.institution?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       person.skills?.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
@@ -47,7 +49,86 @@ export const NetworkingPanel = () => {
     }
   };
 
-  const PersonCard = ({ person, showConnect = true }: { person: PublicProfile; showConnect?: boolean }) => (
+  // Card for displaying discovery profiles (limited public data)
+  const DiscoverPersonCard = ({ person }: { person: PublicProfileDiscovery }) => (
+    <div className="flex items-center gap-4 p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
+      <Avatar className="w-12 h-12">
+        <AvatarImage src={person.avatar_url || undefined} />
+        <AvatarFallback className="bg-primary/10 text-primary">
+          {person.full_name?.[0] || "U"}
+        </AvatarFallback>
+      </Avatar>
+      <div className="flex-1 min-w-0">
+        <p className="font-medium truncate">{person.full_name || "Anonymous"}</p>
+        {person.user_type && (
+          <p className="text-sm text-muted-foreground truncate capitalize">
+            {person.user_type.replace('_', ' ')}
+            {person.institution && ` at ${person.institution}`}
+          </p>
+        )}
+        {person.skills && person.skills.length > 0 && (
+          <div className="flex gap-1 mt-1 flex-wrap">
+            {person.skills.slice(0, 2).map((skill, idx) => (
+              <Badge key={idx} variant="secondary" className="text-xs">
+                {skill}
+              </Badge>
+            ))}
+            {person.skills.length > 2 && (
+              <Badge variant="secondary" className="text-xs">
+                +{person.skills.length - 2}
+              </Badge>
+            )}
+          </div>
+        )}
+      </div>
+      <Dialog open={isDialogOpen && selectedPerson?.user_id === person.user_id} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setSelectedPerson(person)}
+          >
+            <UserPlus className="w-4 h-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Connect with {person.full_name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Purpose</label>
+              <Select value={connectPurpose} onValueChange={setConnectPurpose}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select purpose" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="mentorship">Mentorship</SelectItem>
+                  <SelectItem value="networking">Networking</SelectItem>
+                  <SelectItem value="guidance">Career Guidance</SelectItem>
+                  <SelectItem value="hiring">Hiring/Opportunities</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Message (optional)</label>
+              <Textarea
+                placeholder="Introduce yourself..."
+                value={connectMessage}
+                onChange={(e) => setConnectMessage(e.target.value)}
+              />
+            </div>
+            <Button onClick={handleConnect} disabled={!connectPurpose} className="w-full">
+              Send Connection Request
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+
+  // Card for displaying connected user profiles (full profile data)
+  const ConnectionCard = ({ person }: { person: PublicProfile }) => (
     <div className="flex items-center gap-4 p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
       <Avatar className="w-12 h-12">
         <AvatarImage src={person.avatar_url || undefined} />
@@ -78,51 +159,6 @@ export const NetworkingPanel = () => {
           )}
         </div>
       </div>
-      {showConnect && (
-        <Dialog open={isDialogOpen && selectedPerson?.user_id === person.user_id} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => setSelectedPerson(person)}
-            >
-              <UserPlus className="w-4 h-4" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Connect with {person.full_name}</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Purpose</label>
-                <Select value={connectPurpose} onValueChange={setConnectPurpose}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select purpose" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mentorship">Mentorship</SelectItem>
-                    <SelectItem value="networking">Networking</SelectItem>
-                    <SelectItem value="guidance">Career Guidance</SelectItem>
-                    <SelectItem value="hiring">Hiring/Opportunities</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Message (optional)</label>
-                <Textarea
-                  placeholder="Introduce yourself..."
-                  value={connectMessage}
-                  onChange={(e) => setConnectMessage(e.target.value)}
-                />
-              </div>
-              <Button onClick={handleConnect} disabled={!connectPurpose} className="w-full">
-                Send Connection Request
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 
@@ -172,7 +208,7 @@ export const NetworkingPanel = () => {
             <div className="space-y-3 max-h-[400px] overflow-y-auto">
               {filteredPeople.length > 0 ? (
                 filteredPeople.map((person) => (
-                  <PersonCard key={person.user_id} person={person} />
+                  <DiscoverPersonCard key={person.user_id} person={person} />
                 ))
               ) : (
                 <p className="text-center text-muted-foreground py-8">
