@@ -16,7 +16,7 @@ export const ProtectedRoute = ({
   allowedRoles = [],
   requireAuth = true,
 }: ProtectedRouteProps) => {
-  const { user, isLoading, userRole, isAdmin, isMentor, isPartner } = useAuth();
+  const { user, isLoading, userRole, isAdmin, isMentor, isPartner, isInstitution } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,8 +44,7 @@ export const ProtectedRoute = ({
         case "partner":
           return isPartner || isAdmin;
         case "institution":
-          // Check for institution role - will need to add isInstitution to context
-          return userRole === "user" || isAdmin; // For now, institutions use 'user' role
+          return isInstitution || isAdmin;
         case "user":
           return !!user;
         default:
@@ -57,7 +56,7 @@ export const ProtectedRoute = ({
       // Redirect to 403 or home based on auth status
       navigate("/", { replace: true });
     }
-  }, [user, isLoading, userRole, isAdmin, isMentor, isPartner, allowedRoles, requireAuth, navigate, location]);
+  }, [user, isLoading, userRole, isAdmin, isMentor, isPartner, isInstitution, allowedRoles, requireAuth, navigate, location]);
 
   // Show loading state
   if (isLoading) {
@@ -84,7 +83,7 @@ export const ProtectedRoute = ({
         case "partner":
           return isPartner || isAdmin;
         case "institution":
-          return userRole === "user" || isAdmin;
+          return isInstitution || isAdmin;
         case "user":
           return !!user;
         default:

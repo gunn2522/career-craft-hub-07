@@ -12,6 +12,7 @@ interface AuthContextType {
   isAdmin: boolean;
   isMentor: boolean;
   isPartner: boolean;
+  isInstitution: boolean;
   userRole: AppRole | null;
   signUp: (email: string, password: string, fullName: string, userType: UserType, institution?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMentor, setIsMentor] = useState(false);
   const [isPartner, setIsPartner] = useState(false);
+  const [isInstitution, setIsInstitution] = useState(false);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
 
   useEffect(() => {
@@ -40,11 +42,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session?.user) {
           setTimeout(() => {
             checkUserRole(session.user.id);
+            checkInstitutionMembership(session.user.id);
           }, 0);
         } else {
           setIsAdmin(false);
           setIsMentor(false);
           setIsPartner(false);
+          setIsInstitution(false);
           setUserRole(null);
         }
       }
@@ -57,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (session?.user) {
         checkUserRole(session.user.id);
+        checkInstitutionMembership(session.user.id);
       }
       setIsLoading(false);
     });
@@ -102,6 +107,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const checkInstitutionMembership = async (userId: string) => {
+    try {
+      // Check if user is linked to an institution
+      const { data, error } = await supabase
+        .from("institutions")
+        .select("id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      
+      if (error) {
+        console.error("Error checking institution membership:", error);
+        setIsInstitution(false);
+        return;
+      }
+      
+      setIsInstitution(!!data);
+    } catch (error) {
+      console.error("Error checking institution membership:", error);
+      setIsInstitution(false);
+    }
+  };
+
   const signUp = async (
     email: string,
     password: string,
@@ -144,6 +171,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAdmin(false);
     setIsMentor(false);
     setIsPartner(false);
+    setIsInstitution(false);
     setUserRole(null);
   };
 
@@ -156,6 +184,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAdmin,
         isMentor,
         isPartner,
+        isInstitution,
         userRole,
         signUp,
         signIn,

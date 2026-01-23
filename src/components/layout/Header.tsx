@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Handshake, LogOut, LayoutDashboard, User, GraduationCap, Building2 } from "lucide-react";
+import { Menu, X, Handshake, LogOut, LayoutDashboard, GraduationCap, Building2, Landmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
@@ -21,7 +21,7 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAdmin, isMentor, isPartner, signOut } = useAuth();
+  const { user, isAdmin, isMentor, isPartner, isInstitution, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -83,11 +83,19 @@ export const Header = () => {
                     </Link>
                   </Button>
                 )}
-                {isPartner && !isAdmin && !isMentor && (
+                {isPartner && !isAdmin && (
                   <Button variant="ghost" size="sm" asChild>
                     <Link to="/partner-dashboard" className="flex items-center gap-2">
                       <Building2 className="w-4 h-4" />
                       Partner
+                    </Link>
+                  </Button>
+                )}
+                {isInstitution && !isAdmin && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/institution" className="flex items-center gap-2">
+                      <Landmark className="w-4 h-4" />
+                      Institution
                     </Link>
                   </Button>
                 )}
@@ -151,9 +159,14 @@ export const Header = () => {
                         <Link to="/mentor" onClick={() => setIsOpen(false)}>Mentor Dashboard</Link>
                       </Button>
                     )}
-                    {isPartner && !isAdmin && !isMentor && (
+                    {isPartner && !isAdmin && (
                       <Button variant="outline" asChild>
                         <Link to="/partner-dashboard" onClick={() => setIsOpen(false)}>Partner Dashboard</Link>
+                      </Button>
+                    )}
+                    {isInstitution && !isAdmin && (
+                      <Button variant="outline" asChild>
+                        <Link to="/institution" onClick={() => setIsOpen(false)}>Institution Dashboard</Link>
                       </Button>
                     )}
                     <Button variant="gradient" onClick={handleSignOut}>Sign Out</Button>
