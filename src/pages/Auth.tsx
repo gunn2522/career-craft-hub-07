@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ const passwordSchema = z.string().min(6, "Password must be at least 6 characters
 type UserType = "school_student" | "college_student" | "mentor" | "partner";
 
 const Auth = () => {
+  const [searchParams] = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,14 +23,38 @@ const Auth = () => {
   const [institution, setInstitution] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user, signIn, signUp, isLoading } = useAuth();
+  const { user, signIn, signUp, isLoading, userRole } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user && !isLoading) {
-      navigate("/");
+  // Get the returnTo URL from query params
+  const returnTo = searchParams.get("returnTo") || "/";
+
+  // Handle role-based redirect after authentication
+  const getRedirectPath = () => {
+    // If there's a specific returnTo path, use it
+    if (returnTo && returnTo !== "/") {
+      return returnTo;
     }
-  }, [user, isLoading, navigate]);
+
+    // Otherwise, redirect based on user role
+    switch (userRole) {
+      case "admin":
+        return "/admin";
+      case "mentor":
+        return "/mentor";
+      case "partner":
+        return "/partner-dashboard";
+      default:
+        return "/";
+    }
+  };
+
+  useEffect(() => {
+    if (user && !isLoading && userRole !== null) {
+      const redirectPath = getRedirectPath();
+      navigate(redirectPath, { replace: true });
+    }
+  }, [user, isLoading, userRole, navigate, returnTo]);
 
   const validateForm = () => {
     try {
@@ -76,7 +101,7 @@ const Auth = () => {
           }
         } else {
           toast.success("Welcome back!");
-          navigate("/");
+          // Navigation will happen via useEffect once userRole is loaded
         }
       } else {
         const { error } = await signUp(email, password, fullName, userType, institution);
@@ -88,7 +113,7 @@ const Auth = () => {
           }
         } else {
           toast.success("Account created successfully! Welcome to Career Craft Cafe!");
-          navigate("/");
+          // Navigation will happen via useEffect once userRole is loaded
         }
       }
     } catch (error) {
@@ -104,6 +129,20 @@ const Auth = () => {
       <Layout>
         <div className="min-h-[80vh] flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // If user is already logged in, show loading while redirect happens
+  if (user) {
+    return (
+      <Layout>
+        <div className="min-h-[80vh] flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Redirecting...</p>
+          </div>
         </div>
       </Layout>
     );

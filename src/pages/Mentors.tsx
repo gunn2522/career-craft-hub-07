@@ -54,25 +54,51 @@ const Mentors = () => {
 
   const fetchMentors = async () => {
     try {
+      // Optimized: Single query with join instead of N+1 queries
       const { data: mentorData, error } = await supabase
         .from("mentor_profiles")
-        .select("*")
+        .select(`
+          id,
+          user_id,
+          bio,
+          expertise,
+          specialization,
+          years_of_experience,
+          rating,
+          total_subscribers,
+          verification_status,
+          availability_status,
+          is_featured
+        `)
         .eq("verification_status", "verified");
 
       if (error) throw error;
 
-      // Fetch profiles for each mentor
-      const mentorsWithProfiles = await Promise.all(
-        (mentorData || []).map(async (mentor) => {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("full_name, avatar_url, institution")
-            .eq("user_id", mentor.user_id)
-            .maybeSingle();
-          
-          return { ...mentor, profile };
-        })
+      if (!mentorData || mentorData.length === 0) {
+        setMentors([]);
+        setIsLoading(false);
+        return;
+      }
+
+      // Fetch all profiles in a single query using the user_ids
+      const userIds = mentorData.map(m => m.user_id);
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url, institution")
+        .in("user_id", userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Create a map for quick profile lookup
+      const profileMap = new Map(
+        (profiles || []).map(p => [p.user_id, p])
       );
+
+      // Merge mentor data with profiles
+      const mentorsWithProfiles: MentorWithProfile[] = mentorData.map(mentor => ({
+        ...mentor,
+        profile: profileMap.get(mentor.user_id) || null,
+      }));
 
       setMentors(mentorsWithProfiles);
     } catch (error) {
@@ -237,7 +263,7 @@ const Mentors = () => {
                               {mentor.profile?.full_name || "Mentor"}
                             </h3>
                             {mentor.verification_status === "verified" && (
-                              <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                              <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                             )}
                           </div>
                           <p className="text-sm text-muted-foreground truncate">
@@ -252,7 +278,7 @@ const Mentors = () => {
                       {/* Stats */}
                       <div className="flex items-center gap-4 mb-4 text-sm">
                         <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-500" />
+                          <Star className="w-4 h-4 text-amber-500" />
                           <span className="font-medium">{mentor.rating?.toFixed(1) || "N/A"}</span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -285,7 +311,7 @@ const Mentors = () => {
                       <div className="flex items-center justify-between">
                         <Badge
                           variant={mentor.availability_status === "available" ? "default" : "secondary"}
-                          className={mentor.availability_status === "available" ? "bg-green-500" : ""}
+                          className={mentor.availability_status === "available" ? "bg-primary" : ""}
                         >
                           {mentor.availability_status || "Available"}
                         </Badge>
