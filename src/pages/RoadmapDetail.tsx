@@ -5,6 +5,7 @@ import { GamifiedRoadmap } from "@/components/roadmap/GamifiedRoadmap";
 import { StepResourcesPanel } from "@/components/roadmap/StepResourcesPanel";
 import { Button } from "@/components/ui/button";
 import { useRoadmapProgress } from "@/hooks/useRoadmapProgress";
+import { useRoadmapEnrollments } from "@/hooks/useRoadmapEnrollments";
 import { ArrowLeft, BookOpen, Clock, Target, Users } from "lucide-react";
 
 const RoadmapDetail = () => {
@@ -26,6 +27,18 @@ const RoadmapDetail = () => {
     calculateOverallProgress,
     completeStep,
   } = useRoadmapProgress(id);
+
+  // Fetch real enrollment count
+  const { data: enrollmentData } = useRoadmapEnrollments(id);
+  const learnerCount = enrollmentData?.count || 0;
+
+  // Format learner count for display
+  const formatLearnerCount = (count: number) => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`;
+    }
+    return count.toString();
+  };
 
   if (isLoading) {
     return (
@@ -103,7 +116,7 @@ const RoadmapDetail = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-primary" />
-                  <span>1.2K Learners</span>
+                  <span>{formatLearnerCount(learnerCount)} Learners</span>
                 </div>
               </div>
             </div>
