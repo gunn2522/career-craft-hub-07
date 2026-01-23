@@ -144,99 +144,125 @@ const Craft = () => {
         </div>
       </section>
 
-      {/* Roadmaps */}
+      {/* Domains / Roadmaps Section */}
       <section id="roadmaps" className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="font-display text-2xl md:text-3xl font-bold mb-8">Available Roadmaps</h2>
-          
-          {/* Domain Filter Tabs */}
-          {domains.length > 0 && (
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Layers className="w-5 h-5 text-primary" />
-                <span className="font-medium">Filter by Domain</span>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={() => setActiveDomain(null)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    activeDomain === null
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                  }`}
-                >
-                  All Domains
-                </button>
-                {domains.map((domain) => (
-                  <button
-                    key={domain.id}
-                    onClick={() => setActiveDomain(domain.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                      activeDomain === domain.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    }`}
-                  >
-                    {domain.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <TorchLoader size="lg" text="Loading roadmaps..." />
+              <TorchLoader size="lg" text="Loading..." />
             </div>
-          ) : filteredRoadmaps.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredRoadmaps.map((roadmap) => (
-                <div key={roadmap.id} className="glass-card rounded-2xl p-6 hover:border-primary/50 transition-all">
-                  <div className="flex items-start justify-between mb-4">
-                    <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
-                      {roadmap.difficulty || "Beginner"}
-                    </span>
-                    {roadmap.duration && (
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Clock className="w-4 h-4" />
-                        {roadmap.duration}
+          ) : !activeDomain ? (
+            /* Domain Selection View */
+            <>
+              <div className="text-center mb-12">
+                <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">
+                  Choose Your <span className="gradient-text">Domain</span>
+                </h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Select a domain to explore career roadmaps and start your learning journey
+                </p>
+              </div>
+
+              {domains.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {domains.map((domain) => {
+                    const domainRoadmapCount = roadmaps.filter(r => r.domain_id === domain.id).length;
+                    return (
+                      <div
+                        key={domain.id}
+                        onClick={() => setActiveDomain(domain.id)}
+                        className="glass-card rounded-2xl p-8 cursor-pointer hover:border-primary/50 hover:scale-[1.02] transition-all group"
+                      >
+                        <div className="p-4 rounded-xl bg-primary/10 w-fit mb-6 group-hover:bg-primary/20 transition-colors">
+                          <Layers className="w-8 h-8 text-primary" />
+                        </div>
+                        <h3 className="font-display text-xl font-bold mb-3">{domain.name}</h3>
+                        <p className="text-muted-foreground text-sm mb-4">
+                          Explore career paths and skill roadmaps in {domain.name}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">
+                            {domainRoadmapCount} roadmap{domainRoadmapCount !== 1 ? 's' : ''}
+                          </span>
+                          <ArrowRight className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
                       </div>
-                    )}
-                  </div>
-
-                  <h3 className="font-display text-xl font-bold mb-3">{roadmap.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-6 line-clamp-2">
-                    {roadmap.description || "Start your learning journey with this comprehensive roadmap"}
-                  </p>
-
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      1.2K learners
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-primary" />
-                      4.8
-                    </div>
-                  </div>
-
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link to={`/craft/${roadmap.id}`}>
-                      Start Learning
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
+              ) : (
+                <div className="text-center py-16">
+                  <p className="text-muted-foreground text-lg">No domains available yet. Check back soon!</p>
+                </div>
+              )}
+            </>
           ) : (
-            <div className="text-center py-16">
-              <p className="text-muted-foreground text-lg">
-                {activeDomain 
-                  ? "No roadmaps available in this domain yet." 
-                  : "No roadmaps available yet. Check back soon!"}
-              </p>
-            </div>
+            /* Roadmaps View for Selected Domain */
+            <>
+              <div className="flex items-center gap-4 mb-8">
+                <Button
+                  variant="ghost"
+                  onClick={() => setActiveDomain(null)}
+                  className="gap-2"
+                >
+                  <ArrowRight className="w-4 h-4 rotate-180" />
+                  Back to Domains
+                </Button>
+                <div className="h-6 w-px bg-border" />
+                <h2 className="font-display text-xl md:text-2xl font-bold">
+                  {domains.find(d => d.id === activeDomain)?.name}
+                </h2>
+              </div>
+
+              {filteredRoadmaps.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredRoadmaps.map((roadmap) => (
+                    <div key={roadmap.id} className="glass-card rounded-2xl p-6 hover:border-primary/50 transition-all">
+                      <div className="flex items-start justify-between mb-4">
+                        <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
+                          {roadmap.difficulty || "Beginner"}
+                        </span>
+                        {roadmap.duration && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Clock className="w-4 h-4" />
+                            {roadmap.duration}
+                          </div>
+                        )}
+                      </div>
+
+                      <h3 className="font-display text-xl font-bold mb-3">{roadmap.title}</h3>
+                      <p className="text-muted-foreground text-sm mb-6 line-clamp-2">
+                        {roadmap.description || "Start your learning journey with this comprehensive roadmap"}
+                      </p>
+
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+                        <div className="flex items-center gap-1">
+                          <Users className="w-4 h-4" />
+                          1.2K learners
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 text-primary" />
+                          4.8
+                        </div>
+                      </div>
+
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link to={`/craft/${roadmap.id}`}>
+                          Start Learning
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16">
+                  <p className="text-muted-foreground text-lg">
+                    No roadmaps available in this domain yet. Check back soon!
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
