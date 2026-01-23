@@ -47,6 +47,8 @@ import AdminGovernmentExams from "./pages/admin/AdminGovernmentExams";
 import AdminScholarships from "./pages/admin/AdminScholarships";
 import AdminOlympiads from "./pages/admin/AdminOlympiads";
 import AdminModuleHero from "./pages/admin/AdminModuleHero";
+import AdminOrganizationPlans from "./pages/admin/AdminOrganizationPlans";
+import SchoolAssessment from "./pages/SchoolAssessment";
 import SchoolAssessment from "./pages/SchoolAssessment";
 import MentorDashboard from "./pages/mentor/MentorDashboard";
 import MentorDailyTasks from "./pages/mentor/MentorDailyTasks";
@@ -62,7 +64,11 @@ import MentorMyProfile from "./pages/mentor/MentorMyProfile";
 import Mentors from "./pages/Mentors";
 import MentorProfile from "./pages/MentorProfile";
 import Institutions from "./pages/Institutions";
-import InstitutionProfile from "./pages/InstitutionProfile";
+import InstitutionProfileView from "./pages/InstitutionProfile";
+import InstitutionDashboard from "./pages/institution/InstitutionDashboard";
+import InstitutionProfilePage from "./pages/institution/InstitutionProfilePage";
+import PartnerDashboard from "./pages/partner/PartnerDashboard";
+import PartnerProfilePage from "./pages/partner/PartnerProfilePage";
 
 const queryClient = new QueryClient();
 
@@ -119,9 +125,18 @@ const App = () => (
             <Route path="/admin/scholarships" element={<AdminScholarships />} />
             <Route path="/admin/olympiads" element={<AdminOlympiads />} />
             <Route path="/admin/module-hero" element={<AdminModuleHero />} />
+            <Route path="/admin/organization-plans" element={<AdminOrganizationPlans />} />
+            <Route path="/school-assessment" element={<SchoolAssessment />} />
             <Route path="/school-assessment" element={<SchoolAssessment />} />
             <Route path="/institutions" element={<Institutions />} />
-            <Route path="/institutions/:id" element={<InstitutionProfile />} />
+            <Route path="/institutions/:id" element={<InstitutionProfileView />} />
+            {/* Institution Dashboard Routes */}
+            <Route path="/institution" element={<InstitutionDashboard />} />
+            <Route path="/institution/profile" element={<InstitutionProfilePage />} />
+            {/* Partner Dashboard Routes */}
+            <Route path="/partner-dashboard" element={<PartnerDashboard />} />
+            <Route path="/partner-dashboard/profile" element={<PartnerProfilePage />} />
+            {/* Mentor Dashboard Routes */}
             <Route path="/mentor" element={<MentorDashboard />} />
             <Route path="/mentor/profile" element={<MentorMyProfile />} />
             <Route path="/mentor/daily-tasks" element={<MentorDailyTasks />} />
