@@ -90,9 +90,32 @@ export const ExperienceLevelSelector = ({
     }
   };
 
+  // Prevent closing without selection if no current level exists
+  const handleOpenChange = (open: boolean) => {
+    if (!open && !currentLevel && !selectedLevel) {
+      // Don't allow closing without selection on first visit
+      return;
+    }
+    if (!open) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent 
+        className="sm:max-w-lg"
+        onInteractOutside={(e) => {
+          if (!currentLevel && !selectedLevel) {
+            e.preventDefault();
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          if (!currentLevel && !selectedLevel) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl font-display">
             What's your experience level?
@@ -138,9 +161,11 @@ export const ExperienceLevelSelector = ({
         </div>
 
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
+          {currentLevel && (
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+          )}
           <Button
             onClick={handleConfirm}
             disabled={!selectedLevel || isSaving}
