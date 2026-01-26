@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,12 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+interface Profile {
+  full_name: string;
+  avatar_url: string;
+  job_title?: string;
+}
+
 interface MentorProfile {
   expertise: string[];
   specialization: string;
@@ -30,21 +36,20 @@ interface MentorProfile {
   rating: number;
 }
 
+interface Connection {
+  id: string;
+  connected_user: Profile;
+}
+
 export const MentorDashboardView = () => {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [mentorProfile, setMentorProfile] = useState<MentorProfile | null>(null);
-  const [assignedStudents, setAssignedStudents] = useState<any[]>([]);
+  const [assignedStudents, setAssignedStudents] = useState<Connection[]>([]);
   const [pendingMessages, setPendingMessages] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
     
     setIsLoading(true);
@@ -56,7 +61,7 @@ export const MentorDashboardView = () => {
         .eq("user_id", user.id)
         .maybeSingle();
       
-      setProfile(profileData);
+      setProfile(profileData as Profile);
 
       // Fetch mentor profile
       const { data: mentorData } = await supabase
@@ -65,7 +70,7 @@ export const MentorDashboardView = () => {
         .eq("user_id", user.id)
         .maybeSingle();
       
-      setMentorProfile(mentorData);
+      setMentorProfile(mentorData as MentorProfile);
 
       // Fetch connections (assigned students)
       const { data: connections } = await supabase
@@ -78,7 +83,7 @@ export const MentorDashboardView = () => {
         .limit(5);
 
       if (connections) {
-        setAssignedStudents(connections);
+        setAssignedStudents(connections as Connection[]);
       }
 
     } catch (error) {
@@ -86,7 +91,13 @@ export const MentorDashboardView = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user, fetchData]);
 
   if (isLoading) {
     return (
@@ -205,13 +216,14 @@ export const MentorDashboardView = () => {
                 <CardContent>
                   {assignedStudents.length > 0 ? (
                     <div className="space-y-4">
-                      {assignedStudents.map((connection, index) => (
-                        <div key={index} className="flex items-center gap-4 p-4 rounded-lg border">
+                      {assignedStudents.map((connection) => (
+                        <div key={connection.id} className="flex items-center gap-4 p-4 rounded-lg border">
                           <Avatar>
-                            <AvatarFallback>S</AvatarFallback>
+                            <AvatarImage src={connection.connected_user?.avatar_url} />
+                            <AvatarFallback>{connection.connected_user?.full_name?.charAt(0) || 'S'}</AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <p className="font-medium">Student {index + 1}</p>
+                            <p className="font-medium">{connection.connected_user?.full_name || 'Student'}</p>
                             <p className="text-sm text-muted-foreground">Active</p>
                           </div>
                           <Button size="sm" variant="outline">

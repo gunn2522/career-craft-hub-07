@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
+import { useAdminDashboardStats } from "@/hooks/useAdminDashboardStats";
 import { 
   Briefcase, 
   Map, 
@@ -11,80 +11,12 @@ import {
   Trophy, 
   Calendar, 
   Users,
-  UserCheck
+  UserCheck,
+  RefreshCw
 } from "lucide-react";
 
-interface DashboardStats {
-  careers: number;
-  roadmaps: number;
-  resources: number;
-  internships: number;
-  blogs: number;
-  successStories: number;
-  events: number;
-  applications: number;
-  registeredUsers: number;
-}
-
 const AdminDashboard = () => {
-const [stats, setStats] = useState<DashboardStats>({
-    careers: 0,
-    roadmaps: 0,
-    resources: 0,
-    internships: 0,
-    blogs: 0,
-    successStories: 0,
-    events: 0,
-    applications: 0,
-    registeredUsers: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const [
-        { count: careers },
-        { count: roadmaps },
-        { count: resources },
-        { count: internships },
-        { count: blogs },
-        { count: successStories },
-        { count: events },
-        { count: applications },
-        { count: registeredUsers },
-      ] = await Promise.all([
-        supabase.from("careers").select("*", { count: "exact", head: true }),
-        supabase.from("roadmaps").select("*", { count: "exact", head: true }),
-        supabase.from("resources").select("*", { count: "exact", head: true }),
-        supabase.from("internships").select("*", { count: "exact", head: true }),
-        supabase.from("blogs").select("*", { count: "exact", head: true }),
-        supabase.from("success_stories").select("*", { count: "exact", head: true }),
-        supabase.from("events").select("*", { count: "exact", head: true }),
-        supabase.from("ambassador_applications").select("*", { count: "exact", head: true }),
-        supabase.from("profiles").select("*", { count: "exact", head: true }),
-      ]);
-
-      setStats({
-        careers: careers || 0,
-        roadmaps: roadmaps || 0,
-        resources: resources || 0,
-        internships: internships || 0,
-        blogs: blogs || 0,
-        successStories: successStories || 0,
-        events: events || 0,
-        applications: applications || 0,
-        registeredUsers: registeredUsers || 0,
-      });
-    } catch (error) {
-      console.error("Error fetching stats:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { stats, isLoading, refetch } = useAdminDashboardStats();
 
   const statCards = [
     { title: "Registered Users", value: stats.registeredUsers, icon: Users, color: "text-emerald-500" },
@@ -99,7 +31,15 @@ const [stats, setStats] = useState<DashboardStats>({
   ];
 
   return (
-    <AdminLayout title="Dashboard">
+    <AdminLayout 
+      title="Dashboard"
+      headerActions={
+        <Button onClick={refetch} size="sm" disabled={isLoading}>
+          <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
+      }
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((stat) => {
           const Icon = stat.icon;

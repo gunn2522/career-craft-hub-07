@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Folder, Plus, ExternalLink, Github, Star, Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,13 +39,7 @@ export const ProjectsSection = () => {
     is_featured: false,
   });
 
-  useEffect(() => {
-    if (user) {
-      fetchProjects();
-    }
-  }, [user]);
-
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     if (!user) return;
 
     const { data } = await supabase
@@ -58,7 +52,13 @@ export const ProjectsSection = () => {
       setProjects(data);
     }
     setIsLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchProjects();
+    }
+  }, [user, fetchProjects]);
 
   const saveProject = async () => {
     if (!user || !formData.title) return;

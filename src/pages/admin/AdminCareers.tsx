@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -100,21 +100,7 @@ const AdminCareers = () => {
     display_order: 0,
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (formData.domain_id) {
-      setFilteredCategories(
-        categories.filter((c) => c.domain_id === formData.domain_id)
-      );
-    } else {
-      setFilteredCategories([]);
-    }
-  }, [formData.domain_id, categories]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data: domainsData } = await supabase
@@ -167,7 +153,21 @@ const AdminCareers = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (formData.domain_id) {
+      setFilteredCategories(
+        categories.filter((c) => c.domain_id === formData.domain_id)
+      );
+    } else {
+      setFilteredCategories([]);
+    }
+  }, [formData.domain_id, categories]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

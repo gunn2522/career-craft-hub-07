@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+interface Profile {
+  full_name: string;
+}
+
 interface PartnerProfile {
   company_name: string;
   company_website: string;
@@ -27,20 +31,19 @@ interface PartnerProfile {
   students_engaged: number;
 }
 
+interface Job {
+  title: string;
+  description: string;
+}
+
 export const PartnerDashboardView = () => {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [partnerProfile, setPartnerProfile] = useState<PartnerProfile | null>(null);
-  const [postedJobs, setPostedJobs] = useState<any[]>([]);
+  const [postedJobs, setPostedJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
     
     setIsLoading(true);
@@ -52,7 +55,7 @@ export const PartnerDashboardView = () => {
         .eq("user_id", user.id)
         .maybeSingle();
       
-      setProfile(profileData);
+      setProfile(profileData as Profile);
 
       // Fetch partner profile
       const { data: partnerData } = await supabase
@@ -61,7 +64,7 @@ export const PartnerDashboardView = () => {
         .eq("user_id", user.id)
         .maybeSingle();
       
-      setPartnerProfile(partnerData);
+      setPartnerProfile(partnerData as PartnerProfile);
 
       // Fetch internships posted by company (future enhancement)
       // For now, we'll show placeholder data
@@ -71,7 +74,13 @@ export const PartnerDashboardView = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user, fetchData]);
 
   if (isLoading) {
     return (
