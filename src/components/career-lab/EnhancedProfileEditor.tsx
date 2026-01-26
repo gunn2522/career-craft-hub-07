@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { User, Briefcase, Link, Linkedin, Globe, Save, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,18 +43,14 @@ export const EnhancedProfileEditor = () => {
     years_experience: 0,
   });
 
-  useEffect(() => {
-    if (user) {
-      fetchProfile();
-    }
-  }, [user]);
-
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     if (!user) return;
 
     const { data } = await supabase
       .from("profiles")
-      .select("bio, career_goals, skills, linkedin_url, portfolio_url, is_public, is_mentor, job_title, current_company, years_experience")
+      .select(
+        "bio, career_goals, skills, linkedin_url, portfolio_url, is_public, is_mentor, job_title, current_company, years_experience"
+      )
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -73,7 +69,13 @@ export const EnhancedProfileEditor = () => {
       });
     }
     setIsLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchProfile();
+    }
+  }, [user, fetchProfile]);
 
   const saveProfile = async () => {
     if (!user) return;

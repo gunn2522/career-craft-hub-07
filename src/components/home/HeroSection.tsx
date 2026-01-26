@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Compass, ChevronDown } from "lucide-react";
 import { FloatingShapes3D } from "@/components/ui/FloatingShapes3D";
@@ -9,6 +10,12 @@ import { useVisitorRole } from "@/hooks/useVisitorRole";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const HeroSection = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const heroSection = useHomepageSection('hero');
   const roleBasedHero = useRoleBasedSection('hero');
   const { visitorRole } = useVisitorRole();
@@ -61,23 +68,23 @@ export const HeroSection = () => {
       </div>
 
       {/* 3D Floating Elements */}
-      <FloatingShapes3D count={10} />
+      {isClient && <FloatingShapes3D count={10} />}
       
       {/* Torch-themed 3D Elements */}
-      <TorchElements3D count={15} />
+      {isClient && <TorchElements3D count={15} />}
 
       <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="text-left">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6">
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
               Your Career Journey Starts Here
             </div>
 
             {/* Main Headline - Dynamic from database with role-based personalization */}
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               {displayTitle.includes('.') ? (
                 displayTitle.split('.').map((part, i) => (
                   <span key={i}>
@@ -96,12 +103,12 @@ export const HeroSection = () => {
             </h1>
 
             {/* Subheadline - Dynamic from database with role-based personalization */}
-            <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed">
               {displaySubtitle}
             </p>
 
             {/* CTA Buttons - Dynamic based on role */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <Button variant="hero" size="xl" asChild>
                 <Link to={primaryCTA.link} className="group">
                   <Compass className="w-5 h-5" />
@@ -117,7 +124,7 @@ export const HeroSection = () => {
             </div>
 
             {/* Live Stats - Dynamic from database */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div>
               <LiveStats />
             </div>
           </div>

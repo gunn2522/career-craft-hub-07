@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ import {
   Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PostgrestError } from "@supabase/supabase-js";
 
 interface Career {
   id: string;
@@ -75,11 +76,7 @@ export const CareerProgressionManager = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, [careerId]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       // Fetch all active careers except current one
@@ -107,7 +104,11 @@ export const CareerProgressionManager = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [careerId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, careerId]);
 
   const handleToggleCareer = (career: Career) => {
     const newSelected = new Set(selectedCareers);
@@ -170,8 +171,9 @@ export const CareerProgressionManager = ({
 
       toast.success("Career progressions updated successfully");
       fetchData(); // Refresh
-    } catch (error: any) {
-      toast.error("Failed to save progressions: " + error.message);
+    } catch (error) {
+      const postgrestError = error as PostgrestError;
+      toast.error("Failed to save progressions: " + postgrestError.message);
     } finally {
       setIsSaving(false);
     }
@@ -192,8 +194,9 @@ export const CareerProgressionManager = ({
       setSelectedCareers(newSelected);
       setExistingProgressions(existingProgressions.filter((p) => p.to_career_id !== toCareerID));
       toast.success("Progression removed");
-    } catch (error: any) {
-      toast.error("Failed to remove: " + error.message);
+    } catch (error) {
+      const postgrestError = error as PostgrestError;
+      toast.error("Failed to remove: " + postgrestError.message);
     }
   };
 

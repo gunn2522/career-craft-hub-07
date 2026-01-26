@@ -28,21 +28,61 @@ import {
   Sparkles,
 } from "lucide-react";
 
+// Define specific types for the props
+interface Profile {
+  full_name: string;
+  avatar_url: string;
+}
+
+interface CareerProfile {
+  aspiration: string;
+  target_job_role: string;
+  selected_roadmap_id: string;
+}
+
+interface Streak {
+  current_streak: number;
+  longest_streak: number;
+}
+
+interface Roadmap {
+  id: string;
+  title: string;
+  steps: any[]; // Define a more specific type if possible
+}
+
+interface Assignment {
+  id: string;
+}
+
+interface BadgeData {
+  id: string;
+}
+
+interface RoadmapProgress {
+  // Define properties for roadmap progress
+}
+
+interface Submission {
+  assignment_id: string;
+  status: string;
+}
+
 interface StudentDashboardProps {
-  profile: any;
-  careerProfile: any;
-  streak: any;
-  selectedRoadmap: any;
-  availableRoadmaps: any[];
-  dailyAssignments: any[];
-  userBadges: any[];
-  allBadges: any[];
-  roadmapProgress: any[];
-  submissions: any[];
+  profile: Profile | null;
+  careerProfile: CareerProfile | null;
+  streak: Streak | null;
+  selectedRoadmap: Roadmap | null;
+  availableRoadmaps: Roadmap[];
+  dailyAssignments: Assignment[];
+  userBadges: BadgeData[];
+  allBadges: BadgeData[];
+  roadmapProgress: RoadmapProgress[];
+  submissions: Submission[];
   selectRoadmap: (roadmapId: string, jobRole: string) => Promise<void>;
   submitAssignment: (assignmentId: string, type: string, url: string, fileName?: string) => Promise<void>;
   calculateOverallProgress: () => number;
-  shareOnLinkedIn: (badge: any) => void;
+  shareOnLinkedIn: (badge: BadgeData) => void;
   isLoading: boolean;
 }
 
