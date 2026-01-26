@@ -45,22 +45,59 @@ interface Streak {
   longest_streak: number;
 }
 
+interface RoadmapStep {
+  order: number;
+  title: string;
+  completed: boolean;
+}
+
 interface Roadmap {
   id: string;
   title: string;
-  steps: any[]; // Define a more specific type if possible
+  description: string | null;
+  duration: string | null;
+  difficulty: string | null;
+  steps: RoadmapStep[];
 }
 
-interface Assignment {
+interface DailyAssignment {
   id: string;
+  title: string;
+  description: string | null;
+  skill_focus: string | null;
+  difficulty: string | null;
+  estimated_time: string | null;
+  instructions: string | null;
 }
 
-interface BadgeData {
+interface Badge {
   id: string;
+  name: string;
+  description: string | null;
+  icon: string | null;
+  category: string | null;
+  requirement_type?: string | null;
+  requirement_value?: number | null;
 }
 
-interface RoadmapProgress {
-  // Define properties for roadmap progress
+interface UserBadge {
+  id: string;
+  badge_id: string;
+  earned_at: string;
+  shared_on_linkedin: boolean;
+  badges: {
+    id: string;
+    name: string;
+    description: string | null;
+    icon: string | null;
+    category: string | null;
+  };
+}
+
+interface ProgressData {
+  step_index: number;
+  status: string;
+  completion_percentage: number;
 }
 
 interface Submission {
@@ -74,15 +111,15 @@ interface StudentDashboardProps {
   streak: Streak | null;
   selectedRoadmap: Roadmap | null;
   availableRoadmaps: Roadmap[];
-  dailyAssignments: Assignment[];
-  userBadges: BadgeData[];
-  allBadges: BadgeData[];
-  roadmapProgress: RoadmapProgress[];
+  dailyAssignments: DailyAssignment[];
+  userBadges: UserBadge[];
+  allBadges: Badge[];
+  roadmapProgress: ProgressData[];
   submissions: Submission[];
   selectRoadmap: (roadmapId: string, jobRole: string) => Promise<void>;
   submitAssignment: (assignmentId: string, type: string, url: string, fileName?: string) => Promise<void>;
   calculateOverallProgress: () => number;
-  shareOnLinkedIn: (badge: BadgeData) => void;
+  shareOnLinkedIn: (badge: UserBadge) => void;
   isLoading: boolean;
 }
 

@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { type FallbackProps } from 'react-error-boundary';
 
 const ChunkLoadErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
-  const isChunkLoadError = /Loading( CSS)? chunk .* failed/i.test(error.message);
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  const isChunkLoadError = /Loading( CSS)? chunk .* failed/i.test(errorMessage);
 
   const handleRetry = () => {
     if (isChunkLoadError) {
@@ -33,7 +34,7 @@ const ChunkLoadErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoun
         <details className="mt-4 text-left text-xs text-muted-foreground/70">
           <summary>Error Details</summary>
           <pre className="mt-2 p-2 bg-muted rounded-md text-xs overflow-auto whitespace-pre-wrap">
-            {error.message}
+            {errorMessage}
           </pre>
         </details>
       </div>
