@@ -80,11 +80,16 @@ const AdminAccessControl = () => {
     mutationFn: async (data: typeof formData) => {
       const { error } = await supabase.from("admin_permissions").insert([data]);
       if (error) throw error;
-      // Also add admin role to user_roles
-      await supabase.from("user_roles").upsert({ 
+      
+      // First, delete existing role entry for this user
+      await supabase.from("user_roles").delete().eq("user_id", data.user_id);
+      
+      // Then insert the admin role
+      const { error: roleError } = await supabase.from("user_roles").insert({ 
         user_id: data.user_id, 
         role: 'admin' 
       });
+      if (roleError) throw roleError;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-permissions"] });
