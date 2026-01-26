@@ -76,14 +76,32 @@ export const MentorDashboardView = () => {
       const { data: connections } = await supabase
         .from("connections")
         .select(`
-          *,
-          connected_user:profiles!connections_connected_user_id_fkey(*)
+          id,
+          connected_user_id
         `)
         .eq("user_id", user.id)
         .limit(5);
 
-      if (connections) {
-        setAssignedStudents(connections as Connection[]);
+      if (connections && connections.length > 0) {
+        // Fetch profiles for connected users
+        const connectedUserIds = connections.map(c => c.connected_user_id);
+        const { data: profilesData } = await supabase
+          .from("profiles")
+          .select("user_id, full_name, avatar_url, job_title")
+          .in("user_id", connectedUserIds);
+
+        const mappedConnections: Connection[] = connections.map(conn => {
+          const profile = profilesData?.find(p => p.user_id === conn.connected_user_id);
+          return {
+            id: conn.id,
+            connected_user: {
+              full_name: profile?.full_name || 'Unknown',
+              avatar_url: profile?.avatar_url || '',
+              job_title: profile?.job_title,
+            },
+          };
+        });
+        setAssignedStudents(mappedConnections);
       }
 
     } catch (error) {

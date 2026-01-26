@@ -66,9 +66,10 @@ const sidebarLinks = [
 interface AdminLayoutProps {
   children: ReactNode;
   title: string;
+  headerActions?: ReactNode;
 }
 
-export const AdminLayout = ({ children, title }: AdminLayoutProps) => {
+export const AdminLayout = ({ children, title, headerActions }: AdminLayoutProps) => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -152,8 +153,9 @@ export const AdminLayout = ({ children, title }: AdminLayoutProps) => {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        <header className="bg-card border-b border-border px-8 py-6">
+        <header className="bg-card border-b border-border px-8 py-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">{title}</h1>
+          {headerActions}
         </header>
         <div className="p-8">
           {children}
