@@ -1509,6 +1509,45 @@ export type Database = {
             referencedRelation: "mentor_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mentor_daily_guidance_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_event_payment_details: {
+        Row: {
+          created_at: string | null
+          id: string
+          payment_processor: string | null
+          payment_reference: string | null
+          registration_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          payment_processor?: string | null
+          payment_reference?: string | null
+          registration_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          payment_processor?: string | null
+          payment_reference?: string | null
+          registration_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_event_payment_details_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: true
+            referencedRelation: "mentor_event_registrations"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mentor_event_registrations: {
@@ -1517,7 +1556,6 @@ export type Database = {
           event_id: string
           id: string
           payment_amount: number | null
-          payment_reference: string | null
           payment_status: string | null
           registered_at: string
           user_id: string
@@ -1527,7 +1565,6 @@ export type Database = {
           event_id: string
           id?: string
           payment_amount?: number | null
-          payment_reference?: string | null
           payment_status?: string | null
           registered_at?: string
           user_id: string
@@ -1537,7 +1574,6 @@ export type Database = {
           event_id?: string
           id?: string
           payment_amount?: number | null
-          payment_reference?: string | null
           payment_status?: string | null
           registered_at?: string
           user_id?: string
@@ -1627,6 +1663,13 @@ export type Database = {
             referencedRelation: "mentor_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mentor_events_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mentor_notifications: {
@@ -1669,6 +1712,13 @@ export type Database = {
             columns: ["mentor_id"]
             isOneToOne: false
             referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_notifications_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1722,6 +1772,13 @@ export type Database = {
             columns: ["mentor_id"]
             isOneToOne: false
             referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_payouts_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -2004,6 +2061,13 @@ export type Database = {
             referencedRelation: "mentor_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mentor_rooms_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mentor_subscription_plans: {
@@ -2057,6 +2121,13 @@ export type Database = {
             referencedRelation: "mentor_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mentor_subscription_plans_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mentor_subscriptions: {
@@ -2105,6 +2176,13 @@ export type Database = {
             columns: ["mentor_id"]
             isOneToOne: false
             referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_subscriptions_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "public_mentor_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -2784,6 +2862,38 @@ export type Database = {
         }
         Relationships: []
       }
+      program_payment_details: {
+        Row: {
+          created_at: string | null
+          id: string
+          payment_processor: string | null
+          payment_reference: string | null
+          registration_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          payment_processor?: string | null
+          payment_reference?: string | null
+          registration_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          payment_processor?: string | null
+          payment_reference?: string | null
+          registration_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_payment_details_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: true
+            referencedRelation: "program_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       program_registrations: {
         Row: {
           created_at: string
@@ -2792,7 +2902,6 @@ export type Database = {
           id: string
           last_reminder_sent: string | null
           payment_amount: number | null
-          payment_reference: string | null
           payment_status: string | null
           phone: string | null
           program_id: string
@@ -2807,7 +2916,6 @@ export type Database = {
           id?: string
           last_reminder_sent?: string | null
           payment_amount?: number | null
-          payment_reference?: string | null
           payment_status?: string | null
           phone?: string | null
           program_id: string
@@ -2822,7 +2930,6 @@ export type Database = {
           id?: string
           last_reminder_sent?: string | null
           payment_amount?: number | null
-          payment_reference?: string | null
           payment_status?: string | null
           phone?: string | null
           program_id?: string
@@ -3800,6 +3907,84 @@ export type Database = {
       }
     }
     Views: {
+      public_mentor_profiles: {
+        Row: {
+          achievements: string[] | null
+          availability_status: string | null
+          bio: string | null
+          certifications: string[] | null
+          consultation_rate: number | null
+          created_at: string | null
+          expertise: string[] | null
+          featured_video_url: string | null
+          hourly_rate: number | null
+          id: string | null
+          is_featured: boolean | null
+          languages: string[] | null
+          linkedin_url: string | null
+          portfolio_url: string | null
+          rating: number | null
+          sessions_conducted: number | null
+          specialization: string | null
+          students_mentored: number | null
+          updated_at: string | null
+          user_id: string | null
+          verification_status: string | null
+          verified_at: string | null
+          years_of_experience: number | null
+        }
+        Insert: {
+          achievements?: string[] | null
+          availability_status?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          consultation_rate?: number | null
+          created_at?: string | null
+          expertise?: string[] | null
+          featured_video_url?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_featured?: boolean | null
+          languages?: string[] | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          rating?: number | null
+          sessions_conducted?: number | null
+          specialization?: string | null
+          students_mentored?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          years_of_experience?: number | null
+        }
+        Update: {
+          achievements?: string[] | null
+          availability_status?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          consultation_rate?: number | null
+          created_at?: string | null
+          expertise?: string[] | null
+          featured_video_url?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_featured?: boolean | null
+          languages?: string[] | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          rating?: number | null
+          sessions_conducted?: number | null
+          specialization?: string | null
+          students_mentored?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          years_of_experience?: number | null
+        }
+        Relationships: []
+      }
       public_profiles: {
         Row: {
           avatar_url: string | null
