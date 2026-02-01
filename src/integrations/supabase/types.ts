@@ -2583,6 +2583,60 @@ export type Database = {
           },
         ]
       }
+      partner_audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: string | null
+          new_values: Json | null
+          old_values: Json | null
+          partner_id: string
+          performed_by: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          new_values?: Json | null
+          old_values?: Json | null
+          partner_id: string
+          performed_by?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          new_values?: Json | null
+          old_values?: Json | null
+          partner_id?: string
+          performed_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_audit_logs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_audit_logs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_events: {
         Row: {
           category_id: string | null
@@ -2657,6 +2711,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "partner_events_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "partner_events_stream_id_fkey"
             columns: ["stream_id"]
             isOneToOne: false
@@ -2665,81 +2726,514 @@ export type Database = {
           },
         ]
       }
+      partner_interview_processes: {
+        Row: {
+          average_duration: string | null
+          category_id: string | null
+          common_questions: string[] | null
+          created_at: string
+          difficulty_level: string | null
+          domain_id: string | null
+          id: string
+          is_published: boolean | null
+          partner_id: string
+          preparation_tips: string[] | null
+          role_title: string
+          stages: Json | null
+          total_rounds: number | null
+          updated_at: string
+        }
+        Insert: {
+          average_duration?: string | null
+          category_id?: string | null
+          common_questions?: string[] | null
+          created_at?: string
+          difficulty_level?: string | null
+          domain_id?: string | null
+          id?: string
+          is_published?: boolean | null
+          partner_id: string
+          preparation_tips?: string[] | null
+          role_title: string
+          stages?: Json | null
+          total_rounds?: number | null
+          updated_at?: string
+        }
+        Update: {
+          average_duration?: string | null
+          category_id?: string | null
+          common_questions?: string[] | null
+          created_at?: string
+          difficulty_level?: string | null
+          domain_id?: string | null
+          id?: string
+          is_published?: boolean | null
+          partner_id?: string
+          preparation_tips?: string[] | null
+          role_title?: string
+          stages?: Json | null
+          total_rounds?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_interview_processes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_interview_processes_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_interview_processes_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_interview_processes_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_jobs: {
+        Row: {
+          application_deadline: string | null
+          application_url: string | null
+          applications_count: number | null
+          category_id: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          domain_id: string | null
+          experience_level: string | null
+          id: string
+          is_active: boolean | null
+          is_approved: boolean | null
+          is_remote: boolean | null
+          job_type: string
+          location: string | null
+          partner_id: string
+          requirements: string[] | null
+          responsibilities: string[] | null
+          salary_max: number | null
+          salary_min: number | null
+          skills_required: string[] | null
+          target_qualifications: string[] | null
+          target_streams: string[] | null
+          target_years: string[] | null
+          title: string
+          updated_at: string
+          views_count: number | null
+        }
+        Insert: {
+          application_deadline?: string | null
+          application_url?: string | null
+          applications_count?: number | null
+          category_id?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          domain_id?: string | null
+          experience_level?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_approved?: boolean | null
+          is_remote?: boolean | null
+          job_type?: string
+          location?: string | null
+          partner_id: string
+          requirements?: string[] | null
+          responsibilities?: string[] | null
+          salary_max?: number | null
+          salary_min?: number | null
+          skills_required?: string[] | null
+          target_qualifications?: string[] | null
+          target_streams?: string[] | null
+          target_years?: string[] | null
+          title: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Update: {
+          application_deadline?: string | null
+          application_url?: string | null
+          applications_count?: number | null
+          category_id?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          domain_id?: string | null
+          experience_level?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_approved?: boolean | null
+          is_remote?: boolean | null
+          job_type?: string
+          location?: string | null
+          partner_id?: string
+          requirements?: string[] | null
+          responsibilities?: string[] | null
+          salary_max?: number | null
+          salary_min?: number | null
+          skills_required?: string[] | null
+          target_qualifications?: string[] | null
+          target_streams?: string[] | null
+          target_years?: string[] | null
+          title?: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_jobs_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_jobs_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_jobs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_jobs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_link_validations: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          is_valid: boolean | null
+          last_checked_at: string | null
+          link_type: string
+          partner_id: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_valid?: boolean | null
+          last_checked_at?: string | null
+          link_type: string
+          partner_id: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_valid?: boolean | null
+          last_checked_at?: string | null
+          link_type?: string
+          partner_id?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_link_validations_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_link_validations_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          message: string | null
+          notification_type: string
+          partner_id: string
+          recipient_id: string
+          reference_id: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          notification_type: string
+          partner_id: string
+          recipient_id: string
+          reference_id?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          notification_type?: string
+          partner_id?: string
+          recipient_id?: string
+          reference_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_notifications_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_notifications_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_posts: {
+        Row: {
+          content: string | null
+          created_at: string
+          external_url: string | null
+          id: string
+          image_url: string | null
+          is_approved: boolean | null
+          is_published: boolean | null
+          likes_count: number | null
+          partner_id: string
+          post_type: string
+          target_category_ids: string[] | null
+          target_domain_ids: string[] | null
+          target_qualifications: string[] | null
+          target_streams: string[] | null
+          target_years: string[] | null
+          title: string
+          updated_at: string
+          views_count: number | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          external_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_approved?: boolean | null
+          is_published?: boolean | null
+          likes_count?: number | null
+          partner_id: string
+          post_type?: string
+          target_category_ids?: string[] | null
+          target_domain_ids?: string[] | null
+          target_qualifications?: string[] | null
+          target_streams?: string[] | null
+          target_years?: string[] | null
+          title: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          external_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_approved?: boolean | null
+          is_published?: boolean | null
+          likes_count?: number | null
+          partner_id?: string
+          post_type?: string
+          target_category_ids?: string[] | null
+          target_domain_ids?: string[] | null
+          target_qualifications?: string[] | null
+          target_streams?: string[] | null
+          target_years?: string[] | null
+          title?: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_posts_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_posts_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_profiles: {
         Row: {
           approval_status: string | null
+          avg_rating: number | null
           company_description: string | null
           company_name: string | null
+          company_size: string | null
           company_website: string | null
+          cover_image_url: string | null
           created_at: string
           email: string | null
           events_initiatives: string | null
+          featured_on_homepage: boolean | null
+          founded_year: number | null
+          headquarters: string | null
           hiring_focus: string[] | null
+          hiring_roles: string[] | null
           id: string
           industry: string | null
           internship_opportunities: string | null
           is_approved: boolean | null
           is_visible: boolean | null
           jobs_posted: number | null
+          locations: string[] | null
           logo_url: string | null
           partner_id: string | null
           phone: string | null
+          profile_completion: number | null
           profile_views: number | null
           project_opportunities: string | null
+          slug: string | null
           social_links: Json | null
           students_engaged: number | null
+          tagline: string | null
+          total_applications: number | null
           updated_at: string
           user_id: string
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
+          verified_category_ids: string[] | null
+          verified_domain_id: string | null
+          video_url: string | null
         }
         Insert: {
           approval_status?: string | null
+          avg_rating?: number | null
           company_description?: string | null
           company_name?: string | null
+          company_size?: string | null
           company_website?: string | null
+          cover_image_url?: string | null
           created_at?: string
           email?: string | null
           events_initiatives?: string | null
+          featured_on_homepage?: boolean | null
+          founded_year?: number | null
+          headquarters?: string | null
           hiring_focus?: string[] | null
+          hiring_roles?: string[] | null
           id?: string
           industry?: string | null
           internship_opportunities?: string | null
           is_approved?: boolean | null
           is_visible?: boolean | null
           jobs_posted?: number | null
+          locations?: string[] | null
           logo_url?: string | null
           partner_id?: string | null
           phone?: string | null
+          profile_completion?: number | null
           profile_views?: number | null
           project_opportunities?: string | null
+          slug?: string | null
           social_links?: Json | null
           students_engaged?: number | null
+          tagline?: string | null
+          total_applications?: number | null
           updated_at?: string
           user_id: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          verified_category_ids?: string[] | null
+          verified_domain_id?: string | null
+          video_url?: string | null
         }
         Update: {
           approval_status?: string | null
+          avg_rating?: number | null
           company_description?: string | null
           company_name?: string | null
+          company_size?: string | null
           company_website?: string | null
+          cover_image_url?: string | null
           created_at?: string
           email?: string | null
           events_initiatives?: string | null
+          featured_on_homepage?: boolean | null
+          founded_year?: number | null
+          headquarters?: string | null
           hiring_focus?: string[] | null
+          hiring_roles?: string[] | null
           id?: string
           industry?: string | null
           internship_opportunities?: string | null
           is_approved?: boolean | null
           is_visible?: boolean | null
           jobs_posted?: number | null
+          locations?: string[] | null
           logo_url?: string | null
           partner_id?: string | null
           phone?: string | null
+          profile_completion?: number | null
           profile_views?: number | null
           project_opportunities?: string | null
+          slug?: string | null
           social_links?: Json | null
           students_engaged?: number | null
+          tagline?: string | null
+          total_applications?: number | null
           updated_at?: string
           user_id?: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          verified_category_ids?: string[] | null
+          verified_domain_id?: string | null
+          video_url?: string | null
         }
         Relationships: [
           {
@@ -2747,6 +3241,99 @@ export type Database = {
             columns: ["partner_id"]
             isOneToOne: false
             referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_profiles_verified_domain_id_fkey"
+            columns: ["verified_domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_verified_categories: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          partner_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          partner_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          partner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_verified_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "career_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_verified_categories_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_verified_categories_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_verified_domains: {
+        Row: {
+          created_at: string
+          domain_id: string
+          id: string
+          partner_id: string
+        }
+        Insert: {
+          created_at?: string
+          domain_id: string
+          id?: string
+          partner_id: string
+        }
+        Update: {
+          created_at?: string
+          domain_id?: string
+          id?: string
+          partner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_verified_domains_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "career_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_verified_domains_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_verified_domains_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -4015,6 +4602,78 @@ export type Database = {
         }
         Relationships: []
       }
+      public_partner_profiles: {
+        Row: {
+          avg_rating: number | null
+          company_description: string | null
+          company_name: string | null
+          company_size: string | null
+          company_website: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          founded_year: number | null
+          headquarters: string | null
+          hiring_focus: string[] | null
+          hiring_roles: string[] | null
+          id: string | null
+          industry: string | null
+          locations: string[] | null
+          logo_url: string | null
+          profile_views: number | null
+          slug: string | null
+          social_links: Json | null
+          tagline: string | null
+          verification_status: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          avg_rating?: number | null
+          company_description?: string | null
+          company_name?: string | null
+          company_size?: string | null
+          company_website?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          founded_year?: number | null
+          headquarters?: string | null
+          hiring_focus?: string[] | null
+          hiring_roles?: string[] | null
+          id?: string | null
+          industry?: string | null
+          locations?: string[] | null
+          logo_url?: string | null
+          profile_views?: number | null
+          slug?: string | null
+          social_links?: Json | null
+          tagline?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          avg_rating?: number | null
+          company_description?: string | null
+          company_name?: string | null
+          company_size?: string | null
+          company_website?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          founded_year?: number | null
+          headquarters?: string | null
+          hiring_focus?: string[] | null
+          hiring_roles?: string[] | null
+          id?: string | null
+          industry?: string | null
+          locations?: string[] | null
+          logo_url?: string | null
+          profile_views?: number | null
+          slug?: string | null
+          social_links?: Json | null
+          tagline?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       public_profiles: {
         Row: {
           avatar_url: string | null
@@ -4070,6 +4729,11 @@ export type Database = {
       admin_tier: "super_admin" | "admin" | "moderator"
       app_role: "admin" | "moderator" | "user" | "mentor" | "partner"
       experience_level: "entry" | "mid" | "senior"
+      partner_verification_status:
+        | "unverified"
+        | "pending"
+        | "verified"
+        | "suspended"
       question_type: "mcq" | "likert"
       user_type: "school_student" | "college_student" | "mentor" | "partner"
     }
@@ -4202,6 +4866,12 @@ export const Constants = {
       admin_tier: ["super_admin", "admin", "moderator"],
       app_role: ["admin", "moderator", "user", "mentor", "partner"],
       experience_level: ["entry", "mid", "senior"],
+      partner_verification_status: [
+        "unverified",
+        "pending",
+        "verified",
+        "suspended",
+      ],
       question_type: ["mcq", "likert"],
       user_type: ["school_student", "college_student", "mentor", "partner"],
     },
