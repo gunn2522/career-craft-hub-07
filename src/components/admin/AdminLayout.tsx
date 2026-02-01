@@ -56,46 +56,21 @@ const sidebarModules: SidebarModule[] = [
     ]
   },
   {
-    name: "Site Management",
+    name: "Site Settings",
     icon: Settings,
     links: [
       { name: "Homepage Content", path: "/admin/homepage-content", icon: LayoutList },
       { name: "Module Hero", path: "/admin/module-hero", icon: LayoutList },
       { name: "Site Config", path: "/admin/site-config", icon: Settings },
       { name: "Live Metrics", path: "/admin/metrics", icon: Settings },
-    ]
-  },
-  {
-    name: "User Management",
-    icon: Shield,
-    links: [
+      { name: "FAQs", path: "/admin/faqs", icon: FileText },
+      { name: "Legal Pages", path: "/admin/legal-pages", icon: FileText },
       { name: "Access Control", path: "/admin/access-control", icon: Shield },
       { name: "Users", path: "/admin/users", icon: Users },
-      { name: "Mentor Verification", path: "/admin/mentor-verification", icon: Users },
     ]
   },
   {
-    name: "Organizations",
-    icon: Building2,
-    links: [
-      { name: "Partners", path: "/admin/partners", icon: Building2 },
-      { name: "Institutions", path: "/admin/institutions", icon: Building2 },
-      { name: "Organization Plans", path: "/admin/organization-plans", icon: ClipboardList },
-    ]
-  },
-  {
-    name: "Career Architecture",
-    icon: Layers,
-    links: [
-      { name: "Domains", path: "/admin/domains", icon: Briefcase },
-      { name: "Categories", path: "/admin/categories", icon: Briefcase },
-      { name: "Careers", path: "/admin/careers", icon: Briefcase },
-      { name: "Degrees", path: "/admin/degrees", icon: GraduationCap },
-      { name: "Roadmaps", path: "/admin/roadmaps", icon: Map },
-    ]
-  },
-  {
-    name: "School Module",
+    name: "School Students",
     icon: School,
     links: [
       { name: "Psychometric Tests", path: "/admin/psychometric-tests", icon: Brain },
@@ -105,9 +80,14 @@ const sidebarModules: SidebarModule[] = [
     ]
   },
   {
-    name: "Learning & Programs",
-    icon: BookOpen,
+    name: "College Students",
+    icon: GraduationCap,
     links: [
+      { name: "Domains", path: "/admin/domains", icon: Layers },
+      { name: "Categories", path: "/admin/categories", icon: Briefcase },
+      { name: "Careers", path: "/admin/careers", icon: Briefcase },
+      { name: "Degrees", path: "/admin/degrees", icon: GraduationCap },
+      { name: "Roadmaps", path: "/admin/roadmaps", icon: Map },
       { name: "Daily Tasks", path: "/admin/daily-tasks", icon: ClipboardList },
       { name: "Resources", path: "/admin/resources", icon: BookOpen },
       { name: "Internships", path: "/admin/internships", icon: GraduationCap },
@@ -116,11 +96,31 @@ const sidebarModules: SidebarModule[] = [
     ]
   },
   {
+    name: "Mentors",
+    icon: Users,
+    links: [
+      { name: "Mentor Verification", path: "/admin/mentor-verification", icon: Users },
+    ]
+  },
+  {
+    name: "Partner Companies",
+    icon: Building2,
+    links: [
+      { name: "Partners", path: "/admin/partners", icon: Building2 },
+    ]
+  },
+  {
+    name: "Institutions",
+    icon: School,
+    links: [
+      { name: "Institutions", path: "/admin/institutions", icon: Building2 },
+      { name: "Organization Plans", path: "/admin/organization-plans", icon: ClipboardList },
+    ]
+  },
+  {
     name: "Content & Media",
     icon: FileText,
     links: [
-      { name: "FAQs", path: "/admin/faqs", icon: FileText },
-      { name: "Legal Pages", path: "/admin/legal-pages", icon: FileText },
       { name: "Blogs", path: "/admin/blogs", icon: FileText },
       { name: "Success Stories", path: "/admin/success-stories", icon: Trophy },
     ]
