@@ -72,8 +72,8 @@ const MentorPosts = () => {
   const { data: categories } = useQuery({
     queryKey: ["mentor-categories", mentorProfile?.id],
     queryFn: async () => {
-      const { data: verifiedCats } = await (supabase
-        .from("mentor_verified_categories") as any)
+      const { data: verifiedCats } = await (supabase as any)
+        .from("mentor_verified_categories")
         .select("category_id")
         .eq("mentor_id", mentorProfile?.id || "");
       

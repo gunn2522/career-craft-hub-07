@@ -103,8 +103,8 @@ const AdminMentorManagement = () => {
   const { data: interviews, isLoading: interviewsLoading } = useQuery({
     queryKey: ["admin-mentor-interviews"],
     queryFn: async () => {
-      const { data, error } = await (supabase
-        .from("mentor_interviews") as any)
+      const { data, error } = await (supabase as any)
+        .from("mentor_interviews")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -144,8 +144,8 @@ const AdminMentorManagement = () => {
   // Schedule interview mutation
   const scheduleInterviewMutation = useMutation({
     mutationFn: async ({ interviewId, scheduledAt }: { interviewId: string; scheduledAt: string }) => {
-      const { error } = await (supabase
-        .from("mentor_interviews") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_interviews")
         .update({
           status: "scheduled",
           scheduled_at: scheduledAt,
@@ -189,8 +189,8 @@ const AdminMentorManagement = () => {
       const interview = interviews?.find(i => i.id === interviewId);
       if (!interview) throw new Error("Interview not found");
 
-      const { error } = await (supabase
-        .from("mentor_interviews") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_interviews")
         .update({
           status: result,
           result: result,

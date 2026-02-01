@@ -164,8 +164,8 @@ export const MentorVerificationFlow = () => {
         else navigate("/mentor");
 
         // Fetch verified categories
-        const { data: verifiedCats } = await (supabase
-          .from("mentor_verified_categories") as any)
+        const { data: verifiedCats } = await (supabase as any)
+          .from("mentor_verified_categories")
           .select("category_id")
           .eq("mentor_id", mentorData.id);
         
@@ -330,8 +330,8 @@ export const MentorVerificationFlow = () => {
 
     try {
       if (mentorProfile?.id) {
-        await (supabase
-          .from("mentor_verified_categories") as any)
+        await (supabase as any)
+          .from("mentor_verified_categories")
           .delete()
           .eq("mentor_id", mentorProfile.id);
       }
@@ -341,7 +341,7 @@ export const MentorVerificationFlow = () => {
         category_id: catId
       }));
 
-      await (supabase.from("mentor_verified_categories") as any).insert(insertData);
+      await (supabase as any).from("mentor_verified_categories").insert(insertData);
 
       await (supabase
         .from("mentor_profiles") as any)
@@ -359,7 +359,7 @@ export const MentorVerificationFlow = () => {
 
   const submitForReview = async () => {
     try {
-      await (supabase.from("mentor_interviews") as any).insert({
+      await (supabase as any).from("mentor_interviews").insert({
         mentor_id: mentorProfile?.id,
         domain_id: selectedDomain,
         category_ids: selectedCategories,
