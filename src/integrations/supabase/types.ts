@@ -1461,6 +1461,36 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_pages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_published: boolean
+          last_updated: string
+          page_key: string
+          title: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          last_updated?: string
+          page_key: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          last_updated?: string
+          page_key?: string
+          title?: string
+        }
+        Relationships: []
+      }
       mentor_daily_guidance: {
         Row: {
           content: string | null
