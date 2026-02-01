@@ -30,36 +30,36 @@ export const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="w-full px-4 md:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 md:h-16">
-          <Link to="/" className="flex items-center gap-2 group">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border/60 shadow-sm">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <div className="flex items-center justify-between h-20 py-4">
+          <Link to="/" className="flex items-center group">
             <img 
               src={logo} 
               alt="Career Craft Cafe" 
-              className="h-7 md:h-8 w-auto transition-transform duration-300 group-hover:scale-105"
+              className="h-9 md:h-10 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-5">
+          <nav className="hidden lg:flex items-center gap-7">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative text-sm font-medium transition-colors duration-300 hover:text-primary ${
+                className={`relative text-base font-medium transition-colors duration-300 hover:text-primary ${
                   location.pathname === link.path ? "text-primary" : "text-foreground/80"
                 }`}
               >
                 {link.name}
                 {location.pathname === link.path && (
-                  <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full" />
+                  <span className="absolute -bottom-1.5 left-0 w-full h-[2px] bg-primary rounded-full" />
                 )}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden lg:flex items-center gap-2">
-            <Button variant="ghost" size="nav" className="text-muted-foreground hover:text-foreground" asChild>
+          <div className="hidden lg:flex items-center gap-3">
+            <Button variant="ghost" className="text-[15px] font-medium text-muted-foreground hover:text-foreground h-auto px-3 py-2" asChild>
               <Link to="/partner" className="flex items-center gap-1.5">
                 <Handshake className="w-4 h-4" />
                 Become a Partner
@@ -68,7 +68,7 @@ export const Header = () => {
             {user ? (
               <>
                 {isAdmin && (
-                  <Button variant="ghost" size="nav" asChild>
+                  <Button variant="ghost" className="text-[15px] font-medium h-auto px-3 py-2" asChild>
                     <Link to="/admin" className="flex items-center gap-1.5">
                       <LayoutDashboard className="w-4 h-4" />
                       Admin
@@ -76,7 +76,7 @@ export const Header = () => {
                   </Button>
                 )}
                 {isMentor && !isAdmin && (
-                  <Button variant="ghost" size="nav" asChild>
+                  <Button variant="ghost" className="text-[15px] font-medium h-auto px-3 py-2" asChild>
                     <Link to="/mentor" className="flex items-center gap-1.5">
                       <GraduationCap className="w-4 h-4" />
                       Mentor
@@ -84,7 +84,7 @@ export const Header = () => {
                   </Button>
                 )}
                 {isPartner && !isAdmin && (
-                  <Button variant="ghost" size="nav" asChild>
+                  <Button variant="ghost" className="text-[15px] font-medium h-auto px-3 py-2" asChild>
                     <Link to="/partner-dashboard" className="flex items-center gap-1.5">
                       <Building2 className="w-4 h-4" />
                       Partner
@@ -92,24 +92,24 @@ export const Header = () => {
                   </Button>
                 )}
                 {isInstitution && !isAdmin && (
-                  <Button variant="ghost" size="nav" asChild>
+                  <Button variant="ghost" className="text-[15px] font-medium h-auto px-3 py-2" asChild>
                     <Link to="/institution" className="flex items-center gap-1.5">
                       <Landmark className="w-4 h-4" />
                       Institution
                     </Link>
                   </Button>
                 )}
-                <Button variant="ghost" size="nav" onClick={handleSignOut} className="flex items-center gap-1.5">
+                <Button variant="ghost" onClick={handleSignOut} className="text-[15px] font-medium h-auto px-3 py-2 flex items-center gap-1.5">
                   <LogOut className="w-4 h-4" />
                   Sign Out
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" size="nav" asChild>
+                <Button variant="ghost" className="text-[15px] font-medium h-auto px-3 py-2" asChild>
                   <Link to="/auth">Log In</Link>
                 </Button>
-                <Button variant="gradient" size="nav" className="h-9 px-5" asChild>
+                <Button variant="gradient" className="h-11 px-6 text-[15px] font-semibold rounded-xl shadow-lg" asChild>
                   <Link to="/auth">Get Started</Link>
                 </Button>
               </>
