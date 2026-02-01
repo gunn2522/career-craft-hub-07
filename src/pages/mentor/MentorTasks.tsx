@@ -60,8 +60,8 @@ const MentorTasks = () => {
   const { data: mentorProfile } = useQuery({
     queryKey: ["mentor-profile-tasks", user?.id],
     queryFn: async () => {
-      const { data, error } = await (supabase
-        .from("mentor_profiles") as any)
+      const { data, error } = await (supabase as any)
+        .from("mentor_profiles")
         .select("id, verified_domain_id, verification_status")
         .eq("user_id", user?.id || "")
         .maybeSingle();

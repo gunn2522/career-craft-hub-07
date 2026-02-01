@@ -112,8 +112,8 @@ const AdminMentorManagement = () => {
       if (!data) return [];
 
       const mentorIds = data.map((i: any) => i.mentor_id);
-      const { data: mentorProfiles } = await (supabase
-        .from("mentor_profiles") as any)
+      const { data: mentorProfiles } = await (supabase as any)
+        .from("mentor_profiles")
         .select("id, user_id")
         .in("id", mentorIds);
 
