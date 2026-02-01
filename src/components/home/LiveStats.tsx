@@ -1,5 +1,6 @@
 import { useSiteMetrics, useLiveMetricCounts } from '@/hooks/useHomepageContent';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/components/ui/card';
 
 const formatNumber = (num: number): string => {
   if (num >= 1000) {
@@ -33,28 +34,28 @@ export const LiveStats = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="text-left">
-            <Skeleton className="h-8 w-16 mb-1" />
-            <Skeleton className="h-4 w-24" />
-          </div>
+          <Card key={i} className="p-5 bg-card/60 backdrop-blur-sm border-border/40 rounded-xl">
+            <Skeleton className="h-7 w-16 mb-1.5" />
+            <Skeleton className="h-4 w-20" />
+          </Card>
         ))}
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
       {metrics?.map((metric) => (
-        <div key={metric.id} className="text-left">
-          <div className="font-display text-2xl sm:text-3xl font-bold gradient-text">
+        <Card key={metric.id} className="p-5 bg-card/60 backdrop-blur-sm border-border/40 rounded-xl text-left">
+          <div className="font-display text-[22px] md:text-[26px] font-bold gradient-text leading-none">
             {getMetricValue(metric.metric_key)}
           </div>
-          <div className="text-xs sm:text-sm text-muted-foreground mt-1">
+          <div className="text-[13px] md:text-sm text-muted-foreground mt-1.5">
             {metric.display_label}
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );

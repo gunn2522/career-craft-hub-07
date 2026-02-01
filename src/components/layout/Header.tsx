@@ -31,22 +31,22 @@ export const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="w-full px-4 md:px-8 lg:px-16">
-        <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-3 group">
+      <div className="w-full px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 md:h-16">
+          <Link to="/" className="flex items-center gap-2 group">
             <img 
               src={logo} 
               alt="Career Craft Cafe" 
-              className="h-16 w-auto transition-transform duration-300 group-hover:scale-110"
+              className="h-7 md:h-8 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-5">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative font-medium transition-colors duration-300 hover:text-primary ${
+                className={`relative text-sm font-medium transition-colors duration-300 hover:text-primary ${
                   location.pathname === link.path ? "text-primary" : "text-foreground/80"
                 }`}
               >
@@ -58,9 +58,9 @@ export const Header = () => {
             ))}
           </nav>
 
-          <div className="hidden lg:flex items-center gap-3">
-            <Button variant="outline" size="sm" className="border-primary/50 text-primary hover:bg-primary/10" asChild>
-              <Link to="/partner" className="flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
+            <Button variant="ghost" size="nav" className="text-muted-foreground hover:text-foreground" asChild>
+              <Link to="/partner" className="flex items-center gap-1.5">
                 <Handshake className="w-4 h-4" />
                 Become a Partner
               </Link>
@@ -68,48 +68,48 @@ export const Header = () => {
             {user ? (
               <>
                 {isAdmin && (
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to="/admin" className="flex items-center gap-2">
+                  <Button variant="ghost" size="nav" asChild>
+                    <Link to="/admin" className="flex items-center gap-1.5">
                       <LayoutDashboard className="w-4 h-4" />
                       Admin
                     </Link>
                   </Button>
                 )}
                 {isMentor && !isAdmin && (
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to="/mentor" className="flex items-center gap-2">
+                  <Button variant="ghost" size="nav" asChild>
+                    <Link to="/mentor" className="flex items-center gap-1.5">
                       <GraduationCap className="w-4 h-4" />
                       Mentor
                     </Link>
                   </Button>
                 )}
                 {isPartner && !isAdmin && (
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to="/partner-dashboard" className="flex items-center gap-2">
+                  <Button variant="ghost" size="nav" asChild>
+                    <Link to="/partner-dashboard" className="flex items-center gap-1.5">
                       <Building2 className="w-4 h-4" />
                       Partner
                     </Link>
                   </Button>
                 )}
                 {isInstitution && !isAdmin && (
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to="/institution" className="flex items-center gap-2">
+                  <Button variant="ghost" size="nav" asChild>
+                    <Link to="/institution" className="flex items-center gap-1.5">
                       <Landmark className="w-4 h-4" />
                       Institution
                     </Link>
                   </Button>
                 )}
-                <Button variant="ghost" size="sm" onClick={handleSignOut} className="flex items-center gap-2">
+                <Button variant="ghost" size="nav" onClick={handleSignOut} className="flex items-center gap-1.5">
                   <LogOut className="w-4 h-4" />
                   Sign Out
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild>
+                <Button variant="ghost" size="nav" asChild>
                   <Link to="/auth">Log In</Link>
                 </Button>
-                <Button variant="gradient" size="sm" asChild>
+                <Button variant="gradient" size="nav" className="h-9 px-5" asChild>
                   <Link to="/auth">Get Started</Link>
                 </Button>
               </>
