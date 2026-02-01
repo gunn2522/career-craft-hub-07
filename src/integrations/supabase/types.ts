@@ -2806,6 +2806,60 @@ export type Database = {
           },
         ]
       }
+      partner_interview_stages: {
+        Row: {
+          common_questions: string[] | null
+          created_at: string
+          description: string | null
+          duration_estimate: string | null
+          id: string
+          partner_id: string
+          stage_name: string
+          stage_order: number
+          tips: string | null
+          updated_at: string
+        }
+        Insert: {
+          common_questions?: string[] | null
+          created_at?: string
+          description?: string | null
+          duration_estimate?: string | null
+          id?: string
+          partner_id: string
+          stage_name: string
+          stage_order?: number
+          tips?: string | null
+          updated_at?: string
+        }
+        Update: {
+          common_questions?: string[] | null
+          created_at?: string
+          description?: string | null
+          duration_estimate?: string | null
+          id?: string
+          partner_id?: string
+          stage_name?: string
+          stage_order?: number
+          tips?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_interview_stages_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_interview_stages_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "public_partner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_jobs: {
         Row: {
           application_deadline: string | null
