@@ -15,9 +15,12 @@ import {
   FileSignature,
   CreditCard,
   Eye,
-  Handshake
+  Handshake,
+  FileText,
+  ListOrdered
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PartnerSearchCommand } from "./PartnerSearchCommand";
 import logo from "@/assets/logo.png";
 
 const sidebarLinks = [
@@ -26,6 +29,8 @@ const sidebarLinks = [
   { name: "Preview Page", path: "/partner-dashboard/preview", icon: Eye },
   { name: "Job Postings", path: "/partner-dashboard/jobs", icon: Briefcase },
   { name: "Events", path: "/partner-dashboard/events", icon: Calendar },
+  { name: "Posts & Content", path: "/partner-dashboard/posts", icon: FileText },
+  { name: "Interview Process", path: "/partner-dashboard/interview-process", icon: ListOrdered },
   { name: "Student Engagement", path: "/partner-dashboard/engagement", icon: Users },
   { name: "Collaborations", path: "/partner-dashboard/collaborations", icon: Handshake },
   { name: "Analytics", path: "/partner-dashboard/analytics", icon: TrendingUp },
@@ -124,8 +129,9 @@ export const PartnerLayout = ({ children, title }: PartnerLayoutProps) => {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        <header className="bg-card border-b border-border px-8 py-6">
+        <header className="bg-card border-b border-border px-8 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">{title}</h1>
+          <PartnerSearchCommand />
         </header>
         <div className="p-8">
           {children}
