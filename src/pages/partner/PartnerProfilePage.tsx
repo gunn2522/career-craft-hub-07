@@ -219,17 +219,18 @@ const PartnerProfilePage = () => {
     setIsUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `partner-${user.id}-${Date.now()}.${fileExt}`;
+      // File must be in user's folder to satisfy RLS policy
+      const filePath = `${user.id}/logo-${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('organization-logos')
-        .upload(fileName, file, { upsert: true });
+        .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
         .from('organization-logos')
-        .getPublicUrl(fileName);
+        .getPublicUrl(filePath);
 
       setProfile(prev => ({ ...prev, logo_url: publicUrl }));
       toast({ title: "Logo uploaded successfully" });
