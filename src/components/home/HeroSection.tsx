@@ -73,18 +73,18 @@ export const HeroSection = () => {
       {/* Torch-themed 3D Elements */}
       {isClient && <TorchElements3D count={15} />}
 
-      <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
+      <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8 py-20 md:py-24 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="text-left">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6">
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-xs mb-6">
+              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
               Your Career Journey Starts Here
             </div>
 
             {/* Main Headline - Dynamic from database with role-based personalization */}
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="font-display text-[48px] md:text-[52px] lg:text-[56px] font-bold mb-5 leading-[1.1] max-w-[650px]">
               {displayTitle.includes('.') ? (
                 displayTitle.split('.').map((part, i) => (
                   <span key={i}>
@@ -103,12 +103,12 @@ export const HeroSection = () => {
             </h1>
 
             {/* Subheadline - Dynamic from database with role-based personalization */}
-            <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-[580px] leading-relaxed">
               {displaySubtitle}
             </p>
 
             {/* CTA Buttons - Dynamic based on role */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 mb-10">
               <Button variant="hero" size="xl" asChild>
                 <Link to={primaryCTA.link} className="group">
                   <Compass className="w-5 h-5" />
@@ -116,7 +116,7 @@ export const HeroSection = () => {
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button variant="gradient" size="xl" asChild>
+              <Button variant="heroOutline" size="xl" asChild>
                 <Link to="/craft">
                   Get Career Guidance
                 </Link>
@@ -124,9 +124,7 @@ export const HeroSection = () => {
             </div>
 
             {/* Live Stats - Dynamic from database */}
-            <div>
-              <LiveStats />
-            </div>
+            <LiveStats />
           </div>
 
           {/* Right Side - Empty space for the background image to show */}
