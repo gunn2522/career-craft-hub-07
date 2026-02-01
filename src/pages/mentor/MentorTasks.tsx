@@ -74,8 +74,8 @@ const MentorTasks = () => {
   const { data: categories } = useQuery({
     queryKey: ["mentor-categories-tasks", mentorProfile?.id],
     queryFn: async () => {
-      const { data: verifiedCats } = await (supabase
-        .from("mentor_verified_categories") as any)
+      const { data: verifiedCats } = await (supabase as any)
+        .from("mentor_verified_categories")
         .select("category_id")
         .eq("mentor_id", mentorProfile?.id || "");
 
@@ -95,8 +95,8 @@ const MentorTasks = () => {
   const { data: tasks, isLoading } = useQuery({
     queryKey: ["mentor-tasks", mentorProfile?.id],
     queryFn: async () => {
-      const { data, error } = await (supabase
-        .from("mentor_tasks") as any)
+      const { data, error } = await (supabase as any)
+        .from("mentor_tasks")
         .select("*")
         .eq("mentor_id", mentorProfile?.id || "")
         .order("created_at", { ascending: false });
@@ -111,7 +111,7 @@ const MentorTasks = () => {
 
       const taskIds = data.map((t: any) => t.id);
       const { data: submissions } = taskIds.length > 0
-        ? await (supabase.from("mentor_task_submissions") as any).select("task_id").in("task_id", taskIds)
+        ? await (supabase as any).from("mentor_task_submissions").select("task_id").in("task_id", taskIds)
         : { data: [] };
 
       const submissionCounts: Record<string, number> = {};
@@ -133,7 +133,7 @@ const MentorTasks = () => {
       if (!categoryId) throw new Error("Category is required");
       if (!audienceType) throw new Error("Audience is required");
 
-      const { error } = await (supabase.from("mentor_tasks") as any).insert({
+      const { error } = await (supabase as any).from("mentor_tasks").insert({
         mentor_id: mentorProfile?.id,
         title,
         description: description || null,
@@ -163,8 +163,8 @@ const MentorTasks = () => {
     mutationFn: async () => {
       if (!editingTask) return;
 
-      const { error } = await (supabase
-        .from("mentor_tasks") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_tasks")
         .update({
           title,
           description: description || null,
@@ -193,8 +193,8 @@ const MentorTasks = () => {
 
   const deleteTaskMutation = useMutation({
     mutationFn: async (taskId: string) => {
-      const { error } = await (supabase
-        .from("mentor_tasks") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_tasks")
         .delete()
         .eq("id", taskId);
 
@@ -212,8 +212,8 @@ const MentorTasks = () => {
 
   const toggleTaskMutation = useMutation({
     mutationFn: async ({ taskId, isActive }: { taskId: string; isActive: boolean }) => {
-      const { error } = await (supabase
-        .from("mentor_tasks") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_tasks")
         .update({ is_active: isActive, updated_at: new Date().toISOString() })
         .eq("id", taskId);
 
