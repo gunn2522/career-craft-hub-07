@@ -10,7 +10,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { FileText, Save, Loader2 } from "lucide-react";
+import { FileText, Save, Loader2, Eye } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface LegalPage {
   id: string;
@@ -30,6 +36,8 @@ const pageLabels: Record<string, string> = {
 const AdminLegalPages = () => {
   const [activeTab, setActiveTab] = useState("privacy");
   const [editData, setEditData] = useState<Record<string, { title: string; content: string; is_published: boolean }>>({});
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewPage, setPreviewPage] = useState<{ title: string; content: string } | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -80,6 +88,14 @@ const AdminLegalPages = () => {
     const data = editData[pageKey];
     if (data) {
       updateMutation.mutate({ pageKey, data });
+    }
+  };
+
+  const handlePreview = (pageKey: string) => {
+    const data = editData[pageKey];
+    if (data) {
+      setPreviewPage({ title: data.title, content: data.content });
+      setPreviewOpen(true);
     }
   };
 
@@ -168,20 +184,40 @@ const AdminLegalPages = () => {
                     </p>
                   )}
 
-                  <Button onClick={() => handleSave(pageKey)} disabled={updateMutation.isPending}>
-                    {updateMutation.isPending ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Save className="w-4 h-4 mr-2" />
-                    )}
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => handlePreview(pageKey)}>
+                      <Eye className="w-4 h-4 mr-2" />
+                      Preview
+                    </Button>
+                    <Button onClick={() => handleSave(pageKey)} disabled={updateMutation.isPending}>
+                      {updateMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4 mr-2" />
+                      )}
+                      Save Changes
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
           );
         })}
       </Tabs>
+
+      {/* Preview Dialog */}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{previewPage?.title || "Preview"}</DialogTitle>
+          </DialogHeader>
+          <div className="prose prose-lg dark:prose-invert max-w-none mt-4">
+            {previewPage?.content.split('\n').map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 };
