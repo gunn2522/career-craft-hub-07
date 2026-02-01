@@ -100,6 +100,12 @@ const PartnerMoU = lazy(() => import("./pages/partner/PartnerMoU"));
 const PartnerPlans = lazy(() => import("./pages/partner/PartnerPlans"));
 const PartnerInquiries = lazy(() => import("./pages/partner/PartnerInquiries"));
 const PartnerSettings = lazy(() => import("./pages/partner/PartnerSettings"));
+const PartnerPostsPage = lazy(() => import("./pages/partner/PartnerPostsPage"));
+const PartnerInterviewProcessPage = lazy(() => import("./pages/partner/PartnerInterviewProcessPage"));
+const PartnerJobsPage = lazy(() => import("./pages/partner/PartnerJobsPage"));
+const PartnerEventsPage = lazy(() => import("./pages/partner/PartnerEventsPage"));
+const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
+const AdminPartnerVerification = lazy(() => import("./pages/admin/AdminPartnerVerification"));
 const PlansAndPricing = lazy(() => import("./pages/PlansAndPricing"));
 const AdminRegistrations = lazy(() => import("./pages/admin/AdminRegistrations"));
 
@@ -146,6 +152,7 @@ const App = () => (
                 <Route path="/mentors" element={<Mentors />} />
                 <Route path="/mentors/:mentorId" element={<MentorProfile />} />
                 <Route path="/plans" element={<PlansAndPricing />} />
+                <Route path="/company/:slug" element={<CompanyProfile />} />
 
                 {/* Protected: Requires Authentication */}
                 <Route
@@ -419,6 +426,14 @@ const App = () => (
                   element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                       <AdminEventGallery />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/partner-verification"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                      <AdminPartnerVerification />
                     </ProtectedRoute>
                   }
                 />
@@ -697,6 +712,22 @@ const App = () => (
                   element={
                     <ProtectedRoute allowedRoles={["partner"]}>
                       <PartnerSettings />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/partner-dashboard/posts"
+                  element={
+                    <ProtectedRoute allowedRoles={["partner"]}>
+                      <PartnerPostsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/partner-dashboard/interview-process"
+                  element={
+                    <ProtectedRoute allowedRoles={["partner"]}>
+                      <PartnerInterviewProcessPage />
                     </ProtectedRoute>
                   }
                 />
