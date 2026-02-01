@@ -58,8 +58,8 @@ const MentorPosts = () => {
   const { data: mentorProfile } = useQuery({
     queryKey: ["mentor-profile-posts", user?.id],
     queryFn: async () => {
-      const { data, error } = await (supabase
-        .from("mentor_profiles") as any)
+      const { data, error } = await (supabase as any)
+        .from("mentor_profiles")
         .select("id, verified_domain_id, verification_status")
         .eq("user_id", user?.id || "")
         .maybeSingle();
@@ -93,8 +93,8 @@ const MentorPosts = () => {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["mentor-posts", mentorProfile?.id],
     queryFn: async () => {
-      const { data, error } = await (supabase
-        .from("mentor_posts") as any)
+      const { data, error } = await (supabase as any)
+        .from("mentor_posts")
         .select("*")
         .eq("mentor_id", mentorProfile?.id || "")
         .order("created_at", { ascending: false });
@@ -119,7 +119,7 @@ const MentorPosts = () => {
     mutationFn: async () => {
       if (!categoryId) throw new Error("Category is required");
 
-      const { error } = await (supabase.from("mentor_posts") as any).insert({
+      const { error } = await (supabase as any).from("mentor_posts").insert({
         mentor_id: mentorProfile?.id,
         title,
         content: content || null,
@@ -147,8 +147,8 @@ const MentorPosts = () => {
     mutationFn: async () => {
       if (!editingPost) return;
 
-      const { error } = await (supabase
-        .from("mentor_posts") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_posts")
         .update({
           title,
           content: content || null,
@@ -175,8 +175,8 @@ const MentorPosts = () => {
 
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
-      const { error } = await (supabase
-        .from("mentor_posts") as any)
+      const { error } = await (supabase as any)
+        .from("mentor_posts")
         .delete()
         .eq("id", postId);
 
