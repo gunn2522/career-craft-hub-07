@@ -26,25 +26,25 @@ export const PersonalityQuiz = ({ onComplete }: QuizFlowProps) => {
     new Array(QUESTIONS.length).fill(null)
   );
 
-  const q = QUESTIONS[currentQuestion];
-  const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
-  const isLast = currentQuestion === QUESTIONS.length - 1;
-
   const selectAnswer = useCallback(
     (value: number) => {
       const newAnswers = [...answers];
       newAnswers[currentQuestion] = value;
       setAnswers(newAnswers);
 
-      // Auto-advance after a short delay
       setTimeout(() => {
-        if (currentQuestion < QUESTIONS.length - 1) {
-          setCurrentQuestion((prev) => prev + 1);
-        }
+        setCurrentQuestion((prev) =>
+          prev < QUESTIONS.length - 1 ? prev + 1 : prev
+        );
       }, 350);
     },
     [currentQuestion, answers]
   );
+
+  const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
+  const isLast = currentQuestion === QUESTIONS.length - 1;
+  const q = QUESTIONS[currentQuestion];
+  if (!q) return null;
 
   const goNext = () => {
     if (answers[currentQuestion] === null) return;
