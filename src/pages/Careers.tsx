@@ -224,8 +224,8 @@ const Careers = () => {
         currentLevel={experienceLevel}
       />
 
-      {/* Hero with Image */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
+      {/* Hero - Personality Test as Main Feature */}
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
@@ -240,45 +240,48 @@ const Careers = () => {
         {/* Torch 3D Elements */}
         <TorchElements3D count={12} />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl">
+        <div className="container mx-auto px-4 relative z-10 py-20">
+          <div className="max-w-4xl">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium text-sm mb-6 animate-fade-in">
-              <Briefcase className="w-4 h-4" />
-              {filteredCareers.length} Career Paths
+              <Brain className="w-4 h-4" />
+              Personality-Powered Career Discovery
             </div>
 
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              Discover Your <span className="gradient-text">Career Path</span>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+              Discover Your <span className="gradient-text">Ideal Career</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              Find roles that match your experience, explore skill requirements, and plan your career growth journey
+            <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              Take our scientifically-backed personality assessment to uncover careers that align with your unique strengths and interests
             </p>
 
-            {/* Personality Test CTA - Main Feature */}
-            <div className="mb-6 animate-fade-in" style={{ animationDelay: "0.25s" }}>
+            {/* Personality Test CTA Card */}
+            <div className="animate-fade-in mb-8" style={{ animationDelay: "0.3s" }}>
               <Link to="/personality-test">
-                <Card className="group relative overflow-hidden border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                  <CardContent className="flex items-center gap-4 p-5">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Brain className="w-6 h-6 text-primary" />
+                <Card className="group relative overflow-hidden border-primary/30 bg-card/80 backdrop-blur-sm hover:border-primary/60 transition-all duration-300 cursor-pointer max-w-2xl rounded-xl">
+                  <CardContent className="flex items-center gap-5 p-6">
+                    <div className="flex-shrink-0 w-14 h-14 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/30 transition-all duration-300">
+                      <Brain className="w-7 h-7 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-display text-base font-bold text-foreground mb-0.5">
-                        Discover Your Ideal Career
+                      <h3 className="font-display text-lg font-bold text-foreground mb-1">
+                        Take the 60-Question Personality Test
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        Take our 60-question personality test to find careers that match your strengths
+                        Based on IPIP Big Five research — find your type and get personalized career & roadmap recommendations
                       </p>
                     </div>
-                    <Sparkles className="w-5 h-5 text-primary flex-shrink-0 group-hover:rotate-12 transition-transform" />
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                      <Sparkles className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors" />
+                    </div>
                   </CardContent>
                 </Card>
               </Link>
             </div>
 
-            {/* Search & Filters */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            {/* Browse Careers Section */}
+            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              <p className="text-sm text-muted-foreground mb-3 font-medium">Or browse {filteredCareers.length} career paths directly:</p>
               <CareerFilters
                 search={search}
                 onSearchChange={setSearch}
