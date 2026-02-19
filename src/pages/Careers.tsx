@@ -255,13 +255,25 @@ const Careers = () => {
               Find roles that match your experience, explore skill requirements, and plan your career growth journey
             </p>
 
-            {/* Personality Test CTA */}
+            {/* Personality Test CTA - Main Feature */}
             <div className="mb-6 animate-fade-in" style={{ animationDelay: "0.25s" }}>
               <Link to="/personality-test">
-                <Button variant="outline" className="gap-2 rounded-full border-primary/50 text-primary hover:bg-primary/10">
-                  <Brain className="w-4 h-4" />
-                  Take the Personality Test — Find Your Ideal Career
-                </Button>
+                <Card className="group relative overflow-hidden border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 cursor-pointer">
+                  <CardContent className="flex items-center gap-4 p-5">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Brain className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-display text-base font-bold text-foreground mb-0.5">
+                        Discover Your Ideal Career
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Take our 60-question personality test to find careers that match your strengths
+                      </p>
+                    </div>
+                    <Sparkles className="w-5 h-5 text-primary flex-shrink-0 group-hover:rotate-12 transition-transform" />
+                  </CardContent>
+                </Card>
               </Link>
             </div>
 
