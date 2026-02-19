@@ -27,6 +27,7 @@ const MyCareerLab = lazy(() => import("./pages/MyCareerLab"));
 const RoadmapDetail = lazy(() => import("./pages/RoadmapDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const SchoolCareers = lazy(() => import("./pages/SchoolCareers"));
+const PersonalityTest = lazy(() => import("./pages/PersonalityTest"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminDomains = lazy(() => import("./pages/admin/AdminDomains"));
 const AdminCategories = lazy(() => import("./pages/admin/AdminCategories"));
@@ -129,6 +130,7 @@ const App = () => (
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/careers/:slug" element={<CareerDetail />} />
                 <Route path="/school-careers" element={<SchoolCareers />} />
+                <Route path="/personality-test" element={<PersonalityTest />} />
                 <Route path="/craft" element={<Craft />} />
                 <Route path="/craft/:id" element={<RoadmapDetail />} />
                 <Route path="/roadmap/:id" element={<RoadmapDetail />} />

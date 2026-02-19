@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, ChevronDown, Sparkles } from "lucide-react";
+import { Briefcase, ChevronDown, Sparkles, Brain } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useVisitorRole } from "@/hooks/useVisitorRole";
@@ -253,6 +254,16 @@ const Careers = () => {
             <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
               Find roles that match your experience, explore skill requirements, and plan your career growth journey
             </p>
+
+            {/* Personality Test CTA */}
+            <div className="mb-6 animate-fade-in" style={{ animationDelay: "0.25s" }}>
+              <Link to="/personality-test">
+                <Button variant="outline" className="gap-2 rounded-full border-primary/50 text-primary hover:bg-primary/10">
+                  <Brain className="w-4 h-4" />
+                  Take the Personality Test — Find Your Ideal Career
+                </Button>
+              </Link>
+            </div>
 
             {/* Search & Filters */}
             <div className="animate-fade-in" style={{ animationDelay: "0.3s" }}>
