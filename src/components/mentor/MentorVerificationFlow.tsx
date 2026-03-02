@@ -204,13 +204,14 @@ export const MentorVerificationFlow = () => {
     
     setEmailVerifying(true);
     try {
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      toast.success(`OTP sent to ${user.email}. (Demo: ${otp})`);
+      const { data, error } = await supabase.functions.invoke("mentor-send-otp", {
+        method: "POST",
+      });
+
+      if (error) throw error;
+
+      toast.success(data?.message || `Verification code sent to ${user.email}`);
       setEmailSent(true);
-      localStorage.setItem(`mentor_otp_${user.id}`, JSON.stringify({
-        code: otp,
-        expires: Date.now() + 10 * 60 * 1000
-      }));
     } catch (error) {
       console.error("Error sending OTP:", error);
       toast.error("Failed to send OTP");
@@ -224,35 +225,17 @@ export const MentorVerificationFlow = () => {
     
     setEmailVerifying(true);
     try {
-      const stored = localStorage.getItem(`mentor_otp_${user.id}`);
-      if (!stored) {
-        toast.error("No OTP found. Please request a new one.");
-        return;
-      }
-      
-      const { code, expires } = JSON.parse(stored);
-      if (Date.now() > expires) {
-        toast.error("OTP expired. Please request a new one.");
-        localStorage.removeItem(`mentor_otp_${user.id}`);
-        return;
-      }
-      
-      if (code !== emailOtp) {
-        toast.error("Invalid OTP");
-        return;
-      }
-
-      localStorage.removeItem(`mentor_otp_${user.id}`);
-
-      const { error } = await (supabase
-        .from("mentor_profiles") as any)
-        .update({ 
-          email_verified: true,
-          verification_status: 'pending_profile'
-        })
-        .eq("user_id", user.id);
+      const { data, error } = await supabase.functions.invoke("mentor-verify-otp", {
+        method: "POST",
+        body: { otp: emailOtp },
+      });
 
       if (error) throw error;
+
+      if (data?.error) {
+        toast.error(data.error);
+        return;
+      }
 
       toast.success("Email verified successfully!");
       setCurrentStep(1);
