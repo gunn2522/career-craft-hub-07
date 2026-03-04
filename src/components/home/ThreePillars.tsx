@@ -64,8 +64,8 @@ export const ThreePillars = () => {
         .from('homepage_sections')
         .select('content')
         .eq('section_key', 'three_pillars')
-        .single();
-      if (error) return null;
+        .maybeSingle();
+      if (error || !data) return null;
       return data?.content as Record<string, { subtitle?: string; description?: string; cta_link?: string }> | null;
     },
   });
