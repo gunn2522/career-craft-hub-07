@@ -26,7 +26,6 @@ interface Subscriber {
   profile: {
     full_name: string | null;
     avatar_url: string | null;
-    email: string | null;
     institution: string | null;
   } | null;
 }
@@ -64,11 +63,9 @@ const MentorSubscribers = () => {
       // Fetch profiles for each subscriber
       const subscribersWithProfiles = await Promise.all(
         (data || []).map(async (sub) => {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("full_name, avatar_url, email, institution")
-            .eq("user_id", sub.student_id)
-            .maybeSingle();
+          const { data: profileResults } = await supabase
+            .rpc("get_public_profiles", { user_ids: [sub.student_id] });
+          const profile = profileResults?.[0] || null;
           return { ...sub, profile } as Subscriber;
         })
       );
@@ -203,7 +200,7 @@ const MentorSubscribers = () => {
                               {subscriber.profile?.full_name || "Unknown"}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {subscriber.profile?.email || "No email"}
+                              {subscriber.profile?.institution || "No institution"}
                             </p>
                           </div>
                         </div>

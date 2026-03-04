@@ -83,9 +83,7 @@ const Mentors = () => {
       // Fetch all profiles in a single query using the user_ids
       const userIds = mentorData.map(m => m.user_id);
       const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, institution")
-        .in("user_id", userIds);
+        .rpc("get_public_profiles", { user_ids: userIds });
 
       if (profilesError) throw profilesError;
 
