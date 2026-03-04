@@ -4766,39 +4766,41 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string | null
+          current_company: string | null
           full_name: string | null
           institution: string | null
+          is_mentor: boolean | null
           is_public: boolean | null
+          is_recruiter: boolean | null
+          job_title: string | null
           skills: string[] | null
           user_id: string | null
           user_type: Database["public"]["Enums"]["user_type"] | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string | null
-          full_name?: string | null
-          institution?: string | null
-          is_public?: boolean | null
-          skills?: string[] | null
-          user_id?: string | null
-          user_type?: Database["public"]["Enums"]["user_type"] | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string | null
-          full_name?: string | null
-          institution?: string | null
-          is_public?: boolean | null
-          skills?: string[] | null
-          user_id?: string | null
-          user_type?: Database["public"]["Enums"]["user_type"] | null
+          years_experience: number | null
         }
         Relationships: []
       }
     }
     Functions: {
+      get_public_profiles: {
+        Args: { user_ids?: string[] }
+        Returns: {
+          avatar_url: string
+          bio: string
+          created_at: string
+          current_company: string
+          full_name: string
+          institution: string
+          is_mentor: boolean
+          is_public: boolean
+          is_recruiter: boolean
+          job_title: string
+          skills: string[]
+          user_id: string
+          user_type: Database["public"]["Enums"]["user_type"]
+          years_experience: number
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]

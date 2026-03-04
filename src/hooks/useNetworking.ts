@@ -113,12 +113,10 @@ export const useNetworking = () => {
         },
         async (payload) => {
           const newMessage = payload.new as Message;
-          // Fetch sender profile
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("user_id, full_name, avatar_url, bio, job_title, current_company, skills, is_mentor, is_recruiter, years_experience")
-            .eq("user_id", newMessage.sender_id)
-            .maybeSingle();
+          // Fetch sender profile using secure RPC function
+          const { data: profiles } = await supabase
+            .rpc("get_public_profiles", { user_ids: [newMessage.sender_id] });
+          const profile = profiles?.[0] || null;
           
           setMessages((prev) => [...prev, { ...newMessage, sender_profile: profile as PublicProfile }]);
         }
@@ -162,9 +160,7 @@ export const useNetworking = () => {
       );
       
       const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, bio, job_title, current_company, skills, is_mentor, is_recruiter, years_experience")
-        .in("user_id", connectedUserIds);
+        .rpc("get_public_profiles", { user_ids: connectedUserIds });
 
       const connectionsWithProfiles = data.map((c) => ({
         ...c,
@@ -191,9 +187,7 @@ export const useNetworking = () => {
       const userIds = [...new Set([...data.map((r) => r.from_user_id), ...data.map((r) => r.to_user_id)])];
       
       const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, bio, job_title, current_company, skills, is_mentor, is_recruiter, years_experience")
-        .in("user_id", userIds);
+        .rpc("get_public_profiles", { user_ids: userIds });
 
       const requestsWithProfiles = data.map((r) => ({
         ...r,
@@ -235,9 +229,7 @@ export const useNetworking = () => {
       const participantUserIds = [...new Set(allParticipants?.map((p) => p.user_id) || [])];
       
       const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, bio, job_title, current_company, skills, is_mentor, is_recruiter, years_experience")
-        .in("user_id", participantUserIds);
+        .rpc("get_public_profiles", { user_ids: participantUserIds });
 
       const roomsWithDetails = rooms.map((room) => ({
         ...room,
@@ -373,9 +365,7 @@ export const useNetworking = () => {
       const senderIds = [...new Set(messagesData.map((m) => m.sender_id))];
       
       const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, bio, job_title, current_company, skills, is_mentor, is_recruiter, years_experience")
-        .in("user_id", senderIds);
+        .rpc("get_public_profiles", { user_ids: senderIds });
 
       const messagesWithProfiles = messagesData.map((m) => ({
         ...m,

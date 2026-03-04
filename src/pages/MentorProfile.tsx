@@ -96,11 +96,9 @@ const MentorProfile = () => {
       setMentor(mentorData);
 
       // Fetch user profile
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("full_name, avatar_url, institution")
-        .eq("user_id", mentorData.user_id)
-        .maybeSingle();
+      const { data: profileResults } = await supabase
+        .rpc("get_public_profiles", { user_ids: [mentorData.user_id] });
+      const profileData = profileResults?.[0] || null;
       
       setProfile(profileData);
 
