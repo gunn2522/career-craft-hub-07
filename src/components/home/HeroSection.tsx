@@ -137,7 +137,7 @@ export const HeroSection = () => {
       <button
         onClick={scrollToContent}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
-        aria-label="Scroll to content"
+        aria-label="Discover More"
       >
         <span className="text-sm font-medium">Discover More</span>
         <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary transition-colors">
