@@ -17,16 +17,17 @@ export const Footer = () => {
             </p>
             <div className="flex gap-4">
               {[
-                { Icon: Linkedin, href: "https://www.linkedin.com/company/careercraftcafe/" },
-                { Icon: Instagram, href: "https://www.instagram.com/career_craft_cafe/" },
-                { Icon: Youtube, href: "https://www.youtube.com/@Careercraftcafe" },
-              ].map(({ Icon, href }, i) => (
+                { Icon: Linkedin, href: "https://www.linkedin.com/company/careercraftcafe/", label: "LinkedIn" },
+                { Icon: Instagram, href: "https://www.instagram.com/career_craft_cafe/", label: "Instagram" },
+                { Icon: Youtube, href: "https://www.youtube.com/@Careercraftcafe", label: "YouTube" },
+              ].map(({ Icon, href, label }, i) => (
                 <a
                   key={i}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary hover:bg-secondary hover:text-primary transition-all duration-300"
+                  aria-label={label}
                 >
                   <Icon size={18} />
                 </a>
