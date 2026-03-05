@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { TorchLoader } from "@/components/ui/TorchLoader";
 
-type AllowedRole = "admin" | "mentor" | "partner" | "user" | "institution";
+type AllowedRole = "admin" | "mentor" | "partner" | "user" | "institution" | "ambassador";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -16,7 +16,7 @@ export const ProtectedRoute = ({
   allowedRoles = [],
   requireAuth = true,
 }: ProtectedRouteProps) => {
-  const { user, isLoading, userRole, isAdmin, isMentor, isPartner, isInstitution } = useAuth();
+  const { user, isLoading, userRole, isAdmin, isMentor, isPartner, isInstitution, isAmbassador } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,6 +45,8 @@ export const ProtectedRoute = ({
           return isPartner || isAdmin;
         case "institution":
           return isInstitution || isAdmin;
+        case "ambassador":
+          return isAmbassador || isAdmin;
         case "user":
           return !!user;
         default:
@@ -56,7 +58,7 @@ export const ProtectedRoute = ({
       // Redirect to 403 or home based on auth status
       navigate("/", { replace: true });
     }
-  }, [user, isLoading, userRole, isAdmin, isMentor, isPartner, isInstitution, allowedRoles, requireAuth, navigate, location]);
+  }, [user, isLoading, userRole, isAdmin, isMentor, isPartner, isInstitution, isAmbassador, allowedRoles, requireAuth, navigate, location]);
 
   // Show loading state
   if (isLoading) {
@@ -84,6 +86,8 @@ export const ProtectedRoute = ({
           return isPartner || isAdmin;
         case "institution":
           return isInstitution || isAdmin;
+        case "ambassador":
+          return isAmbassador || isAdmin;
         case "user":
           return !!user;
         default:

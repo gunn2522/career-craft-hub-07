@@ -109,6 +109,11 @@ const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
 const AdminPartnerVerification = lazy(() => import("./pages/admin/AdminPartnerVerification"));
 const PlansAndPricing = lazy(() => import("./pages/PlansAndPricing"));
 const AdminRegistrations = lazy(() => import("./pages/admin/AdminRegistrations"));
+const AmbassadorDashboard = lazy(() => import("./pages/ambassador/AmbassadorDashboard"));
+const AmbassadorEvents = lazy(() => import("./pages/ambassador/AmbassadorEvents"));
+const AmbassadorMedia = lazy(() => import("./pages/ambassador/AmbassadorMedia"));
+const AmbassadorCommunity = lazy(() => import("./pages/ambassador/AmbassadorCommunity"));
+const AmbassadorDiscussions = lazy(() => import("./pages/ambassador/AmbassadorDiscussions"));
 
 const queryClient = new QueryClient();
 
@@ -730,6 +735,49 @@ const App = () => (
                   element={
                     <ProtectedRoute allowedRoles={["partner"]}>
                       <PartnerInterviewProcessPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+
+                {/* Ambassador Dashboard Routes */}
+                <Route
+                  path="/ambassador-dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={["ambassador"]}>
+                      <AmbassadorDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/ambassador-dashboard/events"
+                  element={
+                    <ProtectedRoute allowedRoles={["ambassador"]}>
+                      <AmbassadorEvents />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/ambassador-dashboard/media"
+                  element={
+                    <ProtectedRoute allowedRoles={["ambassador"]}>
+                      <AmbassadorMedia />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/ambassador-dashboard/community"
+                  element={
+                    <ProtectedRoute allowedRoles={["ambassador"]}>
+                      <AmbassadorCommunity />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/ambassador-dashboard/discussions"
+                  element={
+                    <ProtectedRoute allowedRoles={["ambassador"]}>
+                      <AmbassadorDiscussions />
                     </ProtectedRoute>
                   }
                 />
