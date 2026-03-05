@@ -109,6 +109,7 @@ const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
 const AdminPartnerVerification = lazy(() => import("./pages/admin/AdminPartnerVerification"));
 const PlansAndPricing = lazy(() => import("./pages/PlansAndPricing"));
 const AdminRegistrations = lazy(() => import("./pages/admin/AdminRegistrations"));
+const AdminAmbassadorActivity = lazy(() => import("./pages/admin/AdminAmbassadorActivity"));
 const AmbassadorDashboard = lazy(() => import("./pages/ambassador/AmbassadorDashboard"));
 const AmbassadorEvents = lazy(() => import("./pages/ambassador/AmbassadorEvents"));
 const AmbassadorMedia = lazy(() => import("./pages/ambassador/AmbassadorMedia"));
@@ -281,6 +282,14 @@ const App = () => (
                   element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                       <AdminApplications />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/ambassador-activity"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                      <AdminAmbassadorActivity />
                     </ProtectedRoute>
                   }
                 />

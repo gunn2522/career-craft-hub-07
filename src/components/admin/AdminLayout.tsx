@@ -135,10 +135,11 @@ const sidebarModules: SidebarModule[] = [
     ]
   },
   {
-    name: "Applications",
+    name: "Ambassadors",
     icon: Megaphone,
     links: [
       { name: "Ambassador Applications", path: "/admin/applications", icon: Users },
+      { name: "Ambassador Activity", path: "/admin/ambassador-activity", icon: Calendar },
     ]
   },
 ];
