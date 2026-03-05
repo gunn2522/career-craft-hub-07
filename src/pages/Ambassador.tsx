@@ -66,6 +66,7 @@ const programHighlights = [
 const Ambassador = () => {
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -146,7 +147,7 @@ const Ambassador = () => {
           throw error;
         }
       } else {
-        toast.success("Application submitted successfully! We'll contact you for the interview within 48 hours.");
+        setIsSubmitted(true);
         setFormData({ name: "", email: "", phone: "", college: "", year: "", whyAmbassador: "", socialLinks: "" });
       }
     } catch (error) {
@@ -354,6 +355,45 @@ const Ambassador = () => {
         <TorchElements3D count={10} />
         <div className="w-full px-4 md:px-8 lg:px-16">
           <div className="max-w-2xl mx-auto">
+            {isSubmitted ? (
+              <div className="glass-card rounded-2xl p-12 text-center space-y-6 animate-fade-in">
+                <div className="w-20 h-20 rounded-full gradient-primary flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-10 h-10 text-secondary" />
+                </div>
+                <h2 className="font-display text-3xl md:text-4xl font-bold">
+                  Application <span className="gradient-text">Submitted!</span>
+                </h2>
+                <p className="text-muted-foreground text-lg max-w-md mx-auto">
+                  Thank you for applying to be a C-Cell Crafter! We'll review your application and invite you for an interview within <span className="text-primary font-semibold">48 hours</span>.
+                </p>
+                <div className="grid sm:grid-cols-3 gap-4 pt-6">
+                  <div className="p-4 rounded-xl bg-card border border-border/50">
+                    <Target className="w-6 h-6 text-primary mx-auto mb-2" />
+                    <p className="text-sm font-medium">Step 1</p>
+                    <p className="text-xs text-muted-foreground">Application Received ✓</p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-card border border-border/50">
+                    <Calendar className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm font-medium">Step 2</p>
+                    <p className="text-xs text-muted-foreground">Interview (within 48hrs)</p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-card border border-border/50">
+                    <GraduationCap className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm font-medium">Step 3</p>
+                    <p className="text-xs text-muted-foreground">Onboarding & Launch</p>
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-4"
+                >
+                  Submit Another Application
+                </Button>
+              </div>
+            ) : (
+            <>
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6">
                 Apply for Interview
@@ -461,6 +501,8 @@ const Ambassador = () => {
                 )}
               </Button>
             </form>
+            </>
+            )}
           </div>
         </div>
       </section>

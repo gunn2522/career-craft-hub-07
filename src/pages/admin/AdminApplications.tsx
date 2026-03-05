@@ -12,7 +12,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock, ShieldAlert } from "lucide-react";
+import { Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock, ShieldAlert, Loader2 } from "lucide-react";
 
 interface Application {
   id: string;
@@ -34,21 +34,15 @@ const statusOptions = [
   { value: "rejected", label: "Rejected", color: "text-red-500" },
 ];
 
-// Sanitize display text to prevent XSS
-const sanitizeText = (text: string | null): string => {
-  if (!text) return "";
-  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-};
-
 const AdminApplications = () => {
   const { isAdmin, isLoading: authLoading } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
   const [accessDenied, setAccessDenied] = useState(false);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Double-check admin status at application level before fetching sensitive data
     if (!authLoading) {
       if (!isAdmin) {
         setAccessDenied(true);
@@ -60,7 +54,6 @@ const AdminApplications = () => {
   }, [isAdmin, authLoading]);
 
   const fetchApplications = async () => {
-    // Additional security: verify admin status before fetching PII
     if (!isAdmin) {
       setAccessDenied(true);
       setIsLoading(false);
@@ -74,7 +67,6 @@ const AdminApplications = () => {
         .order("created_at", { ascending: false });
 
       if (error) {
-        // RLS will block non-admins, handle gracefully
         if (error.code === "42501" || error.message.includes("permission denied")) {
           setAccessDenied(true);
           return;
@@ -91,18 +83,47 @@ const AdminApplications = () => {
   };
 
   const updateStatus = async (id: string, status: string) => {
+    setUpdatingId(id);
     try {
+      // Find the application to get email and name
+      const app = applications.find((a) => a.id === id);
+      if (!app) {
+        toast.error("Application not found");
+        return;
+      }
+
       const { error } = await supabase
         .from("ambassador_applications")
-        .update({ status })
+        .update({ status, updated_at: new Date().toISOString() })
         .eq("id", id);
 
       if (error) throw error;
-      toast.success("Status updated successfully");
-      fetchApplications();
+
+      // Send notification email via edge function
+      try {
+        await supabase.functions.invoke("ambassador-status-email", {
+          body: {
+            applicationId: id,
+            status,
+            applicantName: app.full_name,
+            applicantEmail: app.email,
+          },
+        });
+      } catch (emailError) {
+        console.warn("Email notification failed (non-blocking):", emailError);
+      }
+
+      toast.success(`Application ${status === "approved" ? "approved ✓" : status === "rejected" ? "rejected" : "updated"} successfully`);
+      
+      // Update local state immediately
+      setApplications((prev) =>
+        prev.map((a) => (a.id === id ? { ...a, status } : a))
+      );
     } catch (error) {
       console.error("Error updating status:", error);
       toast.error("Failed to update status");
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -117,7 +138,7 @@ const AdminApplications = () => {
 
       if (error) throw error;
       toast.success("Application deleted successfully");
-      fetchApplications();
+      setApplications((prev) => prev.filter((a) => a.id !== id));
     } catch (error) {
       console.error("Error deleting application:", error);
       toast.error("Failed to delete application");
@@ -148,7 +169,6 @@ const AdminApplications = () => {
     });
   };
 
-  // Show access denied message if not admin
   if (accessDenied) {
     return (
       <AdminLayout title="Ambassador Applications">
@@ -268,21 +288,27 @@ const AdminApplications = () => {
                     <Calendar className="w-3 h-3" />
                     Applied {formatDate(app.created_at)}
                   </div>
-                  <Select
-                    value={app.status || "pending"}
-                    onValueChange={(value) => updateStatus(app.id, value)}
-                  >
-                    <SelectTrigger className="w-32 h-8">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {statusOptions.map((status) => (
-                        <SelectItem key={status.value} value={status.value}>
-                          {status.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-center gap-2">
+                    {updatingId === app.id && (
+                      <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                    )}
+                    <Select
+                      value={app.status || "pending"}
+                      onValueChange={(value) => updateStatus(app.id, value)}
+                      disabled={updatingId === app.id}
+                    >
+                      <SelectTrigger className="w-32 h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {statusOptions.map((status) => (
+                          <SelectItem key={status.value} value={status.value}>
+                            {status.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </CardContent>
             </Card>
