@@ -3,7 +3,7 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
 type UserType = "school_student" | "college_student" | "mentor" | "partner";
-type AppRole = "admin" | "moderator" | "user" | "mentor" | "partner";
+type AppRole = "admin" | "moderator" | "user" | "mentor" | "partner" | "ambassador";
 
 interface AuthContextType {
   user: User | null;
@@ -13,6 +13,7 @@ interface AuthContextType {
   isMentor: boolean;
   isPartner: boolean;
   isInstitution: boolean;
+  isAmbassador: boolean;
   userRole: AppRole | null;
   signUp: (email: string, password: string, fullName: string, userType: UserType, institution?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isMentor, setIsMentor] = useState(false);
   const [isPartner, setIsPartner] = useState(false);
   const [isInstitution, setIsInstitution] = useState(false);
+  const [isAmbassador, setIsAmbassador] = useState(false);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setIsMentor(false);
           setIsPartner(false);
           setIsInstitution(false);
+          setIsAmbassador(false);
           setUserRole(null);
         }
       }
@@ -82,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAdmin(false);
         setIsMentor(false);
         setIsPartner(false);
+        setIsAmbassador(false);
         setUserRole(null);
         return;
       }
@@ -92,17 +96,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAdmin(role === "admin");
         setIsMentor(role === "mentor");
         setIsPartner(role === "partner");
+        setIsAmbassador(role === "ambassador");
       } else {
         setUserRole(null);
         setIsAdmin(false);
         setIsMentor(false);
         setIsPartner(false);
+        setIsAmbassador(false);
       }
     } catch (error) {
       console.error("Error checking user role:", error);
       setIsAdmin(false);
       setIsMentor(false);
       setIsPartner(false);
+      setIsAmbassador(false);
       setUserRole(null);
     }
   };
@@ -172,6 +179,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsMentor(false);
     setIsPartner(false);
     setIsInstitution(false);
+    setIsAmbassador(false);
     setUserRole(null);
   };
 
@@ -185,6 +193,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isMentor,
         isPartner,
         isInstitution,
+        isAmbassador,
         userRole,
         signUp,
         signIn,

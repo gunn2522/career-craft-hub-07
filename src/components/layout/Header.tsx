@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Handshake, LogOut, LayoutDashboard, GraduationCap, Building2, Landmark } from "lucide-react";
+import { Menu, X, Handshake, LogOut, LayoutDashboard, GraduationCap, Building2, Landmark, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
@@ -21,7 +21,7 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAdmin, isMentor, isPartner, isInstitution, signOut } = useAuth();
+  const { user, isAdmin, isMentor, isPartner, isInstitution, isAmbassador, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -99,6 +99,14 @@ export const Header = () => {
                     </Link>
                   </Button>
                 )}
+                {isAmbassador && !isAdmin && (
+                  <Button variant="ghost" className="text-[15px] font-medium h-auto px-3 py-2" asChild>
+                    <Link to="/ambassador-dashboard" className="flex items-center gap-1.5">
+                      <Award className="w-4 h-4" />
+                      Crafter
+                    </Link>
+                  </Button>
+                )}
                 <Button variant="ghost" onClick={handleSignOut} className="text-[15px] font-medium h-auto px-3 py-2 flex items-center gap-1.5">
                   <LogOut className="w-4 h-4" />
                   Sign Out
@@ -167,6 +175,11 @@ export const Header = () => {
                     {isInstitution && !isAdmin && (
                       <Button variant="outline" asChild>
                         <Link to="/institution" onClick={() => setIsOpen(false)}>Institution Dashboard</Link>
+                      </Button>
+                    )}
+                    {isAmbassador && !isAdmin && (
+                      <Button variant="outline" asChild>
+                        <Link to="/ambassador-dashboard" onClick={() => setIsOpen(false)}>Crafter Dashboard</Link>
                       </Button>
                     )}
                     <Button variant="gradient" onClick={handleSignOut}>Sign Out</Button>

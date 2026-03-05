@@ -167,6 +167,187 @@ export type Database = {
         }
         Relationships: []
       }
+      ambassador_community_members: {
+        Row: {
+          ambassador_id: string
+          id: string
+          joined_at: string
+          member_user_id: string
+          role: string | null
+        }
+        Insert: {
+          ambassador_id: string
+          id?: string
+          joined_at?: string
+          member_user_id: string
+          role?: string | null
+        }
+        Update: {
+          ambassador_id?: string
+          id?: string
+          joined_at?: string
+          member_user_id?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
+      ambassador_discussion_replies: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          discussion_id: string
+          id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          discussion_id: string
+          id?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          discussion_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_discussion_replies_discussion_id_fkey"
+            columns: ["discussion_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_discussions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_discussions: {
+        Row: {
+          ambassador_id: string
+          author_id: string
+          content: string | null
+          created_at: string
+          id: string
+          is_pinned: boolean | null
+          reply_count: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ambassador_id: string
+          author_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_pinned?: boolean | null
+          reply_count?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ambassador_id?: string
+          author_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_pinned?: boolean | null
+          reply_count?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ambassador_event_media: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          description: string | null
+          event_id: string
+          file_name: string | null
+          file_url: string
+          id: string
+          media_type: string
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          description?: string | null
+          event_id: string
+          file_name?: string | null
+          file_url: string
+          id?: string
+          media_type?: string
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          description?: string | null
+          event_id?: string
+          file_name?: string | null
+          file_url?: string
+          id?: string
+          media_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_event_media_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_events: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          current_attendees: number | null
+          description: string | null
+          event_date: string | null
+          id: string
+          location: string | null
+          max_attendees: number | null
+          mode: string | null
+          partner_id: string | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          current_attendees?: number | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          location?: string | null
+          max_attendees?: number | null
+          mode?: string | null
+          partner_id?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          current_attendees?: number | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          location?: string | null
+          max_attendees?: number | null
+          mode?: string | null
+          partner_id?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       assignment_submissions: {
         Row: {
           assignment_id: string
@@ -4816,7 +4997,13 @@ export type Database = {
     }
     Enums: {
       admin_tier: "super_admin" | "admin" | "moderator"
-      app_role: "admin" | "moderator" | "user" | "mentor" | "partner"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "user"
+        | "mentor"
+        | "partner"
+        | "ambassador"
       experience_level: "entry" | "mid" | "senior"
       partner_verification_status:
         | "unverified"
@@ -4953,7 +5140,14 @@ export const Constants = {
   public: {
     Enums: {
       admin_tier: ["super_admin", "admin", "moderator"],
-      app_role: ["admin", "moderator", "user", "mentor", "partner"],
+      app_role: [
+        "admin",
+        "moderator",
+        "user",
+        "mentor",
+        "partner",
+        "ambassador",
+      ],
       experience_level: ["entry", "mid", "senior"],
       partner_verification_status: [
         "unverified",
