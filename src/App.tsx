@@ -110,11 +110,13 @@ const AdminPartnerVerification = lazy(() => import("./pages/admin/AdminPartnerVe
 const PlansAndPricing = lazy(() => import("./pages/PlansAndPricing"));
 const AdminRegistrations = lazy(() => import("./pages/admin/AdminRegistrations"));
 const AdminAmbassadorActivity = lazy(() => import("./pages/admin/AdminAmbassadorActivity"));
+const AdminSponsorshipRequests = lazy(() => import("./pages/admin/AdminSponsorshipRequests"));
 const AmbassadorDashboard = lazy(() => import("./pages/ambassador/AmbassadorDashboard"));
 const AmbassadorEvents = lazy(() => import("./pages/ambassador/AmbassadorEvents"));
 const AmbassadorMedia = lazy(() => import("./pages/ambassador/AmbassadorMedia"));
 const AmbassadorCommunity = lazy(() => import("./pages/ambassador/AmbassadorCommunity"));
 const AmbassadorDiscussions = lazy(() => import("./pages/ambassador/AmbassadorDiscussions"));
+const AmbassadorSponsorship = lazy(() => import("./pages/ambassador/AmbassadorSponsorship"));
 
 const queryClient = new QueryClient();
 
@@ -290,6 +292,14 @@ const App = () => (
                   element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                       <AdminAmbassadorActivity />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/sponsorship-requests"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                      <AdminSponsorshipRequests />
                     </ProtectedRoute>
                   }
                 />
@@ -787,6 +797,14 @@ const App = () => (
                   element={
                     <ProtectedRoute allowedRoles={["ambassador"]}>
                       <AmbassadorDiscussions />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/ambassador-dashboard/sponsorship"
+                  element={
+                    <ProtectedRoute allowedRoles={["ambassador"]}>
+                      <AmbassadorSponsorship />
                     </ProtectedRoute>
                   }
                 />

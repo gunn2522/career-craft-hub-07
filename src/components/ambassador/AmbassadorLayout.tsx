@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   ChevronLeft,
+  DollarSign,
 } from "lucide-react";
 
 interface AmbassadorLayoutProps {
@@ -24,6 +25,7 @@ const navItems = [
   { label: "Media", icon: Image, path: "/ambassador-dashboard/media" },
   { label: "Community", icon: Users, path: "/ambassador-dashboard/community" },
   { label: "Discussions", icon: MessageSquare, path: "/ambassador-dashboard/discussions" },
+  { label: "Sponsorship", icon: DollarSign, path: "/ambassador-dashboard/sponsorship" },
 ];
 
 export const AmbassadorLayout = ({ children, title }: AmbassadorLayoutProps) => {

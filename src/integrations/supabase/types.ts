@@ -348,6 +348,63 @@ export type Database = {
         }
         Relationships: []
       }
+      ambassador_sponsorship_requests: {
+        Row: {
+          additional_notes: string | null
+          admin_notes: string | null
+          ambassador_id: string
+          created_at: string
+          deliverables: string[]
+          event_date: string | null
+          event_location: string | null
+          event_name: string
+          event_type: string
+          expected_participants: number
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          sponsorship_types: string[]
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          admin_notes?: string | null
+          ambassador_id: string
+          created_at?: string
+          deliverables?: string[]
+          event_date?: string | null
+          event_location?: string | null
+          event_name: string
+          event_type: string
+          expected_participants?: number
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sponsorship_types?: string[]
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          admin_notes?: string | null
+          ambassador_id?: string
+          created_at?: string
+          deliverables?: string[]
+          event_date?: string | null
+          event_location?: string | null
+          event_name?: string
+          event_type?: string
+          expected_participants?: number
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sponsorship_types?: string[]
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       assignment_submissions: {
         Row: {
           assignment_id: string
