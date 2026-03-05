@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.mentor-verify-otp]
 verify_jwt = false
+
+[functions.ambassador-status-email]
+verify_jwt = true
