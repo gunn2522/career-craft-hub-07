@@ -50,7 +50,7 @@ export const ConsultancySection = () => {
                 </ul>
 
                 <Button variant="gradient" size="lg" asChild className="group">
-                  <Link to="/book-call">
+                  <Link to="/cafe">
                     <Calendar className="w-5 h-5" />
                     Book a Clarity Call
                     <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
