@@ -24,6 +24,7 @@ export interface Resource {
   type: string;
   url: string | null;
   category: string | null;
+  step_index: number | null;
 }
 
 export interface Assignment {
