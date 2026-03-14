@@ -4202,36 +4202,45 @@ export type Database = {
       }
       resources: {
         Row: {
+          added_by: string | null
           category: string | null
           created_at: string
           description: string | null
           id: string
+          is_approved: boolean
           is_premium: boolean | null
           roadmap_id: string | null
+          step_index: number | null
           title: string
           type: string
           updated_at: string
           url: string | null
         }
         Insert: {
+          added_by?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          is_approved?: boolean
           is_premium?: boolean | null
           roadmap_id?: string | null
+          step_index?: number | null
           title: string
           type: string
           updated_at?: string
           url?: string | null
         }
         Update: {
+          added_by?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          is_approved?: boolean
           is_premium?: boolean | null
           roadmap_id?: string | null
+          step_index?: number | null
           title?: string
           type?: string
           updated_at?: string
