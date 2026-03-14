@@ -164,7 +164,10 @@ export const useRoadmapProgress = (roadmapId: string | undefined) => {
 
   const getStepResources = (stepIndex: number): Resource[] => {
     return resources.filter(
-      (r) => r.category === `step_${stepIndex}` || r.category === roadmap?.steps[stepIndex]?.title
+      (r) =>
+        r.step_index === stepIndex ||
+        r.category === `step_${stepIndex}` ||
+        r.category === roadmap?.steps[stepIndex]?.title
     );
   };
 

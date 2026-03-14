@@ -8,6 +8,7 @@ import {
   Clock,
   Target,
   Award,
+  Youtube,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,18 @@ const getResourceIcon = (type: string) => {
     default:
       return BookOpen;
   }
+};
+
+const getYouTubeId = (url: string): string | null => {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? match[1] : null;
+};
+
+const isYouTubeUrl = (url: string | null): boolean => {
+  if (!url) return false;
+  return /(?:youtube\.com|youtu\.be)/.test(url);
 };
 
 export const StepResourcesPanel = ({
@@ -157,25 +170,64 @@ export const StepResourcesPanel = ({
           <div className="space-y-3">
             {resources.map((resource) => {
               const Icon = getResourceIcon(resource.type);
+              const ytId = resource.url ? getYouTubeId(resource.url) : null;
+
               return (
-                <a
-                  key={resource.id}
-                  href={resource.url || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 border border-border hover:border-primary/30 transition-all group"
-                >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h5 className="font-medium text-sm group-hover:text-primary transition-colors">
-                      {resource.title}
-                    </h5>
-                    <p className="text-xs text-muted-foreground capitalize">{resource.type}</p>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                </a>
+                <div key={resource.id} className="rounded-xl bg-muted/30 border border-border hover:border-primary/30 transition-all overflow-hidden">
+                  {/* YouTube Thumbnail Preview */}
+                  {ytId && (
+                    <a
+                      href={resource.url || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block relative group"
+                    >
+                      <img
+                        src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                        alt={resource.title}
+                        className="w-full h-32 object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center">
+                          <Play className="w-5 h-5 text-white ml-0.5" />
+                        </div>
+                      </div>
+                      <div className="absolute top-2 left-2">
+                        <span className="px-2 py-0.5 text-xs font-medium rounded bg-red-600 text-white flex items-center gap-1">
+                          <Youtube className="w-3 h-3" /> YouTube
+                        </span>
+                      </div>
+                    </a>
+                  )}
+
+                  <a
+                    href={resource.url || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 group"
+                  >
+                    {!ytId && (
+                      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-primary" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-sm group-hover:text-primary transition-colors">
+                        {resource.title}
+                      </h5>
+                      {resource.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                          {resource.description}
+                        </p>
+                      )}
+                      {!ytId && (
+                        <p className="text-xs text-muted-foreground capitalize">{resource.type}</p>
+                      )}
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                  </a>
+                </div>
               );
             })}
           </div>
